@@ -501,17 +501,9 @@ TR5, Wickmann</description>
 <part name="GND" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 <part name="C1" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 <part name="C2" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
-<part name="C3" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
-<part name="C4" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
-<part name="5V" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 <part name="AC/DC1" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
-<part name="AC/DC2" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
-<part name="AC/DC3" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
-<part name="AC/DC4" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 <part name="RC1" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 <part name="RC2" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
-<part name="RC3" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
-<part name="RC4" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 <part name="F1" library="fuse" library_urn="urn:adsk.eagle:library:233" deviceset="19559" device="" package3d_urn="urn:adsk.eagle:package:14056/1"/>
 <part name="F2" library="fuse" library_urn="urn:adsk.eagle:library:233" deviceset="19559" device="" package3d_urn="urn:adsk.eagle:package:14056/1"/>
 <part name="F3" library="fuse" library_urn="urn:adsk.eagle:library:233" deviceset="19559" device="" package3d_urn="urn:adsk.eagle:package:14056/1"/>
@@ -598,54 +590,12 @@ TR5, Wickmann</description>
 <attribute name="VALUE" x="73.66" y="-13.843" size="1.778" layer="96"/>
 <attribute name="NAME" x="76.2" y="-9.271" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="C3" gate="-1" x="76.2" y="-15.24" smashed="yes">
-<attribute name="NAME" x="76.2" y="-14.351" size="1.778" layer="95" rot="R180"/>
-</instance>
-<instance part="C3" gate="-2" x="76.2" y="-20.32" smashed="yes">
-<attribute name="VALUE" x="73.66" y="-24.003" size="1.778" layer="96"/>
-<attribute name="NAME" x="76.2" y="-19.431" size="1.778" layer="95" rot="R180"/>
-</instance>
-<instance part="C4" gate="-1" x="76.2" y="-25.4" smashed="yes">
-<attribute name="NAME" x="76.2" y="-24.511" size="1.778" layer="95" rot="R180"/>
-</instance>
-<instance part="C4" gate="-2" x="76.2" y="-30.48" smashed="yes">
-<attribute name="VALUE" x="73.66" y="-34.163" size="1.778" layer="96"/>
-<attribute name="NAME" x="76.2" y="-29.591" size="1.778" layer="95" rot="R180"/>
-</instance>
-<instance part="5V" gate="-1" x="76.2" y="-35.56" smashed="yes">
-<attribute name="NAME" x="76.2" y="-34.671" size="1.778" layer="95" rot="R180"/>
-</instance>
-<instance part="5V" gate="-2" x="76.2" y="-40.64" smashed="yes">
-<attribute name="VALUE" x="73.66" y="-44.323" size="1.778" layer="96"/>
-<attribute name="NAME" x="76.2" y="-39.751" size="1.778" layer="95" rot="R180"/>
-</instance>
 <instance part="AC/DC1" gate="-1" x="20.32" y="-35.56" smashed="yes" rot="MR0">
 <attribute name="NAME" x="20.32" y="-34.671" size="1.778" layer="95" rot="MR180"/>
 </instance>
 <instance part="AC/DC1" gate="-2" x="20.32" y="-40.64" smashed="yes" rot="MR0">
 <attribute name="VALUE" x="22.86" y="-44.323" size="1.778" layer="96" rot="MR0"/>
 <attribute name="NAME" x="20.32" y="-39.751" size="1.778" layer="95" rot="MR180"/>
-</instance>
-<instance part="AC/DC2" gate="-1" x="20.32" y="-45.72" smashed="yes" rot="MR0">
-<attribute name="NAME" x="20.32" y="-44.831" size="1.778" layer="95" rot="MR180"/>
-</instance>
-<instance part="AC/DC2" gate="-2" x="20.32" y="-50.8" smashed="yes" rot="MR0">
-<attribute name="VALUE" x="22.86" y="-54.483" size="1.778" layer="96" rot="MR0"/>
-<attribute name="NAME" x="20.32" y="-49.911" size="1.778" layer="95" rot="MR180"/>
-</instance>
-<instance part="AC/DC3" gate="-1" x="20.32" y="-55.88" smashed="yes" rot="MR0">
-<attribute name="NAME" x="20.32" y="-54.991" size="1.778" layer="95" rot="MR180"/>
-</instance>
-<instance part="AC/DC3" gate="-2" x="20.32" y="-60.96" smashed="yes" rot="MR0">
-<attribute name="VALUE" x="22.86" y="-64.643" size="1.778" layer="96" rot="MR0"/>
-<attribute name="NAME" x="20.32" y="-60.071" size="1.778" layer="95" rot="MR180"/>
-</instance>
-<instance part="AC/DC4" gate="-1" x="20.32" y="-66.04" smashed="yes" rot="MR0">
-<attribute name="NAME" x="20.32" y="-65.151" size="1.778" layer="95" rot="MR180"/>
-</instance>
-<instance part="AC/DC4" gate="-2" x="20.32" y="-71.12" smashed="yes" rot="MR0">
-<attribute name="VALUE" x="22.86" y="-74.803" size="1.778" layer="96" rot="MR0"/>
-<attribute name="NAME" x="20.32" y="-70.231" size="1.778" layer="95" rot="MR180"/>
 </instance>
 <instance part="RC1" gate="-1" x="73.66" y="-55.88" smashed="yes" rot="R180">
 <attribute name="NAME" x="73.66" y="-56.769" size="1.778" layer="95"/>
@@ -661,35 +611,21 @@ TR5, Wickmann</description>
 <attribute name="VALUE" x="76.2" y="-57.277" size="1.778" layer="96" rot="R180"/>
 <attribute name="NAME" x="73.66" y="-61.849" size="1.778" layer="95"/>
 </instance>
-<instance part="RC3" gate="-1" x="73.66" y="-76.2" smashed="yes" rot="R180">
-<attribute name="NAME" x="73.66" y="-77.089" size="1.778" layer="95"/>
+<instance part="F1" gate="1" x="60.96" y="-50.8" smashed="yes">
+<attribute name="NAME" x="57.15" y="-49.403" size="1.778" layer="95"/>
+<attribute name="VALUE" x="57.15" y="-53.721" size="1.778" layer="96"/>
 </instance>
-<instance part="RC3" gate="-2" x="73.66" y="-71.12" smashed="yes" rot="R180">
-<attribute name="VALUE" x="76.2" y="-67.437" size="1.778" layer="96" rot="R180"/>
-<attribute name="NAME" x="73.66" y="-72.009" size="1.778" layer="95"/>
+<instance part="F2" gate="1" x="60.96" y="-55.88" smashed="yes">
+<attribute name="NAME" x="57.15" y="-54.483" size="1.778" layer="95"/>
+<attribute name="VALUE" x="57.15" y="-58.801" size="1.778" layer="96"/>
 </instance>
-<instance part="RC4" gate="-1" x="73.66" y="-86.36" smashed="yes" rot="R180">
-<attribute name="NAME" x="73.66" y="-87.249" size="1.778" layer="95"/>
+<instance part="F3" gate="1" x="60.96" y="-60.96" smashed="yes">
+<attribute name="NAME" x="57.15" y="-59.563" size="1.778" layer="95"/>
+<attribute name="VALUE" x="57.15" y="-63.881" size="1.778" layer="96"/>
 </instance>
-<instance part="RC4" gate="-2" x="73.66" y="-81.28" smashed="yes" rot="R180">
-<attribute name="VALUE" x="76.2" y="-77.597" size="1.778" layer="96" rot="R180"/>
-<attribute name="NAME" x="73.66" y="-82.169" size="1.778" layer="95"/>
-</instance>
-<instance part="F1" gate="1" x="63.5" y="-50.8" smashed="yes">
-<attribute name="NAME" x="59.69" y="-49.403" size="1.778" layer="95"/>
-<attribute name="VALUE" x="59.69" y="-53.721" size="1.778" layer="96"/>
-</instance>
-<instance part="F2" gate="1" x="63.5" y="-60.96" smashed="yes">
-<attribute name="NAME" x="59.69" y="-59.563" size="1.778" layer="95"/>
-<attribute name="VALUE" x="59.69" y="-63.881" size="1.778" layer="96"/>
-</instance>
-<instance part="F3" gate="1" x="63.5" y="-71.12" smashed="yes">
-<attribute name="NAME" x="59.69" y="-69.723" size="1.778" layer="95"/>
-<attribute name="VALUE" x="59.69" y="-74.041" size="1.778" layer="96"/>
-</instance>
-<instance part="F4" gate="1" x="63.5" y="-81.28" smashed="yes">
-<attribute name="NAME" x="59.69" y="-79.883" size="1.778" layer="95"/>
-<attribute name="VALUE" x="59.69" y="-84.201" size="1.778" layer="96"/>
+<instance part="F4" gate="1" x="60.96" y="-66.04" smashed="yes">
+<attribute name="NAME" x="57.15" y="-64.643" size="1.778" layer="95"/>
+<attribute name="VALUE" x="57.15" y="-68.961" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -798,9 +734,9 @@ TR5, Wickmann</description>
 <label x="43.18" y="17.78" size="1.016" layer="95" rot="R90" xref="yes"/>
 </segment>
 <segment>
-<pinref part="C4" gate="-1" pin="KL"/>
-<wire x1="81.28" y1="-25.4" x2="83.82" y2="-25.4" width="0.1524" layer="91"/>
-<label x="83.82" y="-25.4" size="1.016" layer="95" xref="yes"/>
+<pinref part="C2" gate="-2" pin="KL"/>
+<wire x1="81.28" y1="-10.16" x2="83.82" y2="-10.16" width="0.1524" layer="91"/>
+<label x="83.82" y="-10.16" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="C3" class="0">
@@ -810,9 +746,9 @@ TR5, Wickmann</description>
 <label x="40.64" y="17.78" size="1.016" layer="95" rot="R90" xref="yes"/>
 </segment>
 <segment>
-<pinref part="C3" gate="-1" pin="KL"/>
-<wire x1="81.28" y1="-15.24" x2="83.82" y2="-15.24" width="0.1524" layer="91"/>
-<label x="83.82" y="-15.24" size="1.016" layer="95" xref="yes"/>
+<pinref part="C2" gate="-1" pin="KL"/>
+<wire x1="81.28" y1="-5.08" x2="83.82" y2="-5.08" width="0.1524" layer="91"/>
+<label x="83.82" y="-5.08" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="C2" class="0">
@@ -822,9 +758,9 @@ TR5, Wickmann</description>
 <label x="38.1" y="17.78" size="1.016" layer="95" rot="R90" xref="yes"/>
 </segment>
 <segment>
-<pinref part="C2" gate="-1" pin="KL"/>
-<wire x1="81.28" y1="-5.08" x2="83.82" y2="-5.08" width="0.1524" layer="91"/>
-<label x="83.82" y="-5.08" size="1.016" layer="95" xref="yes"/>
+<pinref part="C1" gate="-2" pin="KL"/>
+<wire x1="81.28" y1="0" x2="83.82" y2="0" width="0.1524" layer="91"/>
+<label x="83.82" y="0" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="C1" class="0">
@@ -836,7 +772,7 @@ TR5, Wickmann</description>
 <segment>
 <pinref part="C1" gate="-1" pin="KL"/>
 <wire x1="81.28" y1="5.08" x2="83.82" y2="5.08" width="0.1524" layer="91"/>
-<label x="83.82" y="5.08" size="1.016" layer="95" xref="yes"/>
+<label x="83.82" y="5.08" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="AC/DC4" class="0">
@@ -845,70 +781,12 @@ TR5, Wickmann</description>
 <wire x1="-20.32" y1="-58.42" x2="-17.78" y2="-58.42" width="0.1524" layer="91"/>
 <label x="-17.78" y="-58.42" size="1.778" layer="95" xref="yes"/>
 </segment>
-<segment>
-<pinref part="AC/DC4" gate="-1" pin="KL"/>
-<wire x1="15.24" y1="-66.04" x2="12.7" y2="-66.04" width="0.1524" layer="91"/>
-<label x="12.7" y="-66.04" size="1.778" layer="95" rot="MR0" xref="yes"/>
-</segment>
-</net>
-<net name="RC1" class="0">
-<segment>
-<pinref part="AC/DC1" gate="-2" pin="KL"/>
-<wire x1="15.24" y1="-40.64" x2="12.7" y2="-40.64" width="0.1524" layer="91"/>
-<label x="12.7" y="-40.64" size="1.778" layer="95" rot="MR0" xref="yes"/>
-</segment>
-<segment>
-<pinref part="F1" gate="1" pin="1"/>
-<wire x1="58.42" y1="-50.8" x2="55.88" y2="-50.8" width="0.1524" layer="91"/>
-<label x="55.88" y="-50.8" size="1.778" layer="95" rot="MR0" xref="yes"/>
-</segment>
-</net>
-<net name="RC2" class="0">
-<segment>
-<pinref part="AC/DC2" gate="-2" pin="KL"/>
-<wire x1="15.24" y1="-50.8" x2="12.7" y2="-50.8" width="0.1524" layer="91"/>
-<label x="12.7" y="-50.8" size="1.778" layer="95" rot="MR0" xref="yes"/>
-</segment>
-<segment>
-<pinref part="F2" gate="1" pin="1"/>
-<wire x1="58.42" y1="-60.96" x2="55.88" y2="-60.96" width="0.1524" layer="91"/>
-<label x="55.88" y="-60.96" size="1.778" layer="95" rot="MR0" xref="yes"/>
-</segment>
-</net>
-<net name="RC3" class="0">
-<segment>
-<pinref part="AC/DC3" gate="-2" pin="KL"/>
-<wire x1="15.24" y1="-60.96" x2="12.7" y2="-60.96" width="0.1524" layer="91"/>
-<label x="12.7" y="-60.96" size="1.778" layer="95" rot="MR0" xref="yes"/>
-</segment>
-<segment>
-<pinref part="F3" gate="1" pin="1"/>
-<wire x1="58.42" y1="-71.12" x2="55.88" y2="-71.12" width="0.1524" layer="91"/>
-<label x="55.88" y="-71.12" size="1.778" layer="95" rot="MR0" xref="yes"/>
-</segment>
-</net>
-<net name="RC4" class="0">
-<segment>
-<pinref part="AC/DC4" gate="-2" pin="KL"/>
-<wire x1="15.24" y1="-71.12" x2="12.7" y2="-71.12" width="0.1524" layer="91"/>
-<label x="12.7" y="-71.12" size="1.778" layer="95" rot="MR0" xref="yes"/>
-</segment>
-<segment>
-<pinref part="F4" gate="1" pin="1"/>
-<wire x1="58.42" y1="-81.28" x2="55.88" y2="-81.28" width="0.1524" layer="91"/>
-<label x="55.88" y="-81.28" size="1.778" layer="95" rot="MR0" xref="yes"/>
-</segment>
 </net>
 <net name="AC/DC1" class="0">
 <segment>
 <pinref part="CH1" gate="-2" pin="KL"/>
 <wire x1="-20.32" y1="-27.94" x2="-17.78" y2="-27.94" width="0.1524" layer="91"/>
 <label x="-17.78" y="-27.94" size="1.778" layer="95" xref="yes"/>
-</segment>
-<segment>
-<pinref part="AC/DC1" gate="-1" pin="KL"/>
-<wire x1="15.24" y1="-35.56" x2="12.7" y2="-35.56" width="0.1524" layer="91"/>
-<label x="12.7" y="-35.56" size="1.778" layer="95" rot="MR0" xref="yes"/>
 </segment>
 </net>
 <net name="AC/DC2" class="0">
@@ -917,11 +795,6 @@ TR5, Wickmann</description>
 <wire x1="-20.32" y1="-38.1" x2="-17.78" y2="-38.1" width="0.1524" layer="91"/>
 <label x="-17.78" y="-38.1" size="1.778" layer="95" xref="yes"/>
 </segment>
-<segment>
-<pinref part="AC/DC2" gate="-1" pin="KL"/>
-<wire x1="15.24" y1="-45.72" x2="12.7" y2="-45.72" width="0.1524" layer="91"/>
-<label x="12.7" y="-45.72" size="1.778" layer="95" rot="MR0" xref="yes"/>
-</segment>
 </net>
 <net name="AC/DC3" class="0">
 <segment>
@@ -929,34 +802,12 @@ TR5, Wickmann</description>
 <wire x1="-20.32" y1="-48.26" x2="-17.78" y2="-48.26" width="0.1524" layer="91"/>
 <label x="-17.78" y="-48.26" size="1.778" layer="95" xref="yes"/>
 </segment>
-<segment>
-<pinref part="AC/DC3" gate="-1" pin="KL"/>
-<wire x1="15.24" y1="-55.88" x2="12.7" y2="-55.88" width="0.1524" layer="91"/>
-<label x="12.7" y="-55.88" size="1.778" layer="95" rot="MR0" xref="yes"/>
-</segment>
 </net>
 <net name="N$1" class="0">
 <segment>
 <pinref part="RC1" gate="-2" pin="KL"/>
 <pinref part="F1" gate="1" pin="2"/>
-</segment>
-</net>
-<net name="N$3" class="0">
-<segment>
-<pinref part="RC2" gate="-2" pin="KL"/>
-<pinref part="F2" gate="1" pin="2"/>
-</segment>
-</net>
-<net name="N$5" class="0">
-<segment>
-<pinref part="RC3" gate="-2" pin="KL"/>
-<pinref part="F3" gate="1" pin="2"/>
-</segment>
-</net>
-<net name="N$7" class="0">
-<segment>
-<pinref part="RC4" gate="-2" pin="KL"/>
-<pinref part="F4" gate="1" pin="2"/>
+<wire x1="66.04" y1="-50.8" x2="68.58" y2="-50.8" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="GND2" class="0">
@@ -969,6 +820,73 @@ TR5, Wickmann</description>
 <pinref part="GND" gate="-1" pin="KL"/>
 <wire x1="81.28" y1="15.24" x2="83.82" y2="15.24" width="0.1524" layer="91"/>
 <label x="83.82" y="15.24" size="1.016" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="VCC" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="3V3"/>
+<wire x1="22.86" y1="-20.32" x2="22.86" y2="-22.86" width="0.1524" layer="91"/>
+<label x="22.86" y="-22.86" size="1.27" layer="95" rot="R270" xref="yes"/>
+</segment>
+<segment>
+<pinref part="GND" gate="-2" pin="KL"/>
+<wire x1="81.28" y1="10.16" x2="83.82" y2="10.16" width="0.1524" layer="91"/>
+<label x="83.82" y="10.16" size="1.27" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="N$2" class="0">
+<segment>
+<pinref part="RC1" gate="-1" pin="KL"/>
+<pinref part="F2" gate="1" pin="2"/>
+<wire x1="66.04" y1="-55.88" x2="68.58" y2="-55.88" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$3" class="0">
+<segment>
+<pinref part="F3" gate="1" pin="2"/>
+<pinref part="RC2" gate="-2" pin="KL"/>
+<wire x1="66.04" y1="-60.96" x2="68.58" y2="-60.96" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$4" class="0">
+<segment>
+<pinref part="RC2" gate="-1" pin="KL"/>
+<pinref part="F4" gate="1" pin="2"/>
+<wire x1="68.58" y1="-66.04" x2="66.04" y2="-66.04" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="-R1" class="0">
+<segment>
+<pinref part="AC/DC1" gate="-1" pin="KL"/>
+<wire x1="15.24" y1="-35.56" x2="12.7" y2="-35.56" width="0.1524" layer="91"/>
+<label x="12.7" y="-35.56" size="1.778" layer="95" rot="MR0" xref="yes"/>
+</segment>
+</net>
+<net name="~R1" class="0">
+<segment>
+<pinref part="AC/DC1" gate="-2" pin="KL"/>
+<wire x1="15.24" y1="-40.64" x2="12.7" y2="-40.64" width="0.1524" layer="91"/>
+<label x="12.7" y="-40.64" size="1.778" layer="95" rot="MR0" xref="yes"/>
+</segment>
+<segment>
+<pinref part="F1" gate="1" pin="1"/>
+<wire x1="55.88" y1="-50.8" x2="53.34" y2="-50.8" width="0.1524" layer="91"/>
+<label x="53.34" y="-50.8" size="1.778" layer="95" rot="MR0" xref="yes"/>
+</segment>
+<segment>
+<pinref part="F2" gate="1" pin="1"/>
+<wire x1="55.88" y1="-55.88" x2="53.34" y2="-55.88" width="0.1524" layer="91"/>
+<label x="53.34" y="-55.88" size="1.778" layer="95" rot="MR0" xref="yes"/>
+</segment>
+<segment>
+<pinref part="F3" gate="1" pin="1"/>
+<wire x1="55.88" y1="-60.96" x2="53.34" y2="-60.96" width="0.1524" layer="91"/>
+<label x="53.34" y="-60.96" size="1.778" layer="95" rot="MR0" xref="yes"/>
+</segment>
+<segment>
+<pinref part="F4" gate="1" pin="1"/>
+<wire x1="55.88" y1="-66.04" x2="53.34" y2="-66.04" width="0.1524" layer="91"/>
+<label x="53.34" y="-66.04" size="1.778" layer="95" rot="MR0" xref="yes"/>
 </segment>
 </net>
 </nets>
