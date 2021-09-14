@@ -638,9 +638,9 @@ TR5, Wickmann</description>
 <label x="-5.08" y="10.16" size="1.524" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="U$1" gate="G$1" pin="GND@1"/>
-<wire x1="25.4" y1="15.24" x2="25.4" y2="17.78" width="0.1524" layer="91"/>
-<label x="25.4" y="17.78" size="1.524" layer="95" rot="R90" xref="yes"/>
+<pinref part="U$1" gate="G$1" pin="GND@2"/>
+<wire x1="25.4" y1="-20.32" x2="25.4" y2="-22.86" width="0.1524" layer="91"/>
+<label x="25.4" y="-22.86" size="1.016" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
 <net name="5V" class="0">
@@ -650,9 +650,9 @@ TR5, Wickmann</description>
 <label x="-5.08" y="-5.08" size="1.524" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="U$1" gate="G$1" pin="VIN"/>
-<wire x1="22.86" y1="15.24" x2="22.86" y2="17.78" width="0.1524" layer="91"/>
-<label x="22.86" y="17.78" size="1.524" layer="95" rot="R90" xref="yes"/>
+<pinref part="U$1" gate="G$1" pin="3V3"/>
+<wire x1="22.86" y1="-20.32" x2="22.86" y2="-22.86" width="0.1524" layer="91"/>
+<label x="22.86" y="-22.86" size="1.27" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
 <net name="AC1" class="0">
@@ -775,34 +775,6 @@ TR5, Wickmann</description>
 <label x="83.82" y="5.08" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="AC/DC4" class="0">
-<segment>
-<pinref part="CH4" gate="-2" pin="KL"/>
-<wire x1="-20.32" y1="-58.42" x2="-17.78" y2="-58.42" width="0.1524" layer="91"/>
-<label x="-17.78" y="-58.42" size="1.778" layer="95" xref="yes"/>
-</segment>
-</net>
-<net name="AC/DC1" class="0">
-<segment>
-<pinref part="CH1" gate="-2" pin="KL"/>
-<wire x1="-20.32" y1="-27.94" x2="-17.78" y2="-27.94" width="0.1524" layer="91"/>
-<label x="-17.78" y="-27.94" size="1.778" layer="95" xref="yes"/>
-</segment>
-</net>
-<net name="AC/DC2" class="0">
-<segment>
-<pinref part="CH2" gate="-2" pin="KL"/>
-<wire x1="-20.32" y1="-38.1" x2="-17.78" y2="-38.1" width="0.1524" layer="91"/>
-<label x="-17.78" y="-38.1" size="1.778" layer="95" xref="yes"/>
-</segment>
-</net>
-<net name="AC/DC3" class="0">
-<segment>
-<pinref part="CH3" gate="-2" pin="KL"/>
-<wire x1="-20.32" y1="-48.26" x2="-17.78" y2="-48.26" width="0.1524" layer="91"/>
-<label x="-17.78" y="-48.26" size="1.778" layer="95" xref="yes"/>
-</segment>
-</net>
 <net name="N$1" class="0">
 <segment>
 <pinref part="RC1" gate="-2" pin="KL"/>
@@ -812,26 +784,26 @@ TR5, Wickmann</description>
 </net>
 <net name="GND2" class="0">
 <segment>
-<pinref part="U$1" gate="G$1" pin="GND@2"/>
-<wire x1="25.4" y1="-20.32" x2="25.4" y2="-22.86" width="0.1524" layer="91"/>
-<label x="25.4" y="-22.86" size="1.016" layer="95" rot="R270" xref="yes"/>
-</segment>
-<segment>
-<pinref part="GND" gate="-1" pin="KL"/>
-<wire x1="81.28" y1="15.24" x2="83.82" y2="15.24" width="0.1524" layer="91"/>
-<label x="83.82" y="15.24" size="1.016" layer="95" xref="yes"/>
-</segment>
-</net>
-<net name="VCC" class="0">
-<segment>
-<pinref part="U$1" gate="G$1" pin="3V3"/>
-<wire x1="22.86" y1="-20.32" x2="22.86" y2="-22.86" width="0.1524" layer="91"/>
-<label x="22.86" y="-22.86" size="1.27" layer="95" rot="R270" xref="yes"/>
+<pinref part="U$1" gate="G$1" pin="GND@1"/>
+<wire x1="25.4" y1="15.24" x2="25.4" y2="17.78" width="0.1524" layer="91"/>
+<label x="25.4" y="17.78" size="1.524" layer="95" rot="R90" xref="yes"/>
 </segment>
 <segment>
 <pinref part="GND" gate="-2" pin="KL"/>
 <wire x1="81.28" y1="10.16" x2="83.82" y2="10.16" width="0.1524" layer="91"/>
 <label x="83.82" y="10.16" size="1.27" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="VCC" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="VIN"/>
+<wire x1="22.86" y1="15.24" x2="22.86" y2="17.78" width="0.1524" layer="91"/>
+<label x="22.86" y="17.78" size="1.524" layer="95" rot="R90" xref="yes"/>
+</segment>
+<segment>
+<pinref part="GND" gate="-1" pin="KL"/>
+<wire x1="81.28" y1="15.24" x2="83.82" y2="15.24" width="0.1524" layer="91"/>
+<label x="83.82" y="15.24" size="1.016" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="N$2" class="0">
@@ -860,6 +832,26 @@ TR5, Wickmann</description>
 <pinref part="AC/DC1" gate="-1" pin="KL"/>
 <wire x1="15.24" y1="-35.56" x2="12.7" y2="-35.56" width="0.1524" layer="91"/>
 <label x="12.7" y="-35.56" size="1.778" layer="95" rot="MR0" xref="yes"/>
+</segment>
+<segment>
+<pinref part="CH1" gate="-2" pin="KL"/>
+<wire x1="-20.32" y1="-27.94" x2="-17.78" y2="-27.94" width="0.1524" layer="91"/>
+<label x="-17.78" y="-27.94" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="CH2" gate="-2" pin="KL"/>
+<wire x1="-20.32" y1="-38.1" x2="-17.78" y2="-38.1" width="0.1524" layer="91"/>
+<label x="-17.78" y="-38.1" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="CH3" gate="-2" pin="KL"/>
+<wire x1="-20.32" y1="-48.26" x2="-17.78" y2="-48.26" width="0.1524" layer="91"/>
+<label x="-17.78" y="-48.26" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="CH4" gate="-2" pin="KL"/>
+<wire x1="-20.32" y1="-58.42" x2="-17.78" y2="-58.42" width="0.1524" layer="91"/>
+<label x="-17.78" y="-58.42" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="~R1" class="0">
