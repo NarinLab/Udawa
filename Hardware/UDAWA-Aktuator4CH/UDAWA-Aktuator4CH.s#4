@@ -775,34 +775,6 @@ TR5, Wickmann</description>
 <label x="83.82" y="5.08" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="AC/DC4" class="0">
-<segment>
-<pinref part="CH4" gate="-2" pin="KL"/>
-<wire x1="-20.32" y1="-58.42" x2="-17.78" y2="-58.42" width="0.1524" layer="91"/>
-<label x="-17.78" y="-58.42" size="1.778" layer="95" xref="yes"/>
-</segment>
-</net>
-<net name="AC/DC1" class="0">
-<segment>
-<pinref part="CH1" gate="-2" pin="KL"/>
-<wire x1="-20.32" y1="-27.94" x2="-17.78" y2="-27.94" width="0.1524" layer="91"/>
-<label x="-17.78" y="-27.94" size="1.778" layer="95" xref="yes"/>
-</segment>
-</net>
-<net name="AC/DC2" class="0">
-<segment>
-<pinref part="CH2" gate="-2" pin="KL"/>
-<wire x1="-20.32" y1="-38.1" x2="-17.78" y2="-38.1" width="0.1524" layer="91"/>
-<label x="-17.78" y="-38.1" size="1.778" layer="95" xref="yes"/>
-</segment>
-</net>
-<net name="AC/DC3" class="0">
-<segment>
-<pinref part="CH3" gate="-2" pin="KL"/>
-<wire x1="-20.32" y1="-48.26" x2="-17.78" y2="-48.26" width="0.1524" layer="91"/>
-<label x="-17.78" y="-48.26" size="1.778" layer="95" xref="yes"/>
-</segment>
-</net>
 <net name="N$1" class="0">
 <segment>
 <pinref part="RC1" gate="-2" pin="KL"/>
@@ -860,6 +832,26 @@ TR5, Wickmann</description>
 <pinref part="AC/DC1" gate="-1" pin="KL"/>
 <wire x1="15.24" y1="-35.56" x2="12.7" y2="-35.56" width="0.1524" layer="91"/>
 <label x="12.7" y="-35.56" size="1.778" layer="95" rot="MR0" xref="yes"/>
+</segment>
+<segment>
+<pinref part="CH1" gate="-2" pin="KL"/>
+<wire x1="-20.32" y1="-27.94" x2="-17.78" y2="-27.94" width="0.1524" layer="91"/>
+<label x="-17.78" y="-27.94" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="CH2" gate="-2" pin="KL"/>
+<wire x1="-20.32" y1="-38.1" x2="-17.78" y2="-38.1" width="0.1524" layer="91"/>
+<label x="-17.78" y="-38.1" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="CH3" gate="-2" pin="KL"/>
+<wire x1="-20.32" y1="-48.26" x2="-17.78" y2="-48.26" width="0.1524" layer="91"/>
+<label x="-17.78" y="-48.26" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="CH4" gate="-2" pin="KL"/>
+<wire x1="-20.32" y1="-58.42" x2="-17.78" y2="-58.42" width="0.1524" layer="91"/>
+<label x="-17.78" y="-58.42" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="~R1" class="0">

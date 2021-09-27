@@ -623,29 +623,17 @@ TR5, Wickmann</description>
 <attribute name="VALUE" x="22.86" y="-74.803" size="1.778" layer="96" rot="MR0"/>
 <attribute name="NAME" x="20.32" y="-70.231" size="1.778" layer="95" rot="MR180"/>
 </instance>
-<instance part="RC1" gate="-1" x="73.66" y="-55.88" smashed="yes" rot="R180">
-<attribute name="NAME" x="73.66" y="-56.769" size="1.778" layer="95"/>
-</instance>
 <instance part="RC1" gate="-2" x="73.66" y="-50.8" smashed="yes" rot="R180">
 <attribute name="VALUE" x="76.2" y="-47.117" size="1.778" layer="96" rot="R180"/>
 <attribute name="NAME" x="73.66" y="-51.689" size="1.778" layer="95"/>
-</instance>
-<instance part="RC2" gate="-1" x="73.66" y="-66.04" smashed="yes" rot="R180">
-<attribute name="NAME" x="73.66" y="-66.929" size="1.778" layer="95"/>
 </instance>
 <instance part="RC2" gate="-2" x="73.66" y="-60.96" smashed="yes" rot="R180">
 <attribute name="VALUE" x="76.2" y="-57.277" size="1.778" layer="96" rot="R180"/>
 <attribute name="NAME" x="73.66" y="-61.849" size="1.778" layer="95"/>
 </instance>
-<instance part="RC3" gate="-1" x="73.66" y="-76.2" smashed="yes" rot="R180">
-<attribute name="NAME" x="73.66" y="-77.089" size="1.778" layer="95"/>
-</instance>
 <instance part="RC3" gate="-2" x="73.66" y="-71.12" smashed="yes" rot="R180">
 <attribute name="VALUE" x="76.2" y="-67.437" size="1.778" layer="96" rot="R180"/>
 <attribute name="NAME" x="73.66" y="-72.009" size="1.778" layer="95"/>
-</instance>
-<instance part="RC4" gate="-1" x="73.66" y="-86.36" smashed="yes" rot="R180">
-<attribute name="NAME" x="73.66" y="-87.249" size="1.778" layer="95"/>
 </instance>
 <instance part="RC4" gate="-2" x="73.66" y="-81.28" smashed="yes" rot="R180">
 <attribute name="VALUE" x="76.2" y="-77.597" size="1.778" layer="96" rot="R180"/>
