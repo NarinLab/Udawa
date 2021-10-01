@@ -5520,8 +5520,8 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <plain>
 </plain>
 <instances>
-<instance part="U$1" gate="G$1" x="-134.62" y="-33.02" smashed="yes" rot="R90">
-<attribute name="NAME" x="-139.7" y="-59.69" size="1.27" layer="95" rot="R180"/>
+<instance part="U$1" gate="G$1" x="-127" y="-35.56" smashed="yes">
+<attribute name="NAME" x="-153.67" y="-30.48" size="1.27" layer="95" rot="R90"/>
 </instance>
 <instance part="HLK1" gate="G$1" x="-134.62" y="5.08" smashed="yes">
 <attribute name="NAME" x="-147.32" y="12.7" size="1.27" layer="94"/>
@@ -5578,13 +5578,13 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </segment>
 <segment>
 <pinref part="U$1" gate="G$1" pin="GND@1"/>
-<wire x1="-152.4" y1="-53.34" x2="-160.02" y2="-53.34" width="0.1524" layer="91"/>
-<label x="-160.02" y="-53.34" size="1.524" layer="95" rot="R180" xref="yes"/>
+<wire x1="-147.32" y1="-17.78" x2="-147.32" y2="-15.24" width="0.1524" layer="91"/>
+<label x="-147.32" y="-15.24" size="1.524" layer="95" rot="R90" xref="yes"/>
 </segment>
 <segment>
 <pinref part="U$1" gate="G$1" pin="GND@2"/>
-<wire x1="-116.84" y1="-53.34" x2="-111.76" y2="-53.34" width="0.1524" layer="91"/>
-<label x="-111.76" y="-53.34" size="1.27" layer="95" xref="yes"/>
+<wire x1="-147.32" y1="-53.34" x2="-147.32" y2="-55.88" width="0.1524" layer="91"/>
+<label x="-147.32" y="-55.88" size="1.27" layer="95" rot="R270" xref="yes"/>
 </segment>
 <segment>
 <pinref part="U$2" gate="G$1" pin="GND.1"/>
@@ -5615,8 +5615,8 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </segment>
 <segment>
 <pinref part="U$1" gate="G$1" pin="VIN"/>
-<wire x1="-152.4" y1="-55.88" x2="-160.02" y2="-55.88" width="0.1524" layer="91"/>
-<label x="-160.02" y="-55.88" size="1.524" layer="95" rot="R180" xref="yes"/>
+<wire x1="-149.86" y1="-17.78" x2="-149.86" y2="-15.24" width="0.1524" layer="91"/>
+<label x="-149.86" y="-15.24" size="1.524" layer="95" rot="R90" xref="yes"/>
 </segment>
 <segment>
 <pinref part="ARDUINO_NANO1" gate="G$1" pin="5V"/>
@@ -5671,8 +5671,8 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </segment>
 <segment>
 <pinref part="U$1" gate="G$1" pin="IO17"/>
-<wire x1="-116.84" y1="-40.64" x2="-111.76" y2="-40.64" width="0.1524" layer="91"/>
-<label x="-111.76" y="-40.64" size="1.27" layer="95" xref="yes"/>
+<wire x1="-134.62" y1="-53.34" x2="-134.62" y2="-55.88" width="0.1524" layer="91"/>
+<label x="-134.62" y="-55.88" size="1.27" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
 <net name="LV2" class="0">
@@ -5683,8 +5683,8 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </segment>
 <segment>
 <pinref part="U$1" gate="G$1" pin="IO16"/>
-<wire x1="-116.84" y1="-43.18" x2="-111.76" y2="-43.18" width="0.1524" layer="91"/>
-<label x="-111.76" y="-43.18" size="1.27" layer="95" xref="yes"/>
+<wire x1="-137.16" y1="-53.34" x2="-137.16" y2="-55.88" width="0.1524" layer="91"/>
+<label x="-137.16" y="-55.88" size="1.27" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
 <net name="3V3" class="0">
@@ -5695,8 +5695,8 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </segment>
 <segment>
 <pinref part="U$1" gate="G$1" pin="3V3"/>
-<wire x1="-116.84" y1="-55.88" x2="-111.76" y2="-55.88" width="0.1524" layer="91"/>
-<label x="-111.76" y="-55.88" size="1.27" layer="95" xref="yes"/>
+<wire x1="-149.86" y1="-53.34" x2="-149.86" y2="-55.88" width="0.1524" layer="91"/>
+<label x="-149.86" y="-55.88" size="1.27" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
 <net name="HV1" class="0">
