@@ -67,9 +67,10 @@
 Universal Digital Agriculture Watering Assistant
 https://github.com/NarinLab/Udawa</text>
 <text x="91.44" y="2.54" size="3.81" layer="21" rot="R90">UDAWA</text>
-<text x="95.25" y="2.54" size="2.54" layer="21" rot="R90">HW V.1</text>
+<text x="99.06" y="2.54" size="2.54" layer="21" rot="R90">HW V.1</text>
 <text x="74.93" y="27.94" size="2.54" layer="21" rot="R90">github.com/NarinLab/Udawa</text>
 <text x="71.12" y="27.94" size="2.54" layer="21" rot="R90">FTI Undiknas</text>
+<text x="95.25" y="2.54" size="2.54" layer="21" rot="R90">Actuator 4Ch</text>
 </plain>
 <libraries>
 <library name="HLK-PM01">

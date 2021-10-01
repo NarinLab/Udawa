@@ -69,7 +69,7 @@ https://github.com/NarinLab/Udawa</text>
 <text x="91.44" y="2.54" size="3.81" layer="21" rot="R90">UDAWA</text>
 <text x="95.25" y="2.54" size="2.54" layer="21" rot="R90">HW V.1</text>
 <text x="74.93" y="27.94" size="2.54" layer="21" rot="R90">github.com/NarinLab/Udawa</text>
-<text x="58.42" y="73.66" size="2.54" layer="21">FTI Undiknas</text>
+<text x="71.12" y="27.94" size="2.54" layer="21" rot="R90">FTI Undiknas</text>
 </plain>
 <libraries>
 <library name="HLK-PM01">
@@ -104,36 +104,36 @@ Author: &lt;a href="https://github.com/AhmedSaid/EAGLELibraries"&gt;Ahmed Said&l
 <library name="ESP32-DEVKITV1">
 <packages>
 <package name="ESP32-DEVKITV1">
-<pad name="3V3" x="-16.52" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="GND@2" x="-13.98" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D15" x="-11.44" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D2" x="-8.9" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D4" x="-6.36" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D16" x="-3.82" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D17" x="-1.28" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D5" x="1.26" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D18" x="3.8" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D19" x="6.34" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D21" x="8.88" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D3" x="11.42" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D1" x="13.96" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D22" x="16.5" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D23" x="19.04" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="VIN" x="-16.52" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="GND@1" x="-13.98" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D13" x="-11.44" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D12" x="-8.9" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D14" x="-6.36" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D27" x="-3.82" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D26" x="-1.28" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D25" x="1.26" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D33" x="3.8" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D32" x="6.34" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D35" x="8.88" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D34" x="11.42" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D39" x="13.96" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D36" x="16.5" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="EN" x="19.04" y="13.135" drill="1" diameter="1.9304"/>
+<pad name="3V3" x="-16.52" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="GND@2" x="-13.98" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D15" x="-11.44" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D2" x="-8.9" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D4" x="-6.36" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D16" x="-3.82" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D17" x="-1.28" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D5" x="1.26" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D18" x="3.8" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D19" x="6.34" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D21" x="8.88" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D3" x="11.42" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D1" x="13.96" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D22" x="16.5" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D23" x="19.04" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="VIN" x="-16.52" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="GND@1" x="-13.98" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D13" x="-11.44" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D12" x="-8.9" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D14" x="-6.36" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D27" x="-3.82" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D26" x="-1.28" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D25" x="1.26" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D33" x="3.8" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D32" x="6.34" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D35" x="8.88" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D34" x="11.42" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D39" x="13.96" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D36" x="16.5" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="EN" x="19.04" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
 <text x="-15.86" y="-9.93" size="1.016" layer="21" font="vector" rot="R90">3V3</text>
 <text x="-13.32" y="-9.93" size="1.016" layer="21" font="vector" rot="R90">GND</text>
 <text x="-10.78" y="-9.93" size="1.016" layer="21" font="vector" rot="R90">IO15</text>
@@ -164,7 +164,7 @@ Author: &lt;a href="https://github.com/AhmedSaid/EAGLELibraries"&gt;Ahmed Said&l
 <text x="14.64" y="5.25" size="1.016" layer="21" font="vector" rot="R90">VN/IO39</text>
 <text x="17.18" y="5.25" size="1.016" layer="21" font="vector" rot="R90">VP/IO36</text>
 <text x="19.72" y="7.79" size="1.016" layer="21" font="vector" rot="R90">EN</text>
-<text x="1.42" y="-1.91" size="1.9304" layer="21" font="vector">ESP32-Devkit V1</text>
+<text x="-23.49" y="-10.01" size="1.9304" layer="21" font="vector" rot="R90">ESP32-Devkit V1</text>
 <wire x1="-26.65" y1="14.605" x2="25.35" y2="14.605" width="0.254" layer="21"/>
 <wire x1="25.35" y1="14.605" x2="25.35" y2="-13.93" width="0.254" layer="21"/>
 <wire x1="25.35" y1="-13.93" x2="-26.65" y2="-13.93" width="0.254" layer="21"/>

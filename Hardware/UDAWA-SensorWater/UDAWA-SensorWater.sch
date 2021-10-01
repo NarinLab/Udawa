@@ -81,36 +81,36 @@
 <library name="ESP32-DEVKITV1">
 <packages>
 <package name="ESP32-DEVKITV1">
-<pad name="3V3" x="-16.52" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="GND@2" x="-13.98" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D15" x="-11.44" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D2" x="-8.9" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D4" x="-6.36" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D16" x="-3.82" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D17" x="-1.28" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D5" x="1.26" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D18" x="3.8" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D19" x="6.34" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D21" x="8.88" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D3" x="11.42" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D1" x="13.96" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D22" x="16.5" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="D23" x="19.04" y="-12.27" drill="1" diameter="1.9304"/>
-<pad name="VIN" x="-16.52" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="GND@1" x="-13.98" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D13" x="-11.44" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D12" x="-8.9" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D14" x="-6.36" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D27" x="-3.82" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D26" x="-1.28" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D25" x="1.26" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D33" x="3.8" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D32" x="6.34" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D35" x="8.88" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D34" x="11.42" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D39" x="13.96" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="D36" x="16.5" y="13.135" drill="1" diameter="1.9304"/>
-<pad name="EN" x="19.04" y="13.135" drill="1" diameter="1.9304"/>
+<pad name="3V3" x="-16.52" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="GND@2" x="-13.98" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D15" x="-11.44" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D2" x="-8.9" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D4" x="-6.36" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D16" x="-3.82" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D17" x="-1.28" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D5" x="1.26" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D18" x="3.8" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D19" x="6.34" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D21" x="8.88" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D3" x="11.42" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D1" x="13.96" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D22" x="16.5" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D23" x="19.04" y="-12.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="VIN" x="-16.52" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="GND@1" x="-13.98" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D13" x="-11.44" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D12" x="-8.9" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D14" x="-6.36" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D27" x="-3.82" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D26" x="-1.28" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D25" x="1.26" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D33" x="3.8" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D32" x="6.34" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D35" x="8.88" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D34" x="11.42" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D39" x="13.96" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="D36" x="16.5" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="EN" x="19.04" y="13.135" drill="0.8128" diameter="1.9304" shape="square"/>
 <text x="-15.86" y="-9.93" size="1.016" layer="21" font="vector" rot="R90">3V3</text>
 <text x="-13.32" y="-9.93" size="1.016" layer="21" font="vector" rot="R90">GND</text>
 <text x="-10.78" y="-9.93" size="1.016" layer="21" font="vector" rot="R90">IO15</text>
@@ -141,7 +141,7 @@
 <text x="14.64" y="5.25" size="1.016" layer="21" font="vector" rot="R90">VN/IO39</text>
 <text x="17.18" y="5.25" size="1.016" layer="21" font="vector" rot="R90">VP/IO36</text>
 <text x="19.72" y="7.79" size="1.016" layer="21" font="vector" rot="R90">EN</text>
-<text x="1.42" y="-1.91" size="1.9304" layer="21" font="vector">ESP32-Devkit V1</text>
+<text x="-23.49" y="-10.01" size="1.9304" layer="21" font="vector" rot="R90">ESP32-Devkit V1</text>
 <wire x1="-26.65" y1="14.605" x2="25.35" y2="14.605" width="0.254" layer="21"/>
 <wire x1="25.35" y1="14.605" x2="25.35" y2="-13.93" width="0.254" layer="21"/>
 <wire x1="25.35" y1="-13.93" x2="-26.65" y2="-13.93" width="0.254" layer="21"/>
@@ -258,10 +258,10 @@ Author: &lt;a href="https://github.com/AhmedSaid/EAGLELibraries"&gt;Ahmed Said&l
 <wire x1="17" y1="10.1" x2="17" y2="-10.1" width="0.127" layer="51"/>
 <wire x1="17" y1="-10.1" x2="-17" y2="-10.1" width="0.127" layer="51"/>
 <wire x1="-17" y1="-10.1" x2="-17" y2="10.1" width="0.127" layer="51"/>
-<pad name="P$1" x="-14.7" y="2.5" drill="1.016" shape="square"/>
-<pad name="P$2" x="-14.7" y="-2.5" drill="1.016" shape="square"/>
-<pad name="P$3" x="14.7" y="7.7" drill="1.016" shape="square"/>
-<pad name="P$4" x="14.7" y="-7.7" drill="1.016" shape="square"/>
+<pad name="P$1" x="-14.7" y="2.5" drill="1.016" diameter="2.1844" shape="square"/>
+<pad name="P$2" x="-14.7" y="-2.5" drill="1.016" diameter="2.1844" shape="square"/>
+<pad name="P$3" x="14.7" y="7.7" drill="1.016" diameter="2.1844" shape="square"/>
+<pad name="P$4" x="14.7" y="-7.7" drill="1.016" diameter="2.1844" shape="square"/>
 <text x="-15.24" y="7.62" size="1.27" layer="21">&gt;NAME</text>
 </package>
 </packages>
@@ -306,163 +306,6 @@ Author: &lt;a href="https://github.com/AhmedSaid/EAGLELibraries"&gt;Ahmed Said&l
 </deviceset>
 </devicesets>
 </library>
-<library name="con-wago-500" urn="urn:adsk.eagle:library:195">
-<description>&lt;b&gt;Wago Screw Clamps&lt;/b&gt;&lt;p&gt;
-Grid 5.00 mm&lt;p&gt;
-&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
-<packages>
-<package name="W237-102" urn="urn:adsk.eagle:footprint:10676/1" library_version="2">
-<description>&lt;b&gt;WAGO SCREW CLAMP&lt;/b&gt;</description>
-<wire x1="-3.491" y1="-2.286" x2="-1.484" y2="-0.279" width="0.254" layer="51"/>
-<wire x1="1.488" y1="-2.261" x2="3.469" y2="-0.254" width="0.254" layer="51"/>
-<wire x1="-4.989" y1="-5.461" x2="4.993" y2="-5.461" width="0.1524" layer="21"/>
-<wire x1="4.993" y1="3.734" x2="4.993" y2="3.531" width="0.1524" layer="21"/>
-<wire x1="4.993" y1="3.734" x2="-4.989" y2="3.734" width="0.1524" layer="21"/>
-<wire x1="-4.989" y1="-5.461" x2="-4.989" y2="-3.073" width="0.1524" layer="21"/>
-<wire x1="-4.989" y1="-3.073" x2="-3.389" y2="-3.073" width="0.1524" layer="21"/>
-<wire x1="-3.389" y1="-3.073" x2="-1.611" y2="-3.073" width="0.1524" layer="51"/>
-<wire x1="-1.611" y1="-3.073" x2="1.615" y2="-3.073" width="0.1524" layer="21"/>
-<wire x1="3.393" y1="-3.073" x2="4.993" y2="-3.073" width="0.1524" layer="21"/>
-<wire x1="-4.989" y1="-3.073" x2="-4.989" y2="3.531" width="0.1524" layer="21"/>
-<wire x1="4.993" y1="-3.073" x2="4.993" y2="-5.461" width="0.1524" layer="21"/>
-<wire x1="-4.989" y1="3.531" x2="4.993" y2="3.531" width="0.1524" layer="21"/>
-<wire x1="-4.989" y1="3.531" x2="-4.989" y2="3.734" width="0.1524" layer="21"/>
-<wire x1="4.993" y1="3.531" x2="4.993" y2="-3.073" width="0.1524" layer="21"/>
-<wire x1="1.615" y1="-3.073" x2="3.393" y2="-3.073" width="0.1524" layer="51"/>
-<circle x="-2.5" y="-1.27" radius="1.4986" width="0.1524" layer="51"/>
-<circle x="-2.5" y="2.2098" radius="0.508" width="0.1524" layer="21"/>
-<circle x="2.5038" y="-1.27" radius="1.4986" width="0.1524" layer="51"/>
-<circle x="2.5038" y="2.2098" radius="0.508" width="0.1524" layer="21"/>
-<pad name="1" x="-2.5" y="-1.27" drill="1.1938" shape="long" rot="R90"/>
-<pad name="2" x="2.5" y="-1.27" drill="1.1938" shape="long" rot="R90"/>
-<text x="-5.04" y="-7.62" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
-<text x="-3.8462" y="-5.0038" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-<text x="-4.532" y="0.635" size="1.27" layer="21" ratio="10">1</text>
-<text x="0.421" y="0.635" size="1.27" layer="21" ratio="10">2</text>
-</package>
-<package name="W237-103" urn="urn:adsk.eagle:footprint:10678/1" library_version="2">
-<description>&lt;b&gt;WAGO SCREW CLAMP&lt;/b&gt;</description>
-<wire x1="4.093" y1="-2.255" x2="5.897" y2="-0.299" width="0.254" layer="51"/>
-<wire x1="-0.911" y1="-2.331" x2="0.994" y2="-0.299" width="0.254" layer="51"/>
-<wire x1="-5.991" y1="-2.306" x2="-3.984" y2="-0.299" width="0.254" layer="51"/>
-<wire x1="-7.489" y1="-5.481" x2="7.497" y2="-5.481" width="0.1524" layer="21"/>
-<wire x1="7.497" y1="3.714" x2="7.497" y2="3.511" width="0.1524" layer="21"/>
-<wire x1="7.497" y1="3.714" x2="-7.489" y2="3.714" width="0.1524" layer="21"/>
-<wire x1="-7.489" y1="-5.481" x2="-7.489" y2="-3.093" width="0.1524" layer="21"/>
-<wire x1="-7.489" y1="-3.093" x2="-5.889" y2="-3.093" width="0.1524" layer="21"/>
-<wire x1="-5.889" y1="-3.093" x2="-4.111" y2="-3.093" width="0.1524" layer="51"/>
-<wire x1="-4.111" y1="-3.093" x2="-0.885" y2="-3.093" width="0.1524" layer="21"/>
-<wire x1="0.893" y1="-3.093" x2="4.119" y2="-3.093" width="0.1524" layer="21"/>
-<wire x1="5.897" y1="-3.093" x2="7.497" y2="-3.093" width="0.1524" layer="21"/>
-<wire x1="-7.489" y1="-3.093" x2="-7.489" y2="3.511" width="0.1524" layer="21"/>
-<wire x1="7.497" y1="-3.093" x2="7.497" y2="-5.481" width="0.1524" layer="21"/>
-<wire x1="7.497" y1="3.511" x2="-7.489" y2="3.511" width="0.1524" layer="21"/>
-<wire x1="7.497" y1="3.511" x2="7.497" y2="-3.093" width="0.1524" layer="21"/>
-<wire x1="-7.489" y1="3.511" x2="-7.489" y2="3.714" width="0.1524" layer="21"/>
-<wire x1="-0.885" y1="-3.093" x2="0.893" y2="-3.093" width="0.1524" layer="51"/>
-<wire x1="4.119" y1="-3.093" x2="5.897" y2="-3.093" width="0.1524" layer="51"/>
-<circle x="-5" y="-1.29" radius="1.4986" width="0.1524" layer="51"/>
-<circle x="5.0076" y="-1.29" radius="1.4986" width="0.1524" layer="51"/>
-<circle x="-5" y="2.1898" radius="0.508" width="0.1524" layer="21"/>
-<circle x="5.0076" y="2.1898" radius="0.508" width="0.1524" layer="21"/>
-<circle x="0.0038" y="-1.29" radius="1.4986" width="0.1524" layer="51"/>
-<circle x="0.0038" y="2.1898" radius="0.508" width="0.1524" layer="21"/>
-<pad name="1" x="-5" y="-1.29" drill="1.1938" shape="long" rot="R90"/>
-<pad name="2" x="0" y="-1.29" drill="1.1938" shape="long" rot="R90"/>
-<pad name="3" x="5" y="-1.29" drill="1.1938" shape="long" rot="R90"/>
-<text x="-6.905" y="0.615" size="1.27" layer="51" ratio="10">1</text>
-<text x="-1.8504" y="0.5642" size="1.27" layer="51" ratio="10">2</text>
-<text x="3.1534" y="0.615" size="1.27" layer="51" ratio="10">3</text>
-<text x="-5.3048" y="-4.9476" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
-<text x="-5.6858" y="-7.4622" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-</package>
-</packages>
-<packages3d>
-<package3d name="W237-102" urn="urn:adsk.eagle:package:10688/1" type="box" library_version="2">
-<description>WAGO SCREW CLAMP</description>
-<packageinstances>
-<packageinstance name="W237-102"/>
-</packageinstances>
-</package3d>
-<package3d name="W237-103" urn="urn:adsk.eagle:package:10691/1" type="box" library_version="2">
-<description>WAGO SCREW CLAMP</description>
-<packageinstances>
-<packageinstance name="W237-103"/>
-</packageinstances>
-</package3d>
-</packages3d>
-<symbols>
-<symbol name="KL" urn="urn:adsk.eagle:symbol:10675/1" library_version="2">
-<circle x="1.27" y="0" radius="1.27" width="0.254" layer="94"/>
-<text x="0" y="0.889" size="1.778" layer="95" rot="R180">&gt;NAME</text>
-<pin name="KL" x="5.08" y="0" visible="off" length="short" direction="pas" rot="R180"/>
-</symbol>
-<symbol name="KL+V" urn="urn:adsk.eagle:symbol:10673/1" library_version="2">
-<circle x="1.27" y="0" radius="1.27" width="0.254" layer="94"/>
-<text x="-2.54" y="-3.683" size="1.778" layer="96">&gt;VALUE</text>
-<text x="0" y="0.889" size="1.778" layer="95" rot="R180">&gt;NAME</text>
-<pin name="KL" x="5.08" y="0" visible="off" length="short" direction="pas" rot="R180"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="W237-102" urn="urn:adsk.eagle:component:10702/2" prefix="X" uservalue="yes" library_version="2">
-<description>&lt;b&gt;WAGO SCREW CLAMP&lt;/b&gt;</description>
-<gates>
-<gate name="-1" symbol="KL" x="0" y="5.08" addlevel="always"/>
-<gate name="-2" symbol="KL+V" x="0" y="0" addlevel="always"/>
-</gates>
-<devices>
-<device name="" package="W237-102">
-<connects>
-<connect gate="-1" pin="KL" pad="1"/>
-<connect gate="-2" pin="KL" pad="2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:10688/1"/>
-</package3dinstances>
-<technologies>
-<technology name="">
-<attribute name="MF" value="" constant="no"/>
-<attribute name="MPN" value="237-102" constant="no"/>
-<attribute name="OC_FARNELL" value="unknown" constant="no"/>
-<attribute name="OC_NEWARK" value="70K9898" constant="no"/>
-<attribute name="POPULARITY" value="32" constant="no"/>
-</technology>
-</technologies>
-</device>
-</devices>
-</deviceset>
-<deviceset name="W237-103" urn="urn:adsk.eagle:component:10707/2" prefix="X" uservalue="yes" library_version="2">
-<description>&lt;b&gt;WAGO SCREW CLAMP&lt;/b&gt;</description>
-<gates>
-<gate name="-1" symbol="KL" x="0" y="5.08" addlevel="always"/>
-<gate name="-2" symbol="KL" x="0" y="0" addlevel="always"/>
-<gate name="-3" symbol="KL+V" x="0" y="-5.08" addlevel="always"/>
-</gates>
-<devices>
-<device name="" package="W237-103">
-<connects>
-<connect gate="-1" pin="KL" pad="1"/>
-<connect gate="-2" pin="KL" pad="2"/>
-<connect gate="-3" pin="KL" pad="3"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:10691/1"/>
-</package3dinstances>
-<technologies>
-<technology name="">
-<attribute name="MF" value="" constant="no"/>
-<attribute name="MPN" value="237-103" constant="no"/>
-<attribute name="OC_FARNELL" value="unknown" constant="no"/>
-<attribute name="OC_NEWARK" value="18M7116" constant="no"/>
-<attribute name="POPULARITY" value="5" constant="no"/>
-</technology>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 <library name="diy-modules">
 <description>&lt;b&gt;DIY Modules for Arduino, Raspberry Pi, CubieBoard etc.&lt;/b&gt;
 &lt;br&gt;&lt;br&gt;
@@ -491,26 +334,26 @@ Comments, suggestions and bug reports please send to: &lt;b&gt;&lt;a href="mailt
 <wire x1="6.35" y1="-3.175" x2="6.35" y2="-4.445" width="0.127" layer="21"/>
 <wire x1="5.715" y1="-7.62" x2="4.445" y2="-7.62" width="0.127" layer="21"/>
 <wire x1="-4.445" y1="-7.62" x2="-5.715" y2="-7.62" width="0.127" layer="21"/>
-<pad name="J2.1" x="5.08" y="6.35" drill="1" shape="square"/>
-<pad name="J2.2" x="5.08" y="3.81" drill="1"/>
-<pad name="J2.3" x="5.08" y="1.27" drill="1"/>
+<pad name="J2.1" x="5.08" y="6.35" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="J2.2" x="5.08" y="3.81" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="J2.3" x="5.08" y="1.27" drill="0.8128" diameter="1.9304" shape="square"/>
 <text x="0" y="8.89" size="1.27" layer="25" align="bottom-center">&gt;NAME</text>
 <text x="0" y="-8.89" size="1.27" layer="27" align="top-center">&gt;VALUE</text>
-<pad name="J2.4" x="5.08" y="-1.27" drill="1"/>
-<pad name="J2.5" x="5.08" y="-3.81" drill="1"/>
+<pad name="J2.4" x="5.08" y="-1.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="J2.5" x="5.08" y="-3.81" drill="0.8128" diameter="1.9304" shape="square"/>
 <text x="3.175" y="6.35" size="1.016" layer="21" align="center-right">HV1</text>
 <text x="3.175" y="3.81" size="1.016" layer="21" align="center-right">HV2</text>
 <text x="3.175" y="1.27" size="1.27" layer="21" align="center-right">HV</text>
-<pad name="J2.6" x="5.08" y="-6.35" drill="1"/>
+<pad name="J2.6" x="5.08" y="-6.35" drill="0.8128" diameter="1.9304" shape="square"/>
 <text x="0" y="-1.27" size="1.27" layer="21" align="center">GND</text>
 <text x="3.175" y="-3.81" size="1.016" layer="21" align="center-right">HV3</text>
 <text x="3.175" y="-6.35" size="1.016" layer="21" align="center-right">HV4</text>
-<pad name="J1.1" x="-5.08" y="6.35" drill="1" shape="square"/>
-<pad name="J1.2" x="-5.08" y="3.81" drill="1"/>
-<pad name="J1.3" x="-5.08" y="1.27" drill="1"/>
-<pad name="J1.4" x="-5.08" y="-1.27" drill="1"/>
-<pad name="J1.5" x="-5.08" y="-3.81" drill="1"/>
-<pad name="J1.6" x="-5.08" y="-6.35" drill="1"/>
+<pad name="J1.1" x="-5.08" y="6.35" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="J1.2" x="-5.08" y="3.81" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="J1.3" x="-5.08" y="1.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="J1.4" x="-5.08" y="-1.27" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="J1.5" x="-5.08" y="-3.81" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="J1.6" x="-5.08" y="-6.35" drill="0.8128" diameter="1.9304" shape="square"/>
 <wire x1="6.35" y1="6.985" x2="5.715" y2="7.62" width="0.127" layer="21"/>
 <wire x1="4.445" y1="7.62" x2="3.81" y2="6.985" width="0.127" layer="21"/>
 <wire x1="3.81" y1="6.985" x2="3.81" y2="5.715" width="0.127" layer="21"/>
@@ -655,36 +498,36 @@ Comments, suggestions and bug reports please send to: &lt;b&gt;&lt;a href="mailt
 
 &lt;a href="http://www.gravitech.us/arna30wiatp.html"&gt;Gravitech Arduino Nano V3.0&lt;/a&gt;&lt;/p&gt;</description>
 <hole x="-22.86" y="-7.62" drill="1.778"/>
-<pad name="1" x="-20.32" y="-7.62" drill="0.8" shape="square"/>
-<pad name="2" x="-17.78" y="-7.62" drill="0.8"/>
-<pad name="3" x="-15.24" y="-7.62" drill="0.8"/>
-<pad name="4" x="-12.7" y="-7.62" drill="0.8"/>
-<pad name="5" x="-10.16" y="-7.62" drill="0.8"/>
-<pad name="6" x="-7.62" y="-7.62" drill="0.8"/>
-<pad name="7" x="-5.08" y="-7.62" drill="0.8"/>
-<pad name="8" x="-2.54" y="-7.62" drill="0.8"/>
-<pad name="9" x="0" y="-7.62" drill="0.8"/>
-<pad name="10" x="2.54" y="-7.62" drill="0.8"/>
-<pad name="11" x="5.08" y="-7.62" drill="0.8"/>
-<pad name="12" x="7.62" y="-7.62" drill="0.8"/>
-<pad name="13" x="10.16" y="-7.62" drill="0.8"/>
-<pad name="14" x="12.7" y="-7.62" drill="0.8"/>
-<pad name="15" x="15.24" y="-7.62" drill="0.8"/>
-<pad name="16" x="15.24" y="7.62" drill="0.8"/>
-<pad name="17" x="12.7" y="7.62" drill="0.8"/>
-<pad name="18" x="10.16" y="7.62" drill="0.8"/>
-<pad name="19" x="7.62" y="7.62" drill="0.8"/>
-<pad name="20" x="5.08" y="7.62" drill="0.8"/>
-<pad name="21" x="2.54" y="7.62" drill="0.8"/>
-<pad name="22" x="0" y="7.62" drill="0.8"/>
-<pad name="23" x="-2.54" y="7.62" drill="0.8"/>
-<pad name="24" x="-5.08" y="7.62" drill="0.8"/>
-<pad name="25" x="-7.62" y="7.62" drill="0.8"/>
-<pad name="26" x="-10.16" y="7.62" drill="0.8"/>
-<pad name="27" x="-12.7" y="7.62" drill="0.8"/>
-<pad name="28" x="-15.24" y="7.62" drill="0.8"/>
-<pad name="29" x="-17.78" y="7.62" drill="0.8"/>
-<pad name="30" x="-20.32" y="7.62" drill="0.8"/>
+<pad name="1" x="-20.32" y="-7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="2" x="-17.78" y="-7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="3" x="-15.24" y="-7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="4" x="-12.7" y="-7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="5" x="-10.16" y="-7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="6" x="-7.62" y="-7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="7" x="-5.08" y="-7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="8" x="-2.54" y="-7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="9" x="0" y="-7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="10" x="2.54" y="-7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="11" x="5.08" y="-7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="12" x="7.62" y="-7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="13" x="10.16" y="-7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="14" x="12.7" y="-7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="15" x="15.24" y="-7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="16" x="15.24" y="7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="17" x="12.7" y="7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="18" x="10.16" y="7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="19" x="7.62" y="7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="20" x="5.08" y="7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="21" x="2.54" y="7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="22" x="0" y="7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="23" x="-2.54" y="7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="24" x="-5.08" y="7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="25" x="-7.62" y="7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="26" x="-10.16" y="7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="27" x="-12.7" y="7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="28" x="-15.24" y="7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="29" x="-17.78" y="7.62" drill="0.8128" diameter="1.9304" shape="square"/>
+<pad name="30" x="-20.32" y="7.62" drill="0.8128" diameter="1.9304" shape="square"/>
 <hole x="-22.86" y="7.62" drill="1.778"/>
 <hole x="17.78" y="7.62" drill="1.778"/>
 <hole x="17.78" y="-7.62" drill="1.778"/>
@@ -703,20 +546,7 @@ Comments, suggestions and bug reports please send to: &lt;b&gt;&lt;a href="mailt
 <text x="-17.78" y="0" size="1.27" layer="21" font="vector">&gt;NAME</text>
 <text x="-17.78" y="-2.54" size="1.27" layer="21" font="vector">&gt;VALUE</text>
 <circle x="0" y="0" radius="1.79605" width="0.127" layer="21"/>
-<text x="3.81" y="-1.27" size="0.8128" layer="21" font="vector" rot="R90">Reset</text>
 <text x="-20.32" y="-6.35" size="1.016" layer="21" font="vector">1</text>
-<text x="-17.78" y="3.81" size="0.6096" layer="21" font="vector" rot="R180">Mini-B USB</text>
-<wire x1="19.05" y1="3.81" x2="13.97" y2="3.81" width="0.127" layer="21"/>
-<wire x1="13.97" y1="3.81" x2="13.97" y2="-3.81" width="0.127" layer="21"/>
-<wire x1="13.97" y1="-3.81" x2="19.05" y2="-3.81" width="0.127" layer="21"/>
-<circle x="17.78" y="-2.54" radius="0.8" width="0.127" layer="21"/>
-<circle x="17.78" y="0" radius="0.8" width="0.127" layer="21"/>
-<circle x="17.78" y="2.54" radius="0.8" width="0.127" layer="21"/>
-<circle x="15.24" y="2.54" radius="0.8" width="0.127" layer="21"/>
-<circle x="17.78" y="0" radius="0.8" width="0.127" layer="21"/>
-<circle x="15.24" y="0" radius="0.8" width="0.127" layer="21"/>
-<circle x="15.24" y="-2.54" radius="0.8" width="0.127" layer="21"/>
-<text x="12.7" y="1.27" size="0.8128" layer="21" font="vector" rot="SR270">ICSP</text>
 </package>
 </packages>
 <symbols>
@@ -5495,6 +5325,92 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="con-wago-500">
+<description>&lt;b&gt;Wago Screw Clamps&lt;/b&gt;&lt;p&gt;
+Grid 5.00 mm&lt;p&gt;
+&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
+<packages>
+<package name="W237-102" urn="urn:adsk.eagle:footprint:10676/1" locally_modified="yes">
+<description>&lt;b&gt;WAGO SCREW CLAMP&lt;/b&gt;</description>
+<wire x1="-3.491" y1="-2.286" x2="-1.484" y2="-0.279" width="0.254" layer="51"/>
+<wire x1="1.488" y1="-2.261" x2="3.469" y2="-0.254" width="0.254" layer="51"/>
+<wire x1="-4.989" y1="-5.461" x2="4.993" y2="-5.461" width="0.1524" layer="21"/>
+<wire x1="4.993" y1="3.734" x2="4.993" y2="3.531" width="0.1524" layer="21"/>
+<wire x1="4.993" y1="3.734" x2="-4.989" y2="3.734" width="0.1524" layer="21"/>
+<wire x1="-4.989" y1="-5.461" x2="-4.989" y2="-3.073" width="0.1524" layer="21"/>
+<wire x1="-4.989" y1="-3.073" x2="-3.389" y2="-3.073" width="0.1524" layer="21"/>
+<wire x1="-3.389" y1="-3.073" x2="-1.611" y2="-3.073" width="0.1524" layer="51"/>
+<wire x1="-1.611" y1="-3.073" x2="1.615" y2="-3.073" width="0.1524" layer="21"/>
+<wire x1="3.393" y1="-3.073" x2="4.993" y2="-3.073" width="0.1524" layer="21"/>
+<wire x1="-4.989" y1="-3.073" x2="-4.989" y2="3.531" width="0.1524" layer="21"/>
+<wire x1="4.993" y1="-3.073" x2="4.993" y2="-5.461" width="0.1524" layer="21"/>
+<wire x1="-4.989" y1="3.531" x2="4.993" y2="3.531" width="0.1524" layer="21"/>
+<wire x1="-4.989" y1="3.531" x2="-4.989" y2="3.734" width="0.1524" layer="21"/>
+<wire x1="4.993" y1="3.531" x2="4.993" y2="-3.073" width="0.1524" layer="21"/>
+<wire x1="1.615" y1="-3.073" x2="3.393" y2="-3.073" width="0.1524" layer="51"/>
+<circle x="-2.5" y="-1.27" radius="1.4986" width="0.1524" layer="51"/>
+<circle x="-2.5" y="2.2098" radius="0.508" width="0.1524" layer="21"/>
+<circle x="2.5038" y="-1.27" radius="1.4986" width="0.1524" layer="51"/>
+<circle x="2.5038" y="2.2098" radius="0.508" width="0.1524" layer="21"/>
+<pad name="1" x="-2.5" y="-1.27" drill="1.27" diameter="2.032" shape="long" rot="R90"/>
+<pad name="2" x="2.5" y="-1.27" drill="1.27" diameter="2.032" shape="long" rot="R90"/>
+<text x="-5.04" y="3.81" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-3.8462" y="-5.0038" size="1.27" layer="25" ratio="10">&gt;NAME</text>
+<text x="-3.088" y="1.905" size="1.27" layer="21" ratio="10" rot="R180">1</text>
+<text x="2.119" y="1.905" size="1.27" layer="21" ratio="10" rot="R180">2</text>
+</package>
+</packages>
+<packages3d>
+<package3d name="W237-102" urn="urn:adsk.eagle:package:10688/1" type="box">
+<description>WAGO SCREW CLAMP</description>
+<packageinstances>
+<packageinstance name="W237-102"/>
+</packageinstances>
+</package3d>
+</packages3d>
+<symbols>
+<symbol name="KL">
+<circle x="1.27" y="0" radius="1.27" width="0.254" layer="94"/>
+<text x="0" y="0.889" size="1.778" layer="95" rot="R180">&gt;NAME</text>
+<pin name="KL" x="5.08" y="0" visible="off" length="short" direction="pas" rot="R180"/>
+</symbol>
+<symbol name="KL+V">
+<circle x="1.27" y="0" radius="1.27" width="0.254" layer="94"/>
+<text x="-2.54" y="-3.683" size="1.778" layer="96">&gt;VALUE</text>
+<text x="0" y="0.889" size="1.778" layer="95" rot="R180">&gt;NAME</text>
+<pin name="KL" x="5.08" y="0" visible="off" length="short" direction="pas" rot="R180"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="W237-102" prefix="X" uservalue="yes">
+<description>&lt;b&gt;WAGO SCREW CLAMP&lt;/b&gt;</description>
+<gates>
+<gate name="-1" symbol="KL" x="0" y="5.08" addlevel="always"/>
+<gate name="-2" symbol="KL+V" x="0" y="0" addlevel="always"/>
+</gates>
+<devices>
+<device name="" package="W237-102">
+<connects>
+<connect gate="-1" pin="KL" pad="1"/>
+<connect gate="-2" pin="KL" pad="2"/>
+</connects>
+<package3dinstances>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:10688/1"/>
+</package3dinstances>
+<technologies>
+<technology name="">
+<attribute name="MF" value="" constant="no"/>
+<attribute name="MPN" value="237-102" constant="no"/>
+<attribute name="OC_FARNELL" value="unknown" constant="no"/>
+<attribute name="OC_NEWARK" value="70K9898" constant="no"/>
+<attribute name="POPULARITY" value="32" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -5504,16 +5420,21 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <class number="0" name="default" width="0" drill="0">
 </class>
 </classes>
+<groups>
+<schematic_group name="DS18B20"/>
+<schematic_group name="STDS"/>
+</groups>
 <parts>
 <part name="U$1" library="ESP32-DEVKITV1" deviceset="ESP32DEVKITV1" device=""/>
 <part name="HLK1" library="HLK-PM01" deviceset="HLK-PM01" device="3W"/>
-<part name="220V" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
+<part name="220V" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 <part name="U$2" library="diy-modules" deviceset="LEVEL-SHIFTER-4CH" device=""/>
 <part name="ARDUINO_NANO1" library="ArduinoNanoV30" deviceset="ARDUINO_NANO" device=""/>
-<part name="TDS" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
-<part name="DS18B20" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-103" device="" package3d_urn="urn:adsk.eagle:package:10691/1"/>
+<part name="TDS" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 <part name="R3" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="0204/7" package3d_urn="urn:adsk.eagle:package:23498/2" value="4.7K"/>
 <part name="R4" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="0204/7" package3d_urn="urn:adsk.eagle:package:23498/2" value="1K"/>
+<part name="P_STEMP" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
+<part name="D_STEMP" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 </parts>
 <sheets>
 <sheet>
@@ -5541,30 +5462,34 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <attribute name="NAME" x="-7.62" y="-7.62" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="-7.62" y="-5.08" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="TDS" gate="-1" x="20.32" y="-17.78" smashed="yes">
-<attribute name="NAME" x="20.32" y="-16.891" size="1.778" layer="95" rot="R180"/>
+<instance part="TDS" gate="-1" x="22.86" y="-22.86" smashed="yes" grouprefs="STDS">
+<attribute name="NAME" x="22.86" y="-21.971" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="TDS" gate="-2" x="20.32" y="-22.86" smashed="yes">
-<attribute name="VALUE" x="17.78" y="-26.543" size="1.778" layer="96"/>
-<attribute name="NAME" x="20.32" y="-21.971" size="1.778" layer="95" rot="R180"/>
+<instance part="TDS" gate="-2" x="22.86" y="-27.94" smashed="yes" grouprefs="STDS">
+<attribute name="VALUE" x="20.32" y="-31.623" size="1.778" layer="96"/>
+<attribute name="NAME" x="22.86" y="-27.051" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="DS18B20" gate="-1" x="22.86" y="-35.56" smashed="yes">
-<attribute name="NAME" x="22.86" y="-34.671" size="1.778" layer="95" rot="R180"/>
+<instance part="R3" gate="G$1" x="22.86" y="-43.18" smashed="yes" grouprefs="DS18B20">
+<attribute name="NAME" x="19.05" y="-41.6814" size="1.778" layer="95"/>
+<attribute name="VALUE" x="19.05" y="-46.482" size="1.778" layer="96"/>
 </instance>
-<instance part="DS18B20" gate="-2" x="22.86" y="-40.64" smashed="yes">
-<attribute name="NAME" x="22.86" y="-39.751" size="1.778" layer="95" rot="R180"/>
+<instance part="R4" gate="G$1" x="22.86" y="-15.24" smashed="yes" grouprefs="STDS">
+<attribute name="NAME" x="19.05" y="-13.7414" size="1.778" layer="95"/>
+<attribute name="VALUE" x="19.05" y="-18.542" size="1.778" layer="96"/>
 </instance>
-<instance part="DS18B20" gate="-3" x="22.86" y="-45.72" smashed="yes">
-<attribute name="VALUE" x="20.32" y="-49.403" size="1.778" layer="96"/>
-<attribute name="NAME" x="22.86" y="-44.831" size="1.778" layer="95" rot="R180"/>
+<instance part="P_STEMP" gate="-1" x="22.86" y="-50.8" smashed="yes" grouprefs="DS18B20">
+<attribute name="NAME" x="22.86" y="-49.911" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="R3" gate="G$1" x="25.4" y="-55.88" smashed="yes">
-<attribute name="NAME" x="21.59" y="-54.3814" size="1.778" layer="95"/>
-<attribute name="VALUE" x="21.59" y="-59.182" size="1.778" layer="96"/>
+<instance part="P_STEMP" gate="-2" x="22.86" y="-55.88" smashed="yes" grouprefs="DS18B20">
+<attribute name="VALUE" x="20.32" y="-59.563" size="1.778" layer="96"/>
+<attribute name="NAME" x="22.86" y="-54.991" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="R4" gate="G$1" x="20.32" y="-2.54" smashed="yes">
-<attribute name="NAME" x="16.51" y="-1.0414" size="1.778" layer="95"/>
-<attribute name="VALUE" x="16.51" y="-5.842" size="1.778" layer="96"/>
+<instance part="D_STEMP" gate="-1" x="22.86" y="-60.96" smashed="yes" grouprefs="DS18B20">
+<attribute name="NAME" x="22.86" y="-60.071" size="1.778" layer="95" rot="R180"/>
+</instance>
+<instance part="D_STEMP" gate="-2" x="22.86" y="-66.04" smashed="yes" grouprefs="DS18B20">
+<attribute name="VALUE" x="20.32" y="-69.723" size="1.778" layer="96"/>
+<attribute name="NAME" x="22.86" y="-65.151" size="1.778" layer="95" rot="R180"/>
 </instance>
 </instances>
 <busses>
@@ -5602,9 +5527,9 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <label x="0" y="-43.18" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="DS18B20" gate="-1" pin="KL"/>
-<wire x1="27.94" y1="-35.56" x2="30.48" y2="-35.56" width="0.1524" layer="91"/>
-<label x="30.48" y="-35.56" size="1.27" layer="95" xref="yes"/>
+<pinref part="P_STEMP" gate="-1" pin="KL"/>
+<wire x1="27.94" y1="-50.8" x2="30.48" y2="-50.8" width="0.1524" layer="91" grouprefs="DS18B20"/>
+<label x="30.48" y="-50.8" size="1.27" layer="95" xref="yes" grouprefs="DS18B20"/>
 </segment>
 </net>
 <net name="5V" class="0">
@@ -5629,14 +5554,14 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <label x="-60.96" y="-35.56" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="DS18B20" gate="-3" pin="KL"/>
-<wire x1="27.94" y1="-45.72" x2="30.48" y2="-45.72" width="0.1524" layer="91"/>
-<label x="30.48" y="-45.72" size="1.27" layer="95" xref="yes"/>
+<pinref part="R3" gate="G$1" pin="1"/>
+<wire x1="17.78" y1="-43.18" x2="15.24" y2="-43.18" width="0.1524" layer="91" grouprefs="DS18B20"/>
+<label x="15.24" y="-43.18" size="1.27" layer="95" rot="R180" xref="yes" grouprefs="DS18B20"/>
 </segment>
 <segment>
-<pinref part="R3" gate="G$1" pin="1"/>
-<wire x1="20.32" y1="-55.88" x2="17.78" y2="-55.88" width="0.1524" layer="91"/>
-<label x="17.78" y="-55.88" size="1.27" layer="95" rot="R180" xref="yes"/>
+<pinref part="P_STEMP" gate="-2" pin="KL"/>
+<wire x1="27.94" y1="-55.88" x2="30.48" y2="-55.88" width="0.1524" layer="91" grouprefs="DS18B20"/>
+<label x="30.48" y="-55.88" size="1.27" layer="95" xref="yes" grouprefs="DS18B20"/>
 </segment>
 </net>
 <net name="AC1" class="0">
@@ -5726,8 +5651,8 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <net name="A0" class="0">
 <segment>
 <pinref part="TDS" gate="-1" pin="KL"/>
-<wire x1="25.4" y1="-17.78" x2="27.94" y2="-17.78" width="0.1524" layer="91"/>
-<label x="27.94" y="-17.78" size="1.27" layer="95" xref="yes"/>
+<wire x1="27.94" y1="-22.86" x2="30.48" y2="-22.86" width="0.1524" layer="91" grouprefs="STDS"/>
+<label x="30.48" y="-22.86" size="1.27" layer="95" xref="yes" grouprefs="STDS"/>
 </segment>
 <segment>
 <pinref part="ARDUINO_NANO1" gate="G$1" pin="A0"/>
@@ -5736,15 +5661,15 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </segment>
 <segment>
 <pinref part="R4" gate="G$1" pin="1"/>
-<wire x1="15.24" y1="-2.54" x2="12.7" y2="-2.54" width="0.1524" layer="91"/>
-<label x="12.7" y="-2.54" size="1.27" layer="95" rot="R180" xref="yes"/>
+<wire x1="17.78" y1="-15.24" x2="15.24" y2="-15.24" width="0.1524" layer="91" grouprefs="STDS"/>
+<label x="15.24" y="-15.24" size="1.27" layer="95" rot="R180" xref="yes" grouprefs="STDS"/>
 </segment>
 </net>
 <net name="A2" class="0">
 <segment>
 <pinref part="TDS" gate="-2" pin="KL"/>
-<wire x1="25.4" y1="-22.86" x2="27.94" y2="-22.86" width="0.1524" layer="91"/>
-<label x="27.94" y="-22.86" size="1.27" layer="95" xref="yes"/>
+<wire x1="27.94" y1="-27.94" x2="30.48" y2="-27.94" width="0.1524" layer="91" grouprefs="STDS"/>
+<label x="30.48" y="-27.94" size="1.27" layer="95" xref="yes" grouprefs="STDS"/>
 </segment>
 <segment>
 <pinref part="ARDUINO_NANO1" gate="G$1" pin="A2"/>
@@ -5754,19 +5679,24 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </net>
 <net name="D2" class="0">
 <segment>
-<pinref part="DS18B20" gate="-2" pin="KL"/>
-<wire x1="27.94" y1="-40.64" x2="30.48" y2="-40.64" width="0.1524" layer="91"/>
-<label x="30.48" y="-40.64" size="1.27" layer="95" xref="yes"/>
-</segment>
-<segment>
 <pinref part="ARDUINO_NANO1" gate="G$1" pin="D2"/>
 <wire x1="-2.54" y1="-40.64" x2="0" y2="-40.64" width="0.1524" layer="91"/>
 <label x="0" y="-40.64" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
 <pinref part="R3" gate="G$1" pin="2"/>
-<wire x1="30.48" y1="-55.88" x2="33.02" y2="-55.88" width="0.1524" layer="91"/>
-<label x="33.02" y="-55.88" size="1.27" layer="95" xref="yes"/>
+<wire x1="27.94" y1="-43.18" x2="30.48" y2="-43.18" width="0.1524" layer="91" grouprefs="DS18B20"/>
+<label x="30.48" y="-43.18" size="1.27" layer="95" xref="yes" grouprefs="DS18B20"/>
+</segment>
+<segment>
+<pinref part="D_STEMP" gate="-1" pin="KL"/>
+<wire x1="27.94" y1="-60.96" x2="30.48" y2="-60.96" width="0.1524" layer="91" grouprefs="DS18B20"/>
+<label x="30.48" y="-60.96" size="1.27" layer="95" xref="yes" grouprefs="DS18B20"/>
+</segment>
+<segment>
+<pinref part="D_STEMP" gate="-2" pin="KL"/>
+<wire x1="27.94" y1="-66.04" x2="30.48" y2="-66.04" width="0.1524" layer="91" grouprefs="DS18B20"/>
+<label x="30.48" y="-66.04" size="1.27" layer="95" xref="yes" grouprefs="DS18B20"/>
 </segment>
 </net>
 <net name="A1" class="0">
@@ -5777,8 +5707,8 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </segment>
 <segment>
 <pinref part="R4" gate="G$1" pin="2"/>
-<wire x1="25.4" y1="-2.54" x2="27.94" y2="-2.54" width="0.1524" layer="91"/>
-<label x="27.94" y="-2.54" size="1.27" layer="95" xref="yes"/>
+<wire x1="27.94" y1="-15.24" x2="30.48" y2="-15.24" width="0.1524" layer="91" grouprefs="STDS"/>
+<label x="30.48" y="-15.24" size="1.27" layer="95" xref="yes" grouprefs="STDS"/>
 </segment>
 </net>
 </nets>
@@ -5805,6 +5735,11 @@ will not be understood (or retained) with this version.
 Since Version 8.3, EAGLE supports the association of 3D packages
 with devices in libraries, schematics, and board files. Those 3D
 packages will not be understood (or retained) with this version.
+</note>
+<note version="9.5" severity="warning">
+Since Version 9.5, EAGLE supports persistent groups with
+schematics, and board files. Those persistent groups
+will not be understood (or retained) with this version.
 </note>
 <note version="8.4" severity="warning">
 Since Version 8.4, EAGLE supports properties for SPICE simulation. 
