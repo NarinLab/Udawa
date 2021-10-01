@@ -265,6 +265,7 @@ UsedLibraryUrn="urn:adsk.eagle:library:196"
 UsedLibraryUrn="urn:adsk.eagle:library:197"
 UsedLibraryUrn="urn:adsk.eagle:library:198"
 UsedLibraryUrn="urn:adsk.eagle:library:199"
+<<<<<<< HEAD
 UsedLibrary="C:/Users/Arta/Documents/GitHub/Udawa/Hardware/lib/ESP32-DEVKITV1.lbr"
 UsedLibrary="C:/Users/Arta/Documents/GitHub/Udawa/Hardware/lib/HLK-PM01.lbr"
 UsedLibrary="C:/Users/Arta/Documents/GitHub/Udawa/Hardware/lib/PushOnTerminal.lbr"
@@ -315,10 +316,17 @@ PadsSameType=0
 Layer=1
 
 [Win_2]
+=======
+
+[Win_1]
+>>>>>>> f40e420f1abc972c27c6b89340498bb3751cd60d
 Type="Control Panel"
 Number=0
 
 [Desktop]
 Screen="1366 768"
 Window="Win_1"
+<<<<<<< HEAD
 Window="Win_2"
+=======
+>>>>>>> f40e420f1abc972c27c6b89340498bb3751cd60d
