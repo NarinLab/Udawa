@@ -2215,9 +2215,6 @@ Wickmann</description>
 <class number="0" name="default" width="0" drill="0">
 </class>
 </classes>
-<groups>
-<schematic_group name="RELAY_CONTROL"/>
-</groups>
 <parts>
 <part name="U$1" library="ESP32-DEVKITV1" deviceset="ESP32DEVKITV1" device=""/>
 <part name="HLK1" library="HLK-PM01" deviceset="HLK-PM01" device="3W"/>
@@ -2239,6 +2236,7 @@ Wickmann</description>
 <part name="CH3" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 <part name="CH4" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 <part name="MAIN_IN" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
+<part name="RELAY_PWR" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 </parts>
 <sheets>
 <sheet>
@@ -2258,17 +2256,17 @@ Wickmann</description>
 <attribute name="VALUE" x="-45.72" y="16.637" size="1.778" layer="96"/>
 <attribute name="NAME" x="-43.18" y="21.209" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="RELAY1" gate="-1" x="86.36" y="-15.24" smashed="yes" grouprefs="RELAY_CONTROL">
+<instance part="RELAY1" gate="-1" x="86.36" y="-15.24" smashed="yes">
 <attribute name="NAME" x="86.36" y="-14.351" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="RELAY1" gate="-2" x="86.36" y="-20.32" smashed="yes" grouprefs="RELAY_CONTROL">
+<instance part="RELAY1" gate="-2" x="86.36" y="-20.32" smashed="yes">
 <attribute name="VALUE" x="83.82" y="-24.003" size="1.778" layer="96"/>
 <attribute name="NAME" x="86.36" y="-19.431" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="RELAY2" gate="-1" x="86.36" y="-5.08" smashed="yes" grouprefs="RELAY_CONTROL">
+<instance part="RELAY2" gate="-1" x="86.36" y="-5.08" smashed="yes">
 <attribute name="NAME" x="86.36" y="-4.191" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="RELAY2" gate="-2" x="86.36" y="-10.16" smashed="yes" grouprefs="RELAY_CONTROL">
+<instance part="RELAY2" gate="-2" x="86.36" y="-10.16" smashed="yes">
 <attribute name="VALUE" x="83.82" y="-13.843" size="1.778" layer="96"/>
 <attribute name="NAME" x="86.36" y="-9.271" size="1.778" layer="95" rot="R180"/>
 </instance>
@@ -2288,17 +2286,17 @@ Wickmann</description>
 <attribute name="NAME" x="-13.97" y="-62.103" size="1.778" layer="95"/>
 <attribute name="VALUE" x="-13.97" y="-66.421" size="1.778" layer="96"/>
 </instance>
-<instance part="RELAY3" gate="-1" x="86.36" y="5.08" smashed="yes" grouprefs="RELAY_CONTROL">
+<instance part="RELAY3" gate="-1" x="86.36" y="5.08" smashed="yes">
 <attribute name="NAME" x="86.36" y="5.969" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="RELAY3" gate="-2" x="86.36" y="0" smashed="yes" grouprefs="RELAY_CONTROL">
+<instance part="RELAY3" gate="-2" x="86.36" y="0" smashed="yes">
 <attribute name="VALUE" x="83.82" y="-3.683" size="1.778" layer="96"/>
 <attribute name="NAME" x="86.36" y="0.889" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="RELAY4" gate="-1" x="86.36" y="15.24" smashed="yes" grouprefs="RELAY_CONTROL">
+<instance part="RELAY4" gate="-1" x="86.36" y="15.24" smashed="yes">
 <attribute name="NAME" x="86.36" y="16.129" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="RELAY4" gate="-2" x="86.36" y="10.16" smashed="yes" grouprefs="RELAY_CONTROL">
+<instance part="RELAY4" gate="-2" x="86.36" y="10.16" smashed="yes">
 <attribute name="VALUE" x="83.82" y="6.477" size="1.778" layer="96"/>
 <attribute name="NAME" x="86.36" y="11.049" size="1.778" layer="95" rot="R180"/>
 </instance>
@@ -2365,6 +2363,13 @@ Wickmann</description>
 <attribute name="VALUE" x="-55.88" y="-24.003" size="1.778" layer="96"/>
 <attribute name="NAME" x="-53.34" y="-19.431" size="1.778" layer="95" rot="R180"/>
 </instance>
+<instance part="RELAY_PWR" gate="-1" x="86.36" y="-27.94" smashed="yes">
+<attribute name="NAME" x="86.36" y="-27.051" size="1.778" layer="95" rot="R180"/>
+</instance>
+<instance part="RELAY_PWR" gate="-2" x="86.36" y="-33.02" smashed="yes">
+<attribute name="VALUE" x="83.82" y="-36.703" size="1.778" layer="96"/>
+<attribute name="NAME" x="86.36" y="-32.131" size="1.778" layer="95" rot="R180"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -2382,23 +2387,28 @@ Wickmann</description>
 </segment>
 <segment>
 <pinref part="RELAY1" gate="-1" pin="KL"/>
-<wire x1="91.44" y1="-15.24" x2="93.98" y2="-15.24" width="0.1524" layer="91" grouprefs="RELAY_CONTROL"/>
-<label x="93.98" y="-15.24" size="1.27" layer="95" xref="yes" grouprefs="RELAY_CONTROL"/>
+<wire x1="91.44" y1="-15.24" x2="93.98" y2="-15.24" width="0.1524" layer="91"/>
+<label x="93.98" y="-15.24" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
 <pinref part="RELAY2" gate="-1" pin="KL"/>
-<wire x1="91.44" y1="-5.08" x2="93.98" y2="-5.08" width="0.1524" layer="91" grouprefs="RELAY_CONTROL"/>
-<label x="93.98" y="-5.08" size="1.27" layer="95" xref="yes" grouprefs="RELAY_CONTROL"/>
+<wire x1="91.44" y1="-5.08" x2="93.98" y2="-5.08" width="0.1524" layer="91"/>
+<label x="93.98" y="-5.08" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
 <pinref part="RELAY3" gate="-1" pin="KL"/>
-<wire x1="91.44" y1="5.08" x2="93.98" y2="5.08" width="0.1524" layer="91" grouprefs="RELAY_CONTROL"/>
-<label x="93.98" y="5.08" size="1.27" layer="95" xref="yes" grouprefs="RELAY_CONTROL"/>
+<wire x1="91.44" y1="5.08" x2="93.98" y2="5.08" width="0.1524" layer="91"/>
+<label x="93.98" y="5.08" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
 <pinref part="RELAY4" gate="-1" pin="KL"/>
-<wire x1="91.44" y1="15.24" x2="93.98" y2="15.24" width="0.1524" layer="91" grouprefs="RELAY_CONTROL"/>
-<label x="93.98" y="15.24" size="1.27" layer="95" xref="yes" grouprefs="RELAY_CONTROL"/>
+<wire x1="91.44" y1="15.24" x2="93.98" y2="15.24" width="0.1524" layer="91"/>
+<label x="93.98" y="15.24" size="1.27" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="RELAY_PWR" gate="-1" pin="KL"/>
+<wire x1="91.44" y1="-27.94" x2="93.98" y2="-27.94" width="0.1524" layer="91"/>
+<label x="93.98" y="-27.94" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="5V" class="0">
@@ -2411,6 +2421,11 @@ Wickmann</description>
 <pinref part="U$1" gate="G$1" pin="VIN"/>
 <wire x1="22.86" y1="15.24" x2="22.86" y2="17.78" width="0.1524" layer="91"/>
 <label x="22.86" y="17.78" size="1.524" layer="95" rot="R90" xref="yes"/>
+</segment>
+<segment>
+<pinref part="RELAY_PWR" gate="-2" pin="KL"/>
+<wire x1="91.44" y1="-33.02" x2="93.98" y2="-33.02" width="0.1524" layer="91"/>
+<label x="93.98" y="-33.02" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="AC1" class="0">
@@ -2445,8 +2460,8 @@ Wickmann</description>
 </segment>
 <segment>
 <pinref part="RELAY4" gate="-2" pin="KL"/>
-<wire x1="91.44" y1="10.16" x2="93.98" y2="10.16" width="0.1524" layer="91" grouprefs="RELAY_CONTROL"/>
-<label x="93.98" y="10.16" size="1.27" layer="95" xref="yes" grouprefs="RELAY_CONTROL"/>
+<wire x1="91.44" y1="10.16" x2="93.98" y2="10.16" width="0.1524" layer="91"/>
+<label x="93.98" y="10.16" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="C3" class="0">
@@ -2457,8 +2472,8 @@ Wickmann</description>
 </segment>
 <segment>
 <pinref part="RELAY3" gate="-2" pin="KL"/>
-<wire x1="91.44" y1="0" x2="93.98" y2="0" width="0.1524" layer="91" grouprefs="RELAY_CONTROL"/>
-<label x="93.98" y="0" size="1.27" layer="95" xref="yes" grouprefs="RELAY_CONTROL"/>
+<wire x1="91.44" y1="0" x2="93.98" y2="0" width="0.1524" layer="91"/>
+<label x="93.98" y="0" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="C2" class="0">
@@ -2469,8 +2484,8 @@ Wickmann</description>
 </segment>
 <segment>
 <pinref part="RELAY2" gate="-2" pin="KL"/>
-<wire x1="91.44" y1="-10.16" x2="93.98" y2="-10.16" width="0.1524" layer="91" grouprefs="RELAY_CONTROL"/>
-<label x="93.98" y="-10.16" size="1.27" layer="95" xref="yes" grouprefs="RELAY_CONTROL"/>
+<wire x1="91.44" y1="-10.16" x2="93.98" y2="-10.16" width="0.1524" layer="91"/>
+<label x="93.98" y="-10.16" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="C1" class="0">
@@ -2481,8 +2496,8 @@ Wickmann</description>
 </segment>
 <segment>
 <pinref part="RELAY1" gate="-2" pin="KL"/>
-<wire x1="91.44" y1="-20.32" x2="93.98" y2="-20.32" width="0.1524" layer="91" grouprefs="RELAY_CONTROL"/>
-<label x="93.98" y="-20.32" size="1.27" layer="95" xref="yes" grouprefs="RELAY_CONTROL"/>
+<wire x1="91.44" y1="-20.32" x2="93.98" y2="-20.32" width="0.1524" layer="91"/>
+<label x="93.98" y="-20.32" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="GND2" class="0">
@@ -2664,11 +2679,6 @@ will not be understood (or retained) with this version.
 Since Version 8.3, EAGLE supports the association of 3D packages
 with devices in libraries, schematics, and board files. Those 3D
 packages will not be understood (or retained) with this version.
-</note>
-<note version="9.5" severity="warning">
-Since Version 9.5, EAGLE supports persistent groups with
-schematics, and board files. Those persistent groups
-will not be understood (or retained) with this version.
 </note>
 </compatibility>
 </eagle>
