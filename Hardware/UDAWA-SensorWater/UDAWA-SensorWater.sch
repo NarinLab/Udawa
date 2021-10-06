@@ -5427,7 +5427,7 @@ Grid 5.00 mm&lt;p&gt;
 <parts>
 <part name="U$1" library="ESP32-DEVKITV1" deviceset="ESP32DEVKITV1" device=""/>
 <part name="HLK1" library="HLK-PM01" deviceset="HLK-PM01" device="3W"/>
-<part name="220V" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
+<part name="220V_IN" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 <part name="U$2" library="diy-modules" deviceset="LEVEL-SHIFTER-4CH" device=""/>
 <part name="ARDUINO_NANO1" library="ArduinoNanoV30" deviceset="ARDUINO_NANO" device=""/>
 <part name="TDS" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
@@ -5435,6 +5435,8 @@ Grid 5.00 mm&lt;p&gt;
 <part name="R4" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="0204/7" package3d_urn="urn:adsk.eagle:package:23498/2" value="1K"/>
 <part name="P_STEMP" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 <part name="D_STEMP" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
+<part name="PSU_5V" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
+<part name="MCU_PWR_IN" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 </parts>
 <sheets>
 <sheet>
@@ -5447,10 +5449,10 @@ Grid 5.00 mm&lt;p&gt;
 <instance part="HLK1" gate="G$1" x="-134.62" y="5.08" smashed="yes">
 <attribute name="NAME" x="-147.32" y="12.7" size="1.27" layer="94"/>
 </instance>
-<instance part="220V" gate="-1" x="-149.86" y="27.94" smashed="yes">
+<instance part="220V_IN" gate="-1" x="-149.86" y="27.94" smashed="yes">
 <attribute name="NAME" x="-149.86" y="28.829" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="220V" gate="-2" x="-149.86" y="22.86" smashed="yes">
+<instance part="220V_IN" gate="-2" x="-149.86" y="22.86" smashed="yes">
 <attribute name="VALUE" x="-152.4" y="19.177" size="1.778" layer="96"/>
 <attribute name="NAME" x="-149.86" y="23.749" size="1.778" layer="95" rot="R180"/>
 </instance>
@@ -5469,27 +5471,41 @@ Grid 5.00 mm&lt;p&gt;
 <attribute name="VALUE" x="20.32" y="-31.623" size="1.778" layer="96"/>
 <attribute name="NAME" x="22.86" y="-27.051" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="R3" gate="G$1" x="22.86" y="-43.18" smashed="yes" grouprefs="DS18B20">
-<attribute name="NAME" x="19.05" y="-41.6814" size="1.778" layer="95"/>
-<attribute name="VALUE" x="19.05" y="-46.482" size="1.778" layer="96"/>
+<instance part="R3" gate="G$1" x="30.48" y="-43.18" smashed="yes" grouprefs="DS18B20">
+<attribute name="NAME" x="26.67" y="-41.6814" size="1.778" layer="95"/>
+<attribute name="VALUE" x="26.67" y="-46.482" size="1.778" layer="96"/>
 </instance>
 <instance part="R4" gate="G$1" x="22.86" y="-15.24" smashed="yes" grouprefs="STDS">
 <attribute name="NAME" x="19.05" y="-13.7414" size="1.778" layer="95"/>
 <attribute name="VALUE" x="19.05" y="-18.542" size="1.778" layer="96"/>
 </instance>
-<instance part="P_STEMP" gate="-1" x="22.86" y="-50.8" smashed="yes" grouprefs="DS18B20">
-<attribute name="NAME" x="22.86" y="-49.911" size="1.778" layer="95" rot="R180"/>
+<instance part="P_STEMP" gate="-1" x="30.48" y="-50.8" smashed="yes" grouprefs="DS18B20">
+<attribute name="NAME" x="30.48" y="-49.911" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="P_STEMP" gate="-2" x="22.86" y="-55.88" smashed="yes" grouprefs="DS18B20">
-<attribute name="VALUE" x="20.32" y="-59.563" size="1.778" layer="96"/>
-<attribute name="NAME" x="22.86" y="-54.991" size="1.778" layer="95" rot="R180"/>
+<instance part="P_STEMP" gate="-2" x="30.48" y="-55.88" smashed="yes" grouprefs="DS18B20">
+<attribute name="VALUE" x="27.94" y="-59.563" size="1.778" layer="96"/>
+<attribute name="NAME" x="30.48" y="-54.991" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="D_STEMP" gate="-1" x="22.86" y="-60.96" smashed="yes" grouprefs="DS18B20">
-<attribute name="NAME" x="22.86" y="-60.071" size="1.778" layer="95" rot="R180"/>
+<instance part="D_STEMP" gate="-1" x="30.48" y="-60.96" smashed="yes" grouprefs="DS18B20">
+<attribute name="NAME" x="30.48" y="-60.071" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="D_STEMP" gate="-2" x="22.86" y="-66.04" smashed="yes" grouprefs="DS18B20">
-<attribute name="VALUE" x="20.32" y="-69.723" size="1.778" layer="96"/>
-<attribute name="NAME" x="22.86" y="-65.151" size="1.778" layer="95" rot="R180"/>
+<instance part="D_STEMP" gate="-2" x="30.48" y="-66.04" smashed="yes" grouprefs="DS18B20">
+<attribute name="VALUE" x="27.94" y="-69.723" size="1.778" layer="96"/>
+<attribute name="NAME" x="30.48" y="-65.151" size="1.778" layer="95" rot="R180"/>
+</instance>
+<instance part="PSU_5V" gate="-1" x="-86.36" y="15.24" smashed="yes">
+<attribute name="NAME" x="-86.36" y="16.129" size="1.778" layer="95" rot="R180"/>
+</instance>
+<instance part="PSU_5V" gate="-2" x="-86.36" y="10.16" smashed="yes">
+<attribute name="VALUE" x="-88.9" y="6.477" size="1.778" layer="96"/>
+<attribute name="NAME" x="-86.36" y="11.049" size="1.778" layer="95" rot="R180"/>
+</instance>
+<instance part="MCU_PWR_IN" gate="-1" x="-53.34" y="15.24" smashed="yes">
+<attribute name="NAME" x="-53.34" y="16.129" size="1.778" layer="95" rot="R180"/>
+</instance>
+<instance part="MCU_PWR_IN" gate="-2" x="-53.34" y="10.16" smashed="yes">
+<attribute name="VALUE" x="-55.88" y="6.477" size="1.778" layer="96"/>
+<attribute name="NAME" x="-53.34" y="11.049" size="1.778" layer="95" rot="R180"/>
 </instance>
 </instances>
 <busses>
@@ -5528,8 +5544,18 @@ Grid 5.00 mm&lt;p&gt;
 </segment>
 <segment>
 <pinref part="P_STEMP" gate="-1" pin="KL"/>
-<wire x1="27.94" y1="-50.8" x2="30.48" y2="-50.8" width="0.1524" layer="91" grouprefs="DS18B20"/>
-<label x="30.48" y="-50.8" size="1.27" layer="95" xref="yes" grouprefs="DS18B20"/>
+<wire x1="35.56" y1="-50.8" x2="38.1" y2="-50.8" width="0.1524" layer="91" grouprefs="DS18B20"/>
+<label x="38.1" y="-50.8" size="1.27" layer="95" xref="yes" grouprefs="DS18B20"/>
+</segment>
+<segment>
+<pinref part="PSU_5V" gate="-2" pin="KL"/>
+<wire x1="-81.28" y1="10.16" x2="-78.74" y2="10.16" width="0.1524" layer="91"/>
+<label x="-78.74" y="10.16" size="1.524" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="MCU_PWR_IN" gate="-2" pin="KL"/>
+<wire x1="-48.26" y1="10.16" x2="-45.72" y2="10.16" width="0.1524" layer="91"/>
+<label x="-45.72" y="10.16" size="1.524" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="5V" class="0">
@@ -5539,34 +5565,14 @@ Grid 5.00 mm&lt;p&gt;
 <label x="-111.76" y="-2.54" size="1.524" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="U$1" gate="G$1" pin="VIN"/>
-<wire x1="-149.86" y1="-17.78" x2="-149.86" y2="-15.24" width="0.1524" layer="91"/>
-<label x="-149.86" y="-15.24" size="1.524" layer="95" rot="R90" xref="yes"/>
-</segment>
-<segment>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="5V"/>
-<wire x1="-43.18" y1="-43.18" x2="-45.72" y2="-43.18" width="0.1524" layer="91"/>
-<label x="-45.72" y="-43.18" size="1.27" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
-<pinref part="U$2" gate="G$1" pin="HV"/>
-<wire x1="-63.5" y1="-35.56" x2="-60.96" y2="-35.56" width="0.1524" layer="91"/>
-<label x="-60.96" y="-35.56" size="1.27" layer="95" xref="yes"/>
-</segment>
-<segment>
-<pinref part="R3" gate="G$1" pin="1"/>
-<wire x1="17.78" y1="-43.18" x2="15.24" y2="-43.18" width="0.1524" layer="91" grouprefs="DS18B20"/>
-<label x="15.24" y="-43.18" size="1.27" layer="95" rot="R180" xref="yes" grouprefs="DS18B20"/>
-</segment>
-<segment>
-<pinref part="P_STEMP" gate="-2" pin="KL"/>
-<wire x1="27.94" y1="-55.88" x2="30.48" y2="-55.88" width="0.1524" layer="91" grouprefs="DS18B20"/>
-<label x="30.48" y="-55.88" size="1.27" layer="95" xref="yes" grouprefs="DS18B20"/>
+<pinref part="PSU_5V" gate="-1" pin="KL"/>
+<wire x1="-81.28" y1="15.24" x2="-78.74" y2="15.24" width="0.1524" layer="91"/>
+<label x="-78.74" y="15.24" size="1.524" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="AC1" class="0">
 <segment>
-<pinref part="220V" gate="-1" pin="KL"/>
+<pinref part="220V_IN" gate="-1" pin="KL"/>
 <wire x1="-144.78" y1="27.94" x2="-142.24" y2="27.94" width="0.1524" layer="91"/>
 <label x="-142.24" y="27.94" size="1.524" layer="95" xref="yes"/>
 </segment>
@@ -5578,7 +5584,7 @@ Grid 5.00 mm&lt;p&gt;
 </net>
 <net name="AC2" class="0">
 <segment>
-<pinref part="220V" gate="-2" pin="KL"/>
+<pinref part="220V_IN" gate="-2" pin="KL"/>
 <wire x1="-144.78" y1="22.86" x2="-142.24" y2="22.86" width="0.1524" layer="91"/>
 <label x="-142.24" y="22.86" size="1.524" layer="95" xref="yes"/>
 </segment>
@@ -5685,18 +5691,18 @@ Grid 5.00 mm&lt;p&gt;
 </segment>
 <segment>
 <pinref part="R3" gate="G$1" pin="2"/>
-<wire x1="27.94" y1="-43.18" x2="30.48" y2="-43.18" width="0.1524" layer="91" grouprefs="DS18B20"/>
-<label x="30.48" y="-43.18" size="1.27" layer="95" xref="yes" grouprefs="DS18B20"/>
+<wire x1="35.56" y1="-43.18" x2="38.1" y2="-43.18" width="0.1524" layer="91" grouprefs="DS18B20"/>
+<label x="38.1" y="-43.18" size="1.27" layer="95" xref="yes" grouprefs="DS18B20"/>
 </segment>
 <segment>
 <pinref part="D_STEMP" gate="-1" pin="KL"/>
-<wire x1="27.94" y1="-60.96" x2="30.48" y2="-60.96" width="0.1524" layer="91" grouprefs="DS18B20"/>
-<label x="30.48" y="-60.96" size="1.27" layer="95" xref="yes" grouprefs="DS18B20"/>
+<wire x1="35.56" y1="-60.96" x2="38.1" y2="-60.96" width="0.1524" layer="91" grouprefs="DS18B20"/>
+<label x="38.1" y="-60.96" size="1.27" layer="95" xref="yes" grouprefs="DS18B20"/>
 </segment>
 <segment>
 <pinref part="D_STEMP" gate="-2" pin="KL"/>
-<wire x1="27.94" y1="-66.04" x2="30.48" y2="-66.04" width="0.1524" layer="91" grouprefs="DS18B20"/>
-<label x="30.48" y="-66.04" size="1.27" layer="95" xref="yes" grouprefs="DS18B20"/>
+<wire x1="35.56" y1="-66.04" x2="38.1" y2="-66.04" width="0.1524" layer="91" grouprefs="DS18B20"/>
+<label x="38.1" y="-66.04" size="1.27" layer="95" xref="yes" grouprefs="DS18B20"/>
 </segment>
 </net>
 <net name="A1" class="0">
@@ -5709,6 +5715,45 @@ Grid 5.00 mm&lt;p&gt;
 <pinref part="R4" gate="G$1" pin="2"/>
 <wire x1="27.94" y1="-15.24" x2="30.48" y2="-15.24" width="0.1524" layer="91" grouprefs="STDS"/>
 <label x="30.48" y="-15.24" size="1.27" layer="95" xref="yes" grouprefs="STDS"/>
+</segment>
+</net>
+<net name="VIN" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="VIN"/>
+<wire x1="-149.86" y1="-17.78" x2="-149.86" y2="-15.24" width="0.1524" layer="91"/>
+<label x="-149.86" y="-15.24" size="1.524" layer="95" rot="R90" xref="yes"/>
+</segment>
+<segment>
+<pinref part="ARDUINO_NANO1" gate="G$1" pin="VIN"/>
+<wire x1="-43.18" y1="-50.8" x2="-45.72" y2="-50.8" width="0.1524" layer="91"/>
+<label x="-45.72" y="-50.8" size="1.524" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="MCU_PWR_IN" gate="-1" pin="KL"/>
+<wire x1="-48.26" y1="15.24" x2="-45.72" y2="15.24" width="0.1524" layer="91"/>
+<label x="-45.72" y="15.24" size="1.524" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="5V_NANO" class="0">
+<segment>
+<pinref part="ARDUINO_NANO1" gate="G$1" pin="5V"/>
+<wire x1="-43.18" y1="-43.18" x2="-45.72" y2="-43.18" width="0.1524" layer="91"/>
+<label x="-45.72" y="-43.18" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="P_STEMP" gate="-2" pin="KL"/>
+<wire x1="35.56" y1="-55.88" x2="38.1" y2="-55.88" width="0.1524" layer="91" grouprefs="DS18B20"/>
+<label x="38.1" y="-55.88" size="1.27" layer="95" xref="yes" grouprefs="DS18B20"/>
+</segment>
+<segment>
+<pinref part="U$2" gate="G$1" pin="HV"/>
+<wire x1="-63.5" y1="-35.56" x2="-60.96" y2="-35.56" width="0.1524" layer="91"/>
+<label x="-60.96" y="-35.56" size="1.27" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="R3" gate="G$1" pin="1"/>
+<wire x1="25.4" y1="-43.18" x2="22.86" y2="-43.18" width="0.1524" layer="91" grouprefs="DS18B20"/>
+<label x="22.86" y="-43.18" size="1.27" layer="95" rot="R180" xref="yes" grouprefs="DS18B20"/>
 </segment>
 </net>
 </nets>

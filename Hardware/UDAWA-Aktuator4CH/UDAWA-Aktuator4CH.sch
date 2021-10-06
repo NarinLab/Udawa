@@ -2235,8 +2235,10 @@ Wickmann</description>
 <part name="CH2" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 <part name="CH3" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 <part name="CH4" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
-<part name="MAIN_IN" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
+<part name="LOAD_IN" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 <part name="RELAY_PWR" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
+<part name="PSU_5V" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
+<part name="MCU_PWR_IN" library="con-wago-500" deviceset="W237-102" device="" package3d_urn="urn:adsk.eagle:package:10688/1"/>
 </parts>
 <sheets>
 <sheet>
@@ -2356,10 +2358,10 @@ Wickmann</description>
 <attribute name="VALUE" x="77.343" y="-66.04" size="1.778" layer="96" rot="R90"/>
 <attribute name="NAME" x="72.771" y="-63.5" size="1.778" layer="95" rot="R270"/>
 </instance>
-<instance part="MAIN_IN" gate="-1" x="-53.34" y="-15.24" smashed="yes">
+<instance part="LOAD_IN" gate="-1" x="-53.34" y="-15.24" smashed="yes">
 <attribute name="NAME" x="-53.34" y="-14.351" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="MAIN_IN" gate="-2" x="-53.34" y="-20.32" smashed="yes">
+<instance part="LOAD_IN" gate="-2" x="-53.34" y="-20.32" smashed="yes">
 <attribute name="VALUE" x="-55.88" y="-24.003" size="1.778" layer="96"/>
 <attribute name="NAME" x="-53.34" y="-19.431" size="1.778" layer="95" rot="R180"/>
 </instance>
@@ -2369,6 +2371,20 @@ Wickmann</description>
 <instance part="RELAY_PWR" gate="-2" x="86.36" y="-33.02" smashed="yes">
 <attribute name="VALUE" x="83.82" y="-36.703" size="1.778" layer="96"/>
 <attribute name="NAME" x="86.36" y="-32.131" size="1.778" layer="95" rot="R180"/>
+</instance>
+<instance part="PSU_5V" gate="-1" x="-12.7" y="25.4" smashed="yes">
+<attribute name="NAME" x="-12.7" y="26.289" size="1.778" layer="95" rot="R180"/>
+</instance>
+<instance part="PSU_5V" gate="-2" x="-12.7" y="20.32" smashed="yes">
+<attribute name="VALUE" x="-15.24" y="16.637" size="1.778" layer="96"/>
+<attribute name="NAME" x="-12.7" y="21.209" size="1.778" layer="95" rot="R180"/>
+</instance>
+<instance part="MCU_PWR_IN" gate="-1" x="30.48" y="35.56" smashed="yes">
+<attribute name="NAME" x="30.48" y="36.449" size="1.778" layer="95" rot="R180"/>
+</instance>
+<instance part="MCU_PWR_IN" gate="-2" x="30.48" y="30.48" smashed="yes">
+<attribute name="VALUE" x="27.94" y="26.797" size="1.778" layer="96"/>
+<attribute name="NAME" x="30.48" y="31.369" size="1.778" layer="95" rot="R180"/>
 </instance>
 </instances>
 <busses>
@@ -2410,6 +2426,21 @@ Wickmann</description>
 <wire x1="91.44" y1="-27.94" x2="93.98" y2="-27.94" width="0.1524" layer="91"/>
 <label x="93.98" y="-27.94" size="1.778" layer="95" xref="yes"/>
 </segment>
+<segment>
+<pinref part="U$1" gate="G$1" pin="GND@2"/>
+<wire x1="25.4" y1="-20.32" x2="25.4" y2="-22.86" width="0.1524" layer="91"/>
+<label x="25.4" y="-22.86" size="1.524" layer="95" rot="R270" xref="yes"/>
+</segment>
+<segment>
+<pinref part="PSU_5V" gate="-1" pin="KL"/>
+<wire x1="-7.62" y1="25.4" x2="-5.08" y2="25.4" width="0.1524" layer="91"/>
+<label x="-5.08" y="25.4" size="1.524" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="MCU_PWR_IN" gate="-1" pin="KL"/>
+<wire x1="35.56" y1="35.56" x2="38.1" y2="35.56" width="0.1524" layer="91"/>
+<label x="38.1" y="35.56" size="1.524" layer="95" xref="yes"/>
+</segment>
 </net>
 <net name="5V" class="0">
 <segment>
@@ -2418,9 +2449,9 @@ Wickmann</description>
 <label x="-5.08" y="-5.08" size="1.524" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="U$1" gate="G$1" pin="VIN"/>
-<wire x1="22.86" y1="15.24" x2="22.86" y2="17.78" width="0.1524" layer="91"/>
-<label x="22.86" y="17.78" size="1.524" layer="95" rot="R90" xref="yes"/>
+<pinref part="PSU_5V" gate="-2" pin="KL"/>
+<wire x1="-7.62" y1="20.32" x2="-5.08" y2="20.32" width="0.1524" layer="91"/>
+<label x="-5.08" y="20.32" size="1.524" layer="95" xref="yes"/>
 </segment>
 <segment>
 <pinref part="RELAY_PWR" gate="-2" pin="KL"/>
@@ -2500,23 +2531,9 @@ Wickmann</description>
 <label x="93.98" y="-20.32" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="GND2" class="0">
-<segment>
-<pinref part="U$1" gate="G$1" pin="GND@2"/>
-<wire x1="25.4" y1="-20.32" x2="25.4" y2="-22.86" width="0.1524" layer="91"/>
-<label x="25.4" y="-22.86" size="1.016" layer="95" rot="R270" xref="yes"/>
-</segment>
-</net>
-<net name="VCC" class="0">
-<segment>
-<pinref part="U$1" gate="G$1" pin="3V3"/>
-<wire x1="22.86" y1="-20.32" x2="22.86" y2="-22.86" width="0.1524" layer="91"/>
-<label x="22.86" y="-22.86" size="1.27" layer="95" rot="R270" xref="yes"/>
-</segment>
-</net>
 <net name="M-" class="0">
 <segment>
-<pinref part="MAIN_IN" gate="-1" pin="KL"/>
+<pinref part="LOAD_IN" gate="-1" pin="KL"/>
 <wire x1="-48.26" y1="-15.24" x2="-45.72" y2="-15.24" width="0.1524" layer="91"/>
 <label x="-45.72" y="-15.24" size="1.778" layer="95" xref="yes"/>
 </segment>
@@ -2543,7 +2560,7 @@ Wickmann</description>
 </net>
 <net name="M+" class="0">
 <segment>
-<pinref part="MAIN_IN" gate="-2" pin="KL"/>
+<pinref part="LOAD_IN" gate="-2" pin="KL"/>
 <wire x1="-48.26" y1="-20.32" x2="-45.72" y2="-20.32" width="0.1524" layer="91"/>
 <label x="-45.72" y="-20.32" size="1.778" layer="95" xref="yes"/>
 </segment>
@@ -2662,6 +2679,25 @@ Wickmann</description>
 <pinref part="FUSE4" gate="G$1" pin="1"/>
 <wire x1="-15.24" y1="-63.5" x2="-17.78" y2="-63.5" width="0.1524" layer="91"/>
 <label x="-17.78" y="-63.5" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="3V3" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="3V3"/>
+<wire x1="22.86" y1="-20.32" x2="22.86" y2="-22.86" width="0.1524" layer="91"/>
+<label x="22.86" y="-22.86" size="1.524" layer="95" rot="R270" xref="yes"/>
+</segment>
+</net>
+<net name="VIN" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="VIN"/>
+<wire x1="22.86" y1="15.24" x2="22.86" y2="17.78" width="0.1524" layer="91"/>
+<label x="22.86" y="17.78" size="1.524" layer="95" rot="R90" xref="yes"/>
+</segment>
+<segment>
+<pinref part="MCU_PWR_IN" gate="-2" pin="KL"/>
+<wire x1="35.56" y1="30.48" x2="38.1" y2="30.48" width="0.1524" layer="91"/>
+<label x="38.1" y="30.48" size="1.524" layer="95" xref="yes"/>
 </segment>
 </net>
 </nets>
