@@ -831,9 +831,9 @@ Grid 5.00 mm&lt;p&gt;
 <label x="-2.54" y="12.7" size="1.524" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PSU_5V" gate="-1" pin="KL"/>
-<wire x1="-7.62" y1="25.4" x2="-5.08" y2="25.4" width="0.1524" layer="91"/>
-<label x="-5.08" y="25.4" size="1.524" layer="95" xref="yes"/>
+<pinref part="PSU_5V" gate="-2" pin="KL"/>
+<wire x1="-7.62" y1="20.32" x2="-5.08" y2="20.32" width="0.1524" layer="91"/>
+<label x="-5.08" y="20.32" size="1.524" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="5V" class="0">
@@ -849,35 +849,35 @@ Grid 5.00 mm&lt;p&gt;
 <label x="-2.54" y="-7.62" size="1.524" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PSU_5V" gate="-2" pin="KL"/>
-<wire x1="-7.62" y1="20.32" x2="-5.08" y2="20.32" width="0.1524" layer="91"/>
-<label x="-5.08" y="20.32" size="1.524" layer="95" xref="yes"/>
+<pinref part="PSU_5V" gate="-1" pin="KL"/>
+<wire x1="-7.62" y1="25.4" x2="-5.08" y2="25.4" width="0.1524" layer="91"/>
+<label x="-5.08" y="25.4" size="1.524" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="AC1" class="0">
+<segment>
+<pinref part="220V" gate="-1" pin="KL"/>
+<wire x1="-38.1" y1="25.4" x2="-35.56" y2="25.4" width="0.1524" layer="91"/>
+<label x="-35.56" y="25.4" size="1.524" layer="95" xref="yes"/>
+</segment>
 <segment>
 <pinref part="HLK1" gate="G$1" pin="1AC"/>
 <wire x1="-51.736" y1="5.216" x2="-51.736" y2="5.08" width="0.1524" layer="91"/>
 <wire x1="-51.736" y1="5.08" x2="-53.34" y2="5.08" width="0.1524" layer="91"/>
 <label x="-53.34" y="5.08" size="1.524" layer="95" rot="R180" xref="yes"/>
 </segment>
+</net>
+<net name="AC2" class="0">
 <segment>
 <pinref part="220V" gate="-2" pin="KL"/>
 <wire x1="-38.1" y1="20.32" x2="-35.56" y2="20.32" width="0.1524" layer="91"/>
 <label x="-35.56" y="20.32" size="1.524" layer="95" xref="yes"/>
 </segment>
-</net>
-<net name="AC2" class="0">
 <segment>
 <pinref part="HLK1" gate="G$1" pin="2AC"/>
 <wire x1="-51.636" y1="-0.784" x2="-51.636" y2="0" width="0.1524" layer="91"/>
 <wire x1="-51.636" y1="0" x2="-53.34" y2="0" width="0.1524" layer="91"/>
 <label x="-53.34" y="0" size="1.524" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
-<pinref part="220V" gate="-1" pin="KL"/>
-<wire x1="-38.1" y1="25.4" x2="-35.56" y2="25.4" width="0.1524" layer="91"/>
-<label x="-35.56" y="25.4" size="1.524" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="C4" class="0">

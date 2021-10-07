@@ -831,9 +831,9 @@ Grid 5.00 mm&lt;p&gt;
 <label x="-2.54" y="12.7" size="1.524" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PSU_5V" gate="-1" pin="KL"/>
-<wire x1="-7.62" y1="25.4" x2="-5.08" y2="25.4" width="0.1524" layer="91"/>
-<label x="-5.08" y="25.4" size="1.524" layer="95" xref="yes"/>
+<pinref part="PSU_5V" gate="-2" pin="KL"/>
+<wire x1="-7.62" y1="20.32" x2="-5.08" y2="20.32" width="0.1524" layer="91"/>
+<label x="-5.08" y="20.32" size="1.524" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="5V" class="0">
@@ -849,9 +849,9 @@ Grid 5.00 mm&lt;p&gt;
 <label x="-2.54" y="-7.62" size="1.524" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PSU_5V" gate="-2" pin="KL"/>
-<wire x1="-7.62" y1="20.32" x2="-5.08" y2="20.32" width="0.1524" layer="91"/>
-<label x="-5.08" y="20.32" size="1.524" layer="95" xref="yes"/>
+<pinref part="PSU_5V" gate="-1" pin="KL"/>
+<wire x1="-7.62" y1="25.4" x2="-5.08" y2="25.4" width="0.1524" layer="91"/>
+<label x="-5.08" y="25.4" size="1.524" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="AC1" class="0">
