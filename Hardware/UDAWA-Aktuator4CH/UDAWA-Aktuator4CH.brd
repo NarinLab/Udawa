@@ -8,7 +8,7 @@
 </settings>
 <grid distance="50" unitdist="mil" unit="mil" style="lines" multiple="1" display="no" altdistance="5" altunitdist="mil" altunit="mil"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="no" active="yes"/>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
@@ -155,10 +155,10 @@
 </layers>
 <board>
 <plain>
-<wire x1="0" y1="0" x2="100" y2="0" width="0" layer="20"/>
-<wire x1="100" y1="0" x2="100" y2="80" width="0" layer="20"/>
-<wire x1="100" y1="80" x2="0" y2="80" width="0" layer="20"/>
-<wire x1="0" y1="80" x2="0" y2="0" width="0" layer="20"/>
+<wire x1="0" y1="0" x2="100" y2="0" width="0.8128" layer="20"/>
+<wire x1="100" y1="0" x2="100" y2="80" width="0.8128" layer="20"/>
+<wire x1="100" y1="80" x2="0" y2="80" width="0.8128" layer="20"/>
+<wire x1="0" y1="80" x2="0" y2="0" width="0.8128" layer="20"/>
 <text x="12.7" y="1.27" size="1.27" layer="21">UDAWA Board HW Ver. 1
 Universal Digital Agriculture Watering Assistant
 https://github.com/NarinLab/Udawa</text>
@@ -672,10 +672,10 @@ design rules under a new name.</description>
 <attribute name="POPULARITY" value="0" x="-16.51" y="12.7" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="VALUE" x="43.561" y="36.322" size="1.778" layer="27" ratio="10" rot="R270"/>
 </element>
-<element name="HLK1" library="HLK-5M05" package="HLK-5M05" value="5VDC/5W" x="68.58" y="12.7" smashed="yes">
-<attribute name="NAME" x="53.34" y="20.32" size="1.27" layer="21"/>
-<attribute name="SIZE" value="23x38(mm)" x="68.58" y="12.7" size="1.778" layer="27" display="off"/>
-<attribute name="VALUE" value="5VDC/5W" x="68.58" y="12.7" size="1.778" layer="27" display="off"/>
+<element name="HLK1" library="HLK-5M05" package="HLK-5M05" value="5VDC/5W" x="69.469" y="12.7" smashed="yes">
+<attribute name="NAME" x="54.229" y="20.32" size="1.27" layer="21"/>
+<attribute name="SIZE" value="23x38(mm)" x="69.469" y="12.7" size="1.778" layer="27" display="off"/>
+<attribute name="VALUE" value="5VDC/5W" x="69.469" y="12.7" size="1.778" layer="27" display="off"/>
 </element>
 <element name="U$1" library="ESP32-DEVKITV1" package="ESP32-DEVKITV1" value="ESP32DEVKITV1" x="71.12" y="50.8" smashed="yes" rot="R270">
 <attribute name="NAME" x="88.9" y="57.15" size="1.27" layer="21" rot="R270"/>
@@ -878,8 +878,9 @@ design rules under a new name.</description>
 <wire x1="97.79" y1="15.24" x2="93.94" y2="15.24" width="1.27" layer="1"/>
 <wire x1="98.349" y1="6.909" x2="98.349" y2="14.681" width="1.27" layer="1"/>
 <contactref element="HLK1" pad="3"/>
-<wire x1="85.33" y1="21.77" x2="83.28" y2="19.72" width="1.27" layer="1"/>
-<wire x1="83.28" y1="19.72" x2="83.28" y2="17.05" width="1.27" layer="1"/>
+<wire x1="86.219" y1="21.77" x2="84.949" y2="21.77" width="1.27" layer="1"/>
+<wire x1="84.949" y1="21.77" x2="83.28" y2="20.101" width="1.27" layer="1"/>
+<wire x1="83.28" y1="20.101" x2="83.28" y2="17.05" width="1.27" layer="1"/>
 <contactref element="PSU_5V" pad="1"/>
 </signal>
 <signal name="5V">
@@ -889,25 +890,24 @@ design rules under a new name.</description>
 <wire x1="81.28" y1="73.66" x2="73.66" y2="66.04" width="1.27" layer="1"/>
 <wire x1="73.66" y1="11.43" x2="73.66" y2="66.04" width="1.27" layer="1"/>
 <contactref element="HLK1" pad="4"/>
-<wire x1="85.33" y1="3.77" x2="81.32" y2="3.77" width="1.27" layer="1"/>
+<wire x1="86.219" y1="3.77" x2="81.32" y2="3.77" width="1.27" layer="1"/>
 <wire x1="81.32" y1="3.77" x2="73.66" y2="11.43" width="1.27" layer="1"/>
 <contactref element="PSU_5V" pad="2"/>
-<wire x1="87.738996875" y1="9.458996875" x2="89.875359375" y2="10.12" width="1.27" layer="1"/>
-<wire x1="89.875359375" y1="10.12" x2="93.98" y2="10.12" width="1.27" layer="1"/>
-<wire x1="85.33" y1="3.77" x2="85.33" y2="7.05" width="1.27" layer="1"/>
-<wire x1="85.33" y1="7.05" x2="87.738996875" y2="9.458996875" width="1.27" layer="1"/>
+<wire x1="88.4" y1="10.12" x2="93.98" y2="10.12" width="1.27" layer="1"/>
+<wire x1="86.219" y1="3.77" x2="86.6" y2="8.32" width="1.27" layer="1"/>
+<wire x1="86.6" y1="8.32" x2="88.4" y2="10.12" width="1.27" layer="1"/>
 </signal>
 <signal name="AC1">
 <contactref element="HLK1" pad="1"/>
 <contactref element="220V" pad="2"/>
 <wire x1="38.1" y1="10.2" x2="38.53" y2="9.77" width="2.54" layer="1"/>
-<wire x1="38.53" y1="9.77" x2="51.73" y2="9.77" width="2.54" layer="1"/>
+<wire x1="38.53" y1="9.77" x2="52.619" y2="9.77" width="2.54" layer="1"/>
 </signal>
 <signal name="AC2">
 <contactref element="HLK1" pad="2"/>
 <contactref element="220V" pad="1"/>
 <wire x1="38.1" y1="15.2" x2="38.57" y2="15.67" width="2.54" layer="1"/>
-<wire x1="38.57" y1="15.67" x2="51.73" y2="15.67" width="2.54" layer="1"/>
+<wire x1="38.57" y1="15.67" x2="52.619" y2="15.67" width="2.54" layer="1"/>
 </signal>
 <signal name="C4">
 <contactref element="U$1" pad="D33"/>

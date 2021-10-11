@@ -8,7 +8,7 @@
 </settings>
 <grid distance="50" unitdist="mil" unit="mil" style="lines" multiple="1" display="no" altdistance="5" altunitdist="mil" altunit="mil"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="1" name="Top" color="4" fill="1" visible="no" active="yes"/>
 <layer number="2" name="Route2" color="16" fill="1" visible="no" active="no"/>
 <layer number="3" name="Route3" color="17" fill="1" visible="no" active="no"/>
 <layer number="4" name="Route4" color="18" fill="1" visible="no" active="no"/>
@@ -169,15 +169,15 @@
 </layers>
 <board>
 <plain>
-<wire x1="0" y1="7.62" x2="100.31" y2="7.62" width="0" layer="20"/>
-<wire x1="100.31" y1="7.62" x2="100.31" y2="100" width="0" layer="20"/>
-<wire x1="100.31" y1="100" x2="0" y2="100" width="0" layer="20"/>
-<wire x1="0" y1="100" x2="0" y2="7.62" width="0" layer="20"/>
-<text x="60.96" y="88.9" size="6.4516" layer="21">UDAWA</text>
-<text x="62.23" y="85.09" size="2.032" layer="21">github.com/NarinLab/Udawa</text>
-<text x="62.23" y="80.01" size="3.048" layer="21">HW Ver.1</text>
-<text x="72.39" y="74.93" size="3.048" layer="21">Water Sensor</text>
-<text x="7.62" y="8.89" size="3.556" layer="21" rot="R90">FTI Undiknas</text>
+<wire x1="0" y1="7.62" x2="100.31" y2="7.62" width="0.8128" layer="20"/>
+<wire x1="100.31" y1="7.62" x2="100.31" y2="100" width="0.8128" layer="20"/>
+<wire x1="100.31" y1="100" x2="0" y2="100" width="0.8128" layer="20"/>
+<wire x1="0" y1="100" x2="0" y2="7.62" width="0.8128" layer="20"/>
+<text x="63.5" y="88.9" size="6.4516" layer="21">UDAWA</text>
+<text x="95.25" y="50.8" size="2.032" layer="21" rot="R90">github.com/NarinLab/Udawa</text>
+<text x="66.04" y="81.28" size="3.048" layer="21">HW Ver.1</text>
+<text x="64.77" y="85.09" size="3.048" layer="21">Water Sensor</text>
+<text x="90.17" y="15.24" size="3.556" layer="21" rot="R90">FTI Undiknas</text>
 <text x="91.44" y="12.7" size="2.7432" layer="21" rot="R180">Universal Digital Agriculture Watering Assistant</text>
 <hole x="12.7" y="17.78" drill="1.27"/>
 <hole x="87.63" y="81.28" drill="1.27"/>
