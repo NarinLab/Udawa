@@ -1,0 +1,14 @@
+{
+  "name": "",
+  "model": "",
+  "group": "",
+  "broker": "",
+  "port": 8883,
+  "wssid": "",
+  "wpass": "",
+  "accessToken": "",
+  "provSent": false,
+  "provisionDeviceKey": "",
+  "provisionDeviceSecret": "",
+  "logLev": 5
+}
