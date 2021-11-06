@@ -36,7 +36,6 @@ void loop()
     {
       sprintf_P(logBuff, PSTR("RPC Callback subscribed successfuly!"));
       recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
-      mySettings.lastConnected = millis();
     }
   }
 }
@@ -260,5 +259,6 @@ RPC_Response processSetSettings(const RPC_Data &data)
   saveSettings();
   loadSettings();
 
+  mySettings.lastConnected = millis();
   return RPC_Response("processSetSettings", 1);
 }
