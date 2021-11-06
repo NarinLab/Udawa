@@ -286,6 +286,8 @@ void dutyRuntime()
           pinMode(mySettings.relayPin[i], OUTPUT);
           digitalWrite(mySettings.relayPin[i], mySettings.dutyState[i]);
           mySettings.dutyCounter[i] = millis();
+          sprintf_P(logBuff, PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
+          recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
           if(tb.connected())
           {
             tb.sendTelemetryInt((String("ch")+String(i)).c_str(), mySettings.dutyState[i]);
@@ -300,6 +302,8 @@ void dutyRuntime()
           pinMode(mySettings.relayPin[i], OUTPUT);
           digitalWrite(mySettings.relayPin[i], mySettings.dutyState[i]);
           mySettings.dutyCounter[i] = millis();
+          sprintf_P(logBuff, PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
+          recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
           if(tb.connected())
           {
             tb.sendTelemetryInt((String("ch")+String(i)).c_str(), mySettings.dutyState[i]);
