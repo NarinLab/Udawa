@@ -262,3 +262,34 @@ RPC_Response processSetSettings(const RPC_Data &data)
   mySettings.lastConnected = millis();
   return RPC_Response("processSetSettings", 1);
 }
+
+
+void dutyRuntime()
+{
+  for(uint8_t i = 0; i < countof(mySettings.relayPin); i++)
+  {
+    if(mySettings.dutyCycle[i] != 0)
+    {
+      if( mySettings.dutyState[i] == mySettings.ON )
+      {
+        if( (millis() - mySettings.dutyCounter[i] ) >= ( (mySettings.dutyCycle[i] / 100) * mySettings.dutyRange[i]) * 1000)
+        {
+          mySettings.dutyState[i] = !mySettings.ON;
+          pinMode(mySettings.relayPin[i], OUTPUT);
+          digitalWrite(mySettings.relayPin[i], mySettings.dutyState[i]);
+          mySettings.dutyCounter[i] = millis();
+        }
+      }
+      else
+      {
+        if( (millis() - mySettings.dutyCounter[i] ) >= ( ((100 - mySettings.dutyCycle[i]) / 100) * mySettings.dutyRange[i]) * 1000)
+        {
+          mySettings.dutyState[i] = mySettings.ON;
+          pinMode(mySettings.relayPin[i], OUTPUT);
+          digitalWrite(mySettings.relayPin[i], mySettings.dutyState[i]);
+          mySettings.dutyCounter[i] = millis();
+        }
+      }
+    }
+  }
+}

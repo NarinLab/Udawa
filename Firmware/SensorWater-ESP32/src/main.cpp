@@ -7,8 +7,11 @@ void setup()
 {
   startup();
   syncConfigCoMCU();
-  taskIdPublishWater = taskManager.scheduleFixedRate(60000, [] {
-    publishWater();
+  taskIdPublishWater = taskManager.scheduleFixedRate(30000, [] {
+    if(tb.connected())
+    {
+      publishWater();
+    }
   });
 }
 
@@ -20,10 +23,6 @@ void loop()
 
 void publishWater()
 {
-  water.celcius = -127.0;
-  water.ec = -127.0;
-  water.tds = -127.0;
-
   StaticJsonDocument<DOCSIZE> doc;
   doc["method"] = "getWaterTemp";
   serialWriteToCoMcu(doc, 1);
@@ -32,6 +31,8 @@ void publishWater()
     water.celcius = doc["params"]["celcius"];
     tb.sendTelemetryFloat("WaterTemp", water.celcius);
   }
+
+  doc.clear();
 
   doc["method"] = "getWaterEC";
   serialWriteToCoMcu(doc, 1);

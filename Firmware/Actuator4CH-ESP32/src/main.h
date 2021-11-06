@@ -13,11 +13,14 @@ struct Settings
     uint8_t relayPin[4];
     long lastConnected;
     bool ON;
+    bool dutyState[4];
+    unsigned long dutyCounter[4];
 };
 
 RPC_Response processSetConfig(const RPC_Data &data);
 RPC_Response processSetSettings(const RPC_Data &data);
 void loadSettings();
 void saveSettings();
+void dutyRuntime();
 
 #endif
