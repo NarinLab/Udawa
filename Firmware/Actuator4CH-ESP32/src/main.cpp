@@ -8,10 +8,10 @@
 #include "main.h"
 
 Settings mySettings;
-const size_t callbacks_size = 3;
+const size_t callbacks_size = 2;
 RPC_Callback callbacks[callbacks_size] = {
-  { "setConfigModel", processSetConfig },
-  { "setDutyCycle", processSetSettings }
+  { "setConfig", processSetConfig },
+  { "setSettings", processSetSettings }
 };
 
 void setup()
@@ -31,6 +31,12 @@ void loop()
     {
       sprintf_P(logBuff, PSTR("Failed to subscribe RPC Callback!"));
       recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+    }
+    else
+    {
+      sprintf_P(logBuff, PSTR("RPC Callback subscribed successfuly!"));
+      recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+      mySettings.lastConnected = millis();
     }
   }
 }
@@ -52,10 +58,6 @@ void loadSettings()
     {
         mySettings.dutyCycle[index] = v.as<uint8_t>();
         index++;
-        if(index+1 >= countof(mySettings.dutyCycle))
-        {
-          break;
-        }
     }
   }
   else
@@ -73,10 +75,6 @@ void loadSettings()
     {
         mySettings.dutyRange[index] = v.as<long>();
         index++;
-        if(index+1 >= countof(mySettings.dutyRange))
-        {
-          break;
-        }
     }
   }
   else
@@ -94,10 +92,6 @@ void loadSettings()
     {
         mySettings.dutyCycleFailSafe[index] = v.as<uint8_t>();
         index++;
-        if(index+1 >= countof(mySettings.dutyCycleFailSafe))
-        {
-          break;
-        }
     }
   }
   else
@@ -115,10 +109,6 @@ void loadSettings()
     {
         mySettings.dutyRangeFailSafe[index] = v.as<long>();
         index++;
-        if(index+1 >= countof(mySettings.dutyRangeFailSafe))
-        {
-          break;
-        }
     }
   }
   else
@@ -136,10 +126,6 @@ void loadSettings()
     {
         mySettings.relayPin[index] = v.as<long>();
         index++;
-        if(index+1 >= countof(mySettings.relayPin))
-        {
-          break;
-        }
     }
   }
   else
@@ -148,15 +134,6 @@ void loadSettings()
     {
         mySettings.relayPin[i] = 0;
     }
-  }
-
-  if(doc["lastConnected"] != nullptr)
-  {
-    mySettings.lastConnected = doc["lastConnected"].as<long>();
-  }
-  else
-  {
-    mySettings.lastConnected = 0;
   }
 
   if(doc["ON"] != nullptr)
@@ -202,7 +179,7 @@ void saveSettings()
   {
     relayPin.add(mySettings.relayPin[i]);
   }
-  doc["lastConnected"] = mySettings.lastConnected;
+
   doc["ON"] = mySettings.ON;
 
   writeSettings(doc, settingsPath);
@@ -225,5 +202,63 @@ RPC_Response processSetConfig(const RPC_Data &data)
 
 RPC_Response processSetSettings(const RPC_Data &data)
 {
+  if(data["dutyCycle"] != nullptr)
+  {
+    uint8_t index = 0;
+    for(JsonVariant v : data["dutyCycle"].as<JsonArray>())
+    {
+        mySettings.dutyCycle[index] = v.as<uint8_t>();
+        index++;
+    }
+  }
+
+  if(data["dutyRange"] != nullptr)
+  {
+    uint8_t index = 0;
+    for(JsonVariant v : data["dutyRange"].as<JsonArray>())
+    {
+        mySettings.dutyRange[index] = v.as<long>();
+        index++;
+    }
+  }
+
+  if(data["dutyCycleFailSafe"] != nullptr)
+  {
+    uint8_t index = 0;
+    for(JsonVariant v : data["dutyCycleFailSafe"].as<JsonArray>())
+    {
+        mySettings.dutyCycleFailSafe[index] = v.as<uint8_t>();
+        index++;
+    }
+  }
+
+  if(data["dutyRangeFailSafe"] != nullptr)
+  {
+    uint8_t index = 0;
+    for(JsonVariant v : data["dutyRangeFailSafe"].as<JsonArray>())
+    {
+        mySettings.dutyRangeFailSafe[index] = v.as<long>();
+        index++;
+    }
+  }
+
+  if(data["relayPin"] != nullptr)
+  {
+    uint8_t index = 0;
+    for(JsonVariant v : data["relayPin"].as<JsonArray>())
+    {
+        mySettings.relayPin[index] = v.as<long>();
+        index++;
+    }
+  }
+
+  if(data["ON"] != nullptr)
+  {
+    mySettings.ON = data["ON"].as<bool>();
+  }
+
+  saveSettings();
+  loadSettings();
+
   return RPC_Response("processSetSettings", 1);
 }
