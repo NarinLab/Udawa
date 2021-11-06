@@ -27,10 +27,11 @@ void loop()
   if(FLAG_IOT_RPC_SUBSCRIBE)
   {
     FLAG_IOT_RPC_SUBSCRIBE = false;
-    if (!tb.RPC_Subscribe(callbacks, callbacks_size))
+    if (tb.connected() && !tb.RPC_Subscribe(callbacks, callbacks_size))
     {
       sprintf_P(logBuff, PSTR("Failed to subscribe RPC Callback!"));
       recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+      FLAG_IOT_RPC_SUBSCRIBE = true;
     }
     else
     {
@@ -38,6 +39,8 @@ void loop()
       recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
     }
   }
+
+  dutyRuntime();
 }
 
 void loadSettings()
@@ -142,6 +145,11 @@ void loadSettings()
   else
   {
     mySettings.ON = 1;
+  }
+
+  for(uint8_t i = 0; i < countof(mySettings.dutyCounter); i++)
+  {
+    mySettings.dutyCounter[i] = 86400;
   }
 }
 
@@ -272,22 +280,30 @@ void dutyRuntime()
     {
       if( mySettings.dutyState[i] == mySettings.ON )
       {
-        if( (millis() - mySettings.dutyCounter[i] ) >= ( (mySettings.dutyCycle[i] / 100) * mySettings.dutyRange[i]) * 1000)
+        if( (millis() - mySettings.dutyCounter[i] ) >= (float)(( ((float)mySettings.dutyCycle[i] / 100) * (float)mySettings.dutyRange[i]) * 1000))
         {
           mySettings.dutyState[i] = !mySettings.ON;
           pinMode(mySettings.relayPin[i], OUTPUT);
           digitalWrite(mySettings.relayPin[i], mySettings.dutyState[i]);
           mySettings.dutyCounter[i] = millis();
+          if(tb.connected())
+          {
+            tb.sendTelemetryInt((String("ch")+String(i)).c_str(), mySettings.dutyState[i]);
+          }
         }
       }
       else
       {
-        if( (millis() - mySettings.dutyCounter[i] ) >= ( ((100 - mySettings.dutyCycle[i]) / 100) * mySettings.dutyRange[i]) * 1000)
+        if( (millis() - mySettings.dutyCounter[i] ) >= (float) ( ((100 - (float) mySettings.dutyCycle[i]) / 100) * (float) mySettings.dutyRange[i]) * 1000)
         {
           mySettings.dutyState[i] = mySettings.ON;
           pinMode(mySettings.relayPin[i], OUTPUT);
           digitalWrite(mySettings.relayPin[i], mySettings.dutyState[i]);
           mySettings.dutyCounter[i] = millis();
+          if(tb.connected())
+          {
+            tb.sendTelemetryInt((String("ch")+String(i)).c_str(), mySettings.dutyState[i]);
+          }
         }
       }
     }
