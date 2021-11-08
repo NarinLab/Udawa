@@ -1,6 +1,6 @@
 /**
  * UDAWA - Universal Digital Agriculture Watering Assistant
- * Firmware for Actuator 4Ch UDAWA Board
+ * Firmware for Actuator 4Ch UDAWA Board (Gadadar)
  * Licensed under aGPLv3
  * Researched and developed by PRITA Research Group & Narin Laboratory
  * prita.undiknas.ac.id | narin.co.id
@@ -37,7 +37,20 @@ void loop()
     {
       sprintf_P(logBuff, PSTR("RPC Callback subscribed successfuly!"));
       recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+      tb.Firmware_OTA_Subscribe();
     }
+
+    if (tb.Firmware_Update(CURRENT_FIRMWARE_TITLE, CURRENT_FIRMWARE_VERSION))
+    {
+      sprintf_P(logBuff, PSTR("Firmware update complete. Rebooting now..."));
+      recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+    }
+    else
+    {
+      sprintf_P(logBuff, PSTR("Firmware is up to date."));
+      recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+    }
+    tb.Firmware_OTA_Unsubscribe();
   }
 
   dutyRuntime();
@@ -75,7 +88,7 @@ void loadSettings()
     uint8_t index = 0;
     for(JsonVariant v : doc["dutyRange"].as<JsonArray>())
     {
-        mySettings.dutyRange[index] = v.as<long>();
+        mySettings.dutyRange[index] = v.as<unsigned long>();
         index++;
     }
   }
@@ -109,7 +122,7 @@ void loadSettings()
     uint8_t index = 0;
     for(JsonVariant v : doc["dutyRangeFailSafe"].as<JsonArray>())
     {
-        mySettings.dutyRangeFailSafe[index] = v.as<long>();
+        mySettings.dutyRangeFailSafe[index] = v.as<unsigned long>();
         index++;
     }
   }
@@ -126,7 +139,7 @@ void loadSettings()
     uint8_t index = 0;
     for(JsonVariant v : doc["relayPin"].as<JsonArray>())
     {
-        mySettings.relayPin[index] = v.as<long>();
+        mySettings.relayPin[index] = v.as<uint8_t>();
         index++;
     }
   }
@@ -199,10 +212,17 @@ void saveSettings()
 
 RPC_Response processSetConfig(const RPC_Data &data)
 {
-  if(data["model"] != nullptr)
-  {
-    strlcpy(config.model, data["model"].as<const char*>(), sizeof(config.model));
-  }
+  if(data["model"] != nullptr){strlcpy(config.model, data["model"].as<const char*>(), sizeof(config.model));}
+  if(data["group"] != nullptr){strlcpy(config.group, data["group"].as<const char*>(), sizeof(config.group));}
+  if(data["broker"] != nullptr){strlcpy(config.broker, data["broker"].as<const char*>(), sizeof(config.broker));}
+  if(data["port"] != nullptr){data["port"].as<uint16_t>();}
+  if(data["wssid"] != nullptr){strlcpy(config.wssid, data["wssid"].as<const char*>(), sizeof(config.wssid));}
+  if(data["wpass"] != nullptr){strlcpy(config.wpass, data["wpass"].as<const char*>(), sizeof(config.wpass));}
+  if(data["upass"] != nullptr){strlcpy(config.upass, data["upass"].as<const char*>(), sizeof(config.upass));}
+  if(data["provisionDeviceKey"] != nullptr){strlcpy(config.provisionDeviceKey, data["provisionDeviceKey"].as<const char*>(), sizeof(config.provisionDeviceKey));}
+  if(data["provisionDeviceSecret"] != nullptr){strlcpy(config.provisionDeviceSecret, data["provisionDeviceSecret"].as<const char*>(), sizeof(config.provisionDeviceSecret));}
+  if(data["logLev"] != nullptr){data["logLev"].as<uint8_t>();}
+
   configSave();
   return RPC_Response("setConfigModel", 1);
 }
@@ -267,7 +287,7 @@ RPC_Response processSetSettings(const RPC_Data &data)
   saveSettings();
   loadSettings();
 
-  mySettings.lastConnected = millis();
+  mySettings.lastUpdated = millis();
   return RPC_Response("processSetSettings", 1);
 }
 
