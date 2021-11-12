@@ -12,7 +12,7 @@
 
 
 #define CURRENT_FIRMWARE_TITLE "UDAWA-Gadadar"
-#define CURRENT_FIRMWARE_VERSION "0.0.4"
+#define CURRENT_FIRMWARE_VERSION "0.0.5"
 
 const char* settingsPath = "/settings.json";
 struct Settings
