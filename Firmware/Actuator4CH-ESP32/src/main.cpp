@@ -9,16 +9,12 @@
 
 Settings mySettings;
 
-const size_t RPCCallbacksSize = 4;
-RPC_Callback RPCCallbacks[RPCCallbacksSize] = {
+const size_t callbacksSize = 4;
+GenericCallback callbacks[callbacksSize] = {
+  { "sharedAttributesUpdate", processSharedAttributesUpdate },
+  { "provisionResponse", processProvisionResponse },
   { "saveConfig", processSaveConfig },
-  { "saveSettings", processSaveSettings },
-  { "subscribeSharedAttributes", processSubscribeSharedAttributes },
-  { "subscribeOTAUpdate", processSubscribeOTAUpdate }
-};
-
-Shared_Attribute_Callback SharedAttributesCallbacks[1] = {
-  processSharedAttributesUpdate
+  { "saveSettings", processSaveSettings }
 };
 
 void setup()
@@ -32,9 +28,14 @@ void loop()
   udawa();
   dutyRuntime();
 
-  if(FLAG_IOT_RPC_SUBSCRIBE)
+  if(tb.connected() && FLAG_IOT_SUBSCRIBE)
   {
-    subscribeRPCCallback();
+    if(tb.callbackSubscribe(callbacks, callbacksSize))
+    {
+      sprintf_P(logBuff, PSTR("Callbacks subscribed successfuly!"));
+      recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+      FLAG_IOT_SUBSCRIBE = false;
+    }
   }
 }
 
@@ -182,32 +183,19 @@ void saveSettings()
   writeSettings(doc, settingsPath);
 }
 
-RPC_Response processSaveConfig(const RPC_Data &data)
+callbackResponse processSaveConfig(const callbackData &data)
 {
   configSave();
-  return RPC_Response("saveConfig", 1);
+  return callbackResponse("saveConfig", 1);
 }
 
-RPC_Response processSaveSettings(const RPC_Data &data)
+callbackResponse processSaveSettings(const callbackData &data)
 {
   saveSettings();
   loadSettings();
 
   mySettings.lastUpdated = millis();
-  return RPC_Response("saveSettings", 1);
-}
-
-RPC_Response processSubscribeOTAUpdate(const RPC_Data &data)
-{
-  tb.RPC_Unsubscribe();
-  subscribeOTAUpdate();
-  return RPC_Response("subscribeOTAUpdate", 1);
-}
-RPC_Response processSubscribeSharedAttributes(const RPC_Data &data)
-{
-  tb.RPC_Unsubscribe();
-  subscribeSharedAttributesUpdate();
-  return RPC_Response("subscribeSharedAttributes", 1);
+  return callbackResponse("saveSettings", 1);
 }
 
 
@@ -253,7 +241,7 @@ void dutyRuntime()
   }
 }
 
-void processSharedAttributesUpdate(const Shared_Attribute_Data &data)
+callbackResponse processSharedAttributesUpdate(const callbackData &data)
 {
   sprintf_P(logBuff, PSTR("Received shared attributes update:"));
   recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
@@ -301,55 +289,5 @@ void processSharedAttributesUpdate(const Shared_Attribute_Data &data)
   if(data["ON"] != nullptr){mySettings.ON = data["ON"].as<bool>();}
 
   mySettings.lastUpdated = millis();
-  tb.Shared_Attributes_Unsubscribe();
-  subscribeRPCCallback();
-}
-
-void subscribeRPCCallback()
-{
-  if(tb.connected())
-  {
-    if(tb.RPC_Subscribe(RPCCallbacks, RPCCallbacksSize))
-    {
-      sprintf_P(logBuff, PSTR("RPC callbacks subscribed successfuly!"));
-      recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
-      FLAG_IOT_RPC_SUBSCRIBE = false;
-    }
-  }
-}
-
-void subscribeOTAUpdate()
-{
-  if(tb.connected())
-  {
-    if (tb.Firmware_OTA_Subscribe() && FLAG_IOT_OTA_UPDATE_SUBSCRIBE)
-    {
-      if (tb.Firmware_Update(CURRENT_FIRMWARE_TITLE, CURRENT_FIRMWARE_VERSION))
-      {
-        sprintf_P(logBuff, PSTR("Firmware update complete. Rebooting now..."));
-        recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
-      }
-      else
-      {
-        sprintf_P(logBuff, PSTR("Firmware is up to date."));
-        recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
-        tb.Firmware_OTA_Unsubscribe();
-        subscribeRPCCallback();
-      }
-      FLAG_IOT_OTA_UPDATE_SUBSCRIBE = false;
-    }
-  }
-}
-
-void subscribeSharedAttributesUpdate()
-{
-  if(tb.connected())
-  {
-    if(tb.Shared_Attributes_Subscribe(SharedAttributesCallbacks, 1))
-    {
-      sprintf_P(logBuff, PSTR("Shared attributes update callbacks subscribed successfuly!"));
-      recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
-      FLAG_IOT_SHARED_ATTRIBUTES_SUBSCRIBE = false;
-    }
-  }
+  return callbackResponse("sharedAttributesUpdate", 1);
 }
