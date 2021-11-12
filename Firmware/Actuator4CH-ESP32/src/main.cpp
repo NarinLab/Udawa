@@ -33,19 +33,20 @@ void loop()
 
   if(tb.connected())
   {
-    if (FLAG_IOT_RPC_SUBSCRIBE)
+    if (tb.Firmware_OTA_Subscribe() && FLAG_IOT_OTA_UPDATE_SUBSCRIBE)
     {
-      if(tb.RPC_Subscribe(RPCCallbacks, RPCCallbacksSize))
+      if (tb.Firmware_Update(CURRENT_FIRMWARE_TITLE, CURRENT_FIRMWARE_VERSION))
       {
-        sprintf_P(logBuff, PSTR("Shared attributes update callbacks subscribed successfuly!"));
+        sprintf_P(logBuff, PSTR("Firmware update complete. Rebooting now..."));
         recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
-        FLAG_IOT_RPC_SUBSCRIBE = false;
       }
       else
       {
-        sprintf_P(logBuff, PSTR("Failed to subscribe RPC Callback!"));
+        sprintf_P(logBuff, PSTR("Firmware is up to date."));
         recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+        tb.Firmware_OTA_Unsubscribe();
       }
+      FLAG_IOT_OTA_UPDATE_SUBSCRIBE = false;
     }
 
     if (FLAG_IOT_SHARED_ATTRIBUTES_SUBSCRIBE)
@@ -57,31 +58,17 @@ void loop()
         FLAG_IOT_SHARED_ATTRIBUTES_SUBSCRIBE = false;
       }
     }
-    else
+
+    if (FLAG_IOT_RPC_SUBSCRIBE)
     {
-      sprintf_P(logBuff, PSTR("Failed to subscribe Shared attributes update!"));
-      recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+      if(tb.RPC_Subscribe(RPCCallbacks, RPCCallbacksSize))
+      {
+        sprintf_P(logBuff, PSTR("RPC callbacks subscribed successfuly!"));
+        recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+        FLAG_IOT_RPC_SUBSCRIBE = false;
+      }
     }
 
-    if (FLAG_IOT_OTA_UPDATE_SUBSCRIBE)
-    {
-      if(!tb.Firmware_OTA_Subscribe())
-      {
-        sprintf_P(logBuff, PSTR("Failed to subscribe OTA Update."));
-        recordLog(2, PSTR(__FILE__), __LINE__, PSTR(__func__));
-      }
-      if (tb.Firmware_Update(CURRENT_FIRMWARE_TITLE, CURRENT_FIRMWARE_VERSION))
-      {
-        sprintf_P(logBuff, PSTR("Firmware update complete. Rebooting now..."));
-        recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
-      }
-      else
-      {
-        sprintf_P(logBuff, PSTR("Firmware is up to date."));
-        recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
-      }
-      FLAG_IOT_OTA_UPDATE_SUBSCRIBE = false;
-    }
   }
 }
 
@@ -91,7 +78,7 @@ void loadSettings()
   readSettings(doc, settingsPath);
 
   sprintf_P(logBuff, PSTR("Loaded settings:"));
-  recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+  recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
 
   serializeJsonPretty(doc, Serial);
 
@@ -234,7 +221,7 @@ void saveSettings()
   writeSettings(doc, settingsPath);
 
   sprintf_P(logBuff, PSTR("Saved settings:"));
-  recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+  recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
 
   serializeJsonPretty(doc, Serial);
 }
