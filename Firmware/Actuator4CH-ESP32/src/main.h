@@ -30,6 +30,7 @@ struct Settings
 
 RPC_Response processSetConfig(const RPC_Data &data);
 RPC_Response processSetSettings(const RPC_Data &data);
+void processSharedAttributesUpdate(const Shared_Attribute_Data &data);
 void loadSettings();
 void saveSettings();
 void dutyRuntime();
