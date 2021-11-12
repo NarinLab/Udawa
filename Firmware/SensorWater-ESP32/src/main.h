@@ -28,8 +28,10 @@ struct Settings
     unsigned long lastUpdated;
 };
 
-RPC_Response processSetConfig(const RPC_Data &data);
-RPC_Response processSetSettings(const RPC_Data &data);
+callbackResponse processSaveConfig(const callbackData &data);
+callbackResponse processSaveSettings(const callbackData &data);
+callbackResponse processSharedAttributesUpdate(const callbackData &data);
+
 void loadSettings();
 void saveSettings();
 void publishWater();
