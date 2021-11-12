@@ -9,14 +9,15 @@
 
 Settings mySettings;
 
-const size_t RPCCallbacksSize = 2;
+const size_t RPCCallbacksSize = 4;
 RPC_Callback RPCCallbacks[RPCCallbacksSize] = {
-  { "setConfig", processSetConfig },
-  { "setSettings", processSetSettings }
+  { "saveConfig", processSaveConfig },
+  { "saveSettings", processSaveSettings },
+  { "subscribeSharedAttributes", processSubscribeSharedAttributes },
+  { "subscribeOTAUpdate", processSubscribeOTAUpdate }
 };
 
-const size_t SharedAttributesCallbacksSize = 1;
-Shared_Attribute_Callback SharedAttributesCallbacks[SharedAttributesCallbacksSize] = {
+Shared_Attribute_Callback SharedAttributesCallbacks[1] = {
   processSharedAttributesUpdate
 };
 
@@ -31,44 +32,9 @@ void loop()
   udawa();
   dutyRuntime();
 
-  if(tb.connected())
+  if(FLAG_IOT_RPC_SUBSCRIBE)
   {
-    if (tb.Firmware_OTA_Subscribe() && FLAG_IOT_OTA_UPDATE_SUBSCRIBE)
-    {
-      if (tb.Firmware_Update(CURRENT_FIRMWARE_TITLE, CURRENT_FIRMWARE_VERSION))
-      {
-        sprintf_P(logBuff, PSTR("Firmware update complete. Rebooting now..."));
-        recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
-      }
-      else
-      {
-        sprintf_P(logBuff, PSTR("Firmware is up to date."));
-        recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
-        tb.Firmware_OTA_Unsubscribe();
-      }
-      FLAG_IOT_OTA_UPDATE_SUBSCRIBE = false;
-    }
-
-    if (FLAG_IOT_SHARED_ATTRIBUTES_SUBSCRIBE)
-    {
-      if(tb.Shared_Attributes_Subscribe(SharedAttributesCallbacks, SharedAttributesCallbacksSize))
-      {
-        sprintf_P(logBuff, PSTR("Shared attributes update callbacks subscribed successfuly!"));
-        recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
-        FLAG_IOT_SHARED_ATTRIBUTES_SUBSCRIBE = false;
-      }
-    }
-
-    if (FLAG_IOT_RPC_SUBSCRIBE)
-    {
-      if(tb.RPC_Subscribe(RPCCallbacks, RPCCallbacksSize))
-      {
-        sprintf_P(logBuff, PSTR("RPC callbacks subscribed successfuly!"));
-        recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
-        FLAG_IOT_RPC_SUBSCRIBE = false;
-      }
-    }
-
+    subscribeRPCCallback();
   }
 }
 
@@ -76,11 +42,6 @@ void loadSettings()
 {
   StaticJsonDocument<DOCSIZE> doc;
   readSettings(doc, settingsPath);
-
-  sprintf_P(logBuff, PSTR("Loaded settings:"));
-  recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
-
-  serializeJsonPretty(doc, Serial);
 
   if(doc["dutyCycle"] != nullptr)
   {
@@ -219,92 +180,34 @@ void saveSettings()
   doc["ON"] = mySettings.ON;
 
   writeSettings(doc, settingsPath);
-
-  sprintf_P(logBuff, PSTR("Saved settings:"));
-  recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
-
-  serializeJsonPretty(doc, Serial);
 }
 
-RPC_Response processSetConfig(const RPC_Data &data)
+RPC_Response processSaveConfig(const RPC_Data &data)
 {
-  if(data["model"] != nullptr){strlcpy(config.model, data["model"].as<const char*>(), sizeof(config.model));}
-  if(data["group"] != nullptr){strlcpy(config.group, data["group"].as<const char*>(), sizeof(config.group));}
-  if(data["broker"] != nullptr){strlcpy(config.broker, data["broker"].as<const char*>(), sizeof(config.broker));}
-  if(data["port"] != nullptr){data["port"].as<uint16_t>();}
-  if(data["wssid"] != nullptr){strlcpy(config.wssid, data["wssid"].as<const char*>(), sizeof(config.wssid));}
-  if(data["wpass"] != nullptr){strlcpy(config.wpass, data["wpass"].as<const char*>(), sizeof(config.wpass));}
-  if(data["upass"] != nullptr){strlcpy(config.upass, data["upass"].as<const char*>(), sizeof(config.upass));}
-  if(data["provisionDeviceKey"] != nullptr){strlcpy(config.provisionDeviceKey, data["provisionDeviceKey"].as<const char*>(), sizeof(config.provisionDeviceKey));}
-  if(data["provisionDeviceSecret"] != nullptr){strlcpy(config.provisionDeviceSecret, data["provisionDeviceSecret"].as<const char*>(), sizeof(config.provisionDeviceSecret));}
-  if(data["logLev"] != nullptr){data["logLev"].as<uint8_t>();}
-
   configSave();
-  return RPC_Response("setConfigModel", 1);
+  return RPC_Response("saveConfig", 1);
 }
 
-RPC_Response processSetSettings(const RPC_Data &data)
+RPC_Response processSaveSettings(const RPC_Data &data)
 {
-  if(data["dutyCycle"] != nullptr)
-  {
-    uint8_t index = 0;
-    for(JsonVariant v : data["dutyCycle"].as<JsonArray>())
-    {
-        mySettings.dutyCycle[index] = v.as<uint8_t>();
-        index++;
-    }
-  }
-
-  if(data["dutyRange"] != nullptr)
-  {
-    uint8_t index = 0;
-    for(JsonVariant v : data["dutyRange"].as<JsonArray>())
-    {
-        mySettings.dutyRange[index] = v.as<long>();
-        index++;
-    }
-  }
-
-  if(data["dutyCycleFailSafe"] != nullptr)
-  {
-    uint8_t index = 0;
-    for(JsonVariant v : data["dutyCycleFailSafe"].as<JsonArray>())
-    {
-        mySettings.dutyCycleFailSafe[index] = v.as<uint8_t>();
-        index++;
-    }
-  }
-
-  if(data["dutyRangeFailSafe"] != nullptr)
-  {
-    uint8_t index = 0;
-    for(JsonVariant v : data["dutyRangeFailSafe"].as<JsonArray>())
-    {
-        mySettings.dutyRangeFailSafe[index] = v.as<long>();
-        index++;
-    }
-  }
-
-  if(data["relayPin"] != nullptr)
-  {
-    uint8_t index = 0;
-    for(JsonVariant v : data["relayPin"].as<JsonArray>())
-    {
-        mySettings.relayPin[index] = v.as<long>();
-        index++;
-    }
-  }
-
-  if(data["ON"] != nullptr)
-  {
-    mySettings.ON = data["ON"].as<bool>();
-  }
-
   saveSettings();
   loadSettings();
 
   mySettings.lastUpdated = millis();
-  return RPC_Response("processSetSettings", 1);
+  return RPC_Response("saveSettings", 1);
+}
+
+RPC_Response processSubscribeOTAUpdate(const RPC_Data &data)
+{
+  tb.RPC_Unsubscribe();
+  subscribeOTAUpdate();
+  return RPC_Response("subscribeOTAUpdate", 1);
+}
+RPC_Response processSubscribeSharedAttributes(const RPC_Data &data)
+{
+  tb.RPC_Unsubscribe();
+  subscribeSharedAttributesUpdate();
+  return RPC_Response("subscribeSharedAttributes", 1);
 }
 
 
@@ -322,8 +225,8 @@ void dutyRuntime()
           pinMode(mySettings.relayPin[i], OUTPUT);
           digitalWrite(mySettings.relayPin[i], mySettings.dutyState[i]);
           mySettings.dutyCounter[i] = millis();
-          //sprintf_P(logBuff, PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
-          //recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
+          sprintf_P(logBuff, PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
+          recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
           if(tb.connected())
           {
             tb.sendTelemetryInt((String("ch")+String(i+1)).c_str(), mySettings.dutyState[i]);
@@ -338,8 +241,8 @@ void dutyRuntime()
           pinMode(mySettings.relayPin[i], OUTPUT);
           digitalWrite(mySettings.relayPin[i], mySettings.dutyState[i]);
           mySettings.dutyCounter[i] = millis();
-          //sprintf_P(logBuff, PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
-          //recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
+          sprintf_P(logBuff, PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
+          recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
           if(tb.connected())
           {
             tb.sendTelemetryInt((String("ch")+String(i+1)).c_str(), mySettings.dutyState[i]);
@@ -352,8 +255,9 @@ void dutyRuntime()
 
 void processSharedAttributesUpdate(const Shared_Attribute_Data &data)
 {
-  Serial.println("processSharedAttributesUpdate:");
-  serializeJsonPretty(data, Serial);
+  sprintf_P(logBuff, PSTR("Received shared attributes update:"));
+  recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
+  if(config.logLev >= 4){serializeJsonPretty(data, Serial);}
 
   if(data["model"] != nullptr){strlcpy(config.model, data["model"].as<const char*>(), sizeof(config.model));}
   if(data["group"] != nullptr){strlcpy(config.group, data["group"].as<const char*>(), sizeof(config.group));}
@@ -361,69 +265,91 @@ void processSharedAttributesUpdate(const Shared_Attribute_Data &data)
   if(data["port"] != nullptr){data["port"].as<uint16_t>();}
   if(data["wssid"] != nullptr){strlcpy(config.wssid, data["wssid"].as<const char*>(), sizeof(config.wssid));}
   if(data["wpass"] != nullptr){strlcpy(config.wpass, data["wpass"].as<const char*>(), sizeof(config.wpass));}
+  if(data["dssid"] != nullptr){strlcpy(config.dssid, data["dssid"].as<const char*>(), sizeof(config.dssid));}
+  if(data["dpass"] != nullptr){strlcpy(config.dpass, data["dpass"].as<const char*>(), sizeof(config.dpass));}
   if(data["upass"] != nullptr){strlcpy(config.upass, data["upass"].as<const char*>(), sizeof(config.upass));}
   if(data["provisionDeviceKey"] != nullptr){strlcpy(config.provisionDeviceKey, data["provisionDeviceKey"].as<const char*>(), sizeof(config.provisionDeviceKey));}
   if(data["provisionDeviceSecret"] != nullptr){strlcpy(config.provisionDeviceSecret, data["provisionDeviceSecret"].as<const char*>(), sizeof(config.provisionDeviceSecret));}
-  if(data["logLev"] != nullptr){data["logLev"].as<uint8_t>();}
-  configSave();
+  if(data["logLev"] != nullptr){config.logLev = data["logLev"].as<uint8_t>();}
 
-  if(data["dutyCycle"] != nullptr)
-  {
-    uint8_t index = 0;
-    for(JsonVariant v : data["dutyCycle"].as<JsonArray>())
-    {
-        mySettings.dutyCycle[index] = v.as<uint8_t>();
-        index++;
-    }
-  }
 
-  if(data["dutyRange"] != nullptr)
-  {
-    uint8_t index = 0;
-    for(JsonVariant v : data["dutyRange"].as<JsonArray>())
-    {
-        mySettings.dutyRange[index] = v.as<long>();
-        index++;
-    }
-  }
+  if(data["dutyCycleCh1"] != nullptr){mySettings.dutyCycle[0] = data["dutyCycleCh1"].as<uint8_t>();}
+  if(data["dutyCycleCh2"] != nullptr){mySettings.dutyCycle[1] = data["dutyCycleCh2"].as<uint8_t>();}
+  if(data["dutyCycleCh3"] != nullptr){mySettings.dutyCycle[2] = data["dutyCycleCh3"].as<uint8_t>();}
+  if(data["dutyCycleCh4"] != nullptr){mySettings.dutyCycle[3] = data["dutyCycleCh4"].as<uint8_t>();}
 
-  if(data["dutyCycleFailSafe"] != nullptr)
-  {
-    uint8_t index = 0;
-    for(JsonVariant v : data["dutyCycleFailSafe"].as<JsonArray>())
-    {
-        mySettings.dutyCycleFailSafe[index] = v.as<uint8_t>();
-        index++;
-    }
-  }
+  if(data["dutyRangeCh1"] != nullptr){mySettings.dutyRange[0] = data["dutyRangeCh1"].as<unsigned long>();}
+  if(data["dutyRangeCh2"] != nullptr){mySettings.dutyRange[1] = data["dutyRangeCh2"].as<unsigned long>();}
+  if(data["dutyRangeCh3"] != nullptr){mySettings.dutyRange[2] = data["dutyRangeCh3"].as<unsigned long>();}
+  if(data["dutyRangeCh4"] != nullptr){mySettings.dutyRange[3] = data["dutyRangeCh4"].as<unsigned long>();}
 
-  if(data["dutyRangeFailSafe"] != nullptr)
-  {
-    uint8_t index = 0;
-    for(JsonVariant v : data["dutyRangeFailSafe"].as<JsonArray>())
-    {
-        mySettings.dutyRangeFailSafe[index] = v.as<long>();
-        index++;
-    }
-  }
+  if(data["dutyCycleFailSafeCh1"] != nullptr){mySettings.dutyCycleFailSafe[0] = data["dutyCycleFailSafeCh1"].as<uint8_t>();}
+  if(data["dutyCycleFailSafeCh2"] != nullptr){mySettings.dutyCycleFailSafe[1] = data["dutyCycleFailSafeCh2"].as<uint8_t>();}
+  if(data["dutyCycleFailSafeCh3"] != nullptr){mySettings.dutyCycleFailSafe[2] = data["dutyCycleFailSafeCh3"].as<uint8_t>();}
+  if(data["dutyCycleFailSafeCh4"] != nullptr){mySettings.dutyCycleFailSafe[3] = data["dutyCycleFailSafeCh4"].as<uint8_t>();}
 
-  if(data["relayPin"] != nullptr)
-  {
-    uint8_t index = 0;
-    for(JsonVariant v : data["relayPin"].as<JsonArray>())
-    {
-        mySettings.relayPin[index] = v.as<long>();
-        index++;
-    }
-  }
+  if(data["dutyRangeFailSafeCh1"] != nullptr){mySettings.dutyRangeFailSafe[0] = data["dutyRangeFailSafeCh1"].as<unsigned long>();}
+  if(data["dutyRangeFailSafeCh2"] != nullptr){mySettings.dutyRangeFailSafe[1] = data["dutyRangeFailSafeCh2"].as<unsigned long>();}
+  if(data["dutyRangeFailSafeCh3"] != nullptr){mySettings.dutyRangeFailSafe[2] = data["dutyRangeFailSafeCh3"].as<unsigned long>();}
+  if(data["dutyRangeFailSafeCh4"] != nullptr){mySettings.dutyRangeFailSafe[3] = data["dutyRangeFailSafeCh4"].as<unsigned long>();}
 
-  if(data["ON"] != nullptr)
-  {
-    mySettings.ON = data["ON"].as<bool>();
-  }
+  if(data["relayPinCh1"] != nullptr){mySettings.relayPin[0] = data["relayPinCh1"].as<uint8_t>();}
+  if(data["relayPinCh2"] != nullptr){mySettings.relayPin[1] = data["relayPinCh2"].as<uint8_t>();}
+  if(data["relayPinCh3"] != nullptr){mySettings.relayPin[2] = data["relayPinCh3"].as<uint8_t>();}
+  if(data["relayPinCh4"] != nullptr){mySettings.relayPin[3] = data["relayPinCh4"].as<uint8_t>();}
 
-  saveSettings();
-  loadSettings();
+  if(data["ON"] != nullptr){mySettings.ON = data["ON"].as<bool>();}
 
   mySettings.lastUpdated = millis();
+  tb.Shared_Attributes_Unsubscribe();
+  subscribeRPCCallback();
+}
+
+void subscribeRPCCallback()
+{
+  if(tb.connected())
+  {
+    if(tb.RPC_Subscribe(RPCCallbacks, RPCCallbacksSize))
+    {
+      sprintf_P(logBuff, PSTR("RPC callbacks subscribed successfuly!"));
+      recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+      FLAG_IOT_RPC_SUBSCRIBE = false;
+    }
+  }
+}
+
+void subscribeOTAUpdate()
+{
+  if(tb.connected())
+  {
+    if (tb.Firmware_OTA_Subscribe() && FLAG_IOT_OTA_UPDATE_SUBSCRIBE)
+    {
+      if (tb.Firmware_Update(CURRENT_FIRMWARE_TITLE, CURRENT_FIRMWARE_VERSION))
+      {
+        sprintf_P(logBuff, PSTR("Firmware update complete. Rebooting now..."));
+        recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+      }
+      else
+      {
+        sprintf_P(logBuff, PSTR("Firmware is up to date."));
+        recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+        tb.Firmware_OTA_Unsubscribe();
+        subscribeRPCCallback();
+      }
+      FLAG_IOT_OTA_UPDATE_SUBSCRIBE = false;
+    }
+  }
+}
+
+void subscribeSharedAttributesUpdate()
+{
+  if(tb.connected())
+  {
+    if(tb.Shared_Attributes_Subscribe(SharedAttributesCallbacks, 1))
+    {
+      sprintf_P(logBuff, PSTR("Shared attributes update callbacks subscribed successfuly!"));
+      recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+      FLAG_IOT_SHARED_ATTRIBUTES_SUBSCRIBE = false;
+    }
+  }
 }
