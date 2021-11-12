@@ -289,5 +289,18 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["ON"] != nullptr){mySettings.ON = data["ON"].as<bool>();}
 
   mySettings.lastUpdated = millis();
+
+  if(data["fw_title"] != nullptr)
+  {
+    if (tb.Firmware_Update(CURRENT_FIRMWARE_TITLE, CURRENT_FIRMWARE_VERSION)) {
+      sprintf_P(logBuff, PSTR("OTA Update finished, rebooting..."));
+      recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
+      reboot();
+    }
+    else {
+      sprintf_P(logBuff, PSTR("Firmware up-to-date."));
+      recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
+    }
+  }
   return callbackResponse("sharedAttributesUpdate", 1);
 }
