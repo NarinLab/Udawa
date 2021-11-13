@@ -9,18 +9,26 @@
 
 Settings mySettings;
 
-const size_t callbacksSize = 4;
+const size_t callbacksSize = 5;
 GenericCallback callbacks[callbacksSize] = {
   { "sharedAttributesUpdate", processSharedAttributesUpdate },
   { "provisionResponse", processProvisionResponse },
   { "saveConfig", processSaveConfig },
-  { "saveSettings", processSaveSettings }
+  { "saveSettings", processSaveSettings },
+  { "syncClientAttributes", processSyncClientAttributes }
 };
 
 void setup()
 {
   startup();
   loadSettings();
+
+  if(mySettings.fTeleDev)
+  {
+    taskManager.scheduleFixedRate(1000, [] {
+      publishDeviceTelemetry();
+    });
+  }
 }
 
 void loop()
@@ -36,15 +44,19 @@ void loop()
       recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
       FLAG_IOT_SUBSCRIBE = false;
     }
-    if (tb.Firmware_Update(CURRENT_FIRMWARE_TITLE, CURRENT_FIRMWARE_VERSION)) {
+    if (tb.Firmware_Update(CURRENT_FIRMWARE_TITLE, CURRENT_FIRMWARE_VERSION))
+    {
       sprintf_P(logBuff, PSTR("OTA Update finished, rebooting..."));
       recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
       reboot();
     }
-    else {
+    else
+    {
       sprintf_P(logBuff, PSTR("Firmware up-to-date."));
       recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
     }
+
+    syncClientAttributes();
   }
 }
 
@@ -147,6 +159,15 @@ void loadSettings()
     mySettings.ON = 1;
   }
 
+  if(doc["fTeleDev"] != nullptr)
+  {
+    mySettings.fTeleDev = doc["fTeleDev"].as<bool>();
+  }
+  else
+  {
+    mySettings.fTeleDev = 1;
+  }
+
   for(uint8_t i = 0; i < countof(mySettings.dutyCounter); i++)
   {
     mySettings.dutyCounter[i] = 86400;
@@ -188,6 +209,7 @@ void saveSettings()
   }
 
   doc["ON"] = mySettings.ON;
+  doc["fTeleDev"] = mySettings.fTeleDev;
 
   writeSettings(doc, settingsPath);
 }
@@ -207,6 +229,11 @@ callbackResponse processSaveSettings(const callbackData &data)
   return callbackResponse("saveSettings", 1);
 }
 
+callbackResponse processSyncClientAttributes(const callbackData &data)
+{
+  syncClientAttributes();
+  return callbackResponse("syncClientAttributes", 1);
+}
 
 void dutyRuntime()
 {
@@ -296,8 +323,88 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["relayPinCh4"] != nullptr){mySettings.relayPin[3] = data["relayPinCh4"].as<uint8_t>();}
 
   if(data["ON"] != nullptr){mySettings.ON = data["ON"].as<bool>();}
+  if(data["fTeleDev"] != nullptr){mySettings.fTeleDev = data["fTeleDev"].as<bool>();}
 
   mySettings.lastUpdated = millis();
 
   return callbackResponse("sharedAttributesUpdate", 1);
+}
+
+void syncClientAttributes()
+{
+  StaticJsonDocument<DOCSIZE> doc;
+
+  IPAddress ip = WiFi.localIP();
+  char ipa[25];
+  sprintf(ipa, "%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+  doc["ipad"] = ipa;
+  doc["compdate"] = COMPILED;
+  doc["fmTitle"] = CURRENT_FIRMWARE_TITLE;
+  doc["fmVersion"] = CURRENT_FIRMWARE_VERSION;
+  doc["stamac"] = WiFi.macAddress();
+  tb.sendAttributeDoc(doc);
+  doc.clear();
+  doc["apmac"] = WiFi.softAPmacAddress();
+  doc["flashFree"] = ESP.getFreeSketchSpace();
+  doc["firmwareSize"] = ESP.getSketchSize();
+  doc["flashSize"] = ESP.getFlashChipSize();
+  doc["sdkVer"] = ESP.getSdkVersion();
+  tb.sendAttributeDoc(doc);
+  doc.clear();
+  doc["model"] = config.model;
+  doc["group"] = config.group;
+  doc["broker"] = config.broker;
+  doc["port"] = config.port;
+  doc["wssid"] = config.wssid;
+  tb.sendAttributeDoc(doc);
+  doc.clear();
+  doc["wpass"] = config.wpass;
+  doc["dssid"] = config.dssid;
+  doc["dpass"] = config.dpass;
+  doc["upass"] = config.upass;
+  doc["accessToken"] = config.accessToken;
+  doc["provisionDeviceKey"] = config.provisionDeviceKey;
+  doc["provisionDeviceSecret"] = config.provisionDeviceSecret;
+  doc["logLev"] = config.logLev;
+  tb.sendAttributeDoc(doc);
+  doc.clear();
+  doc["dutyCycleCh1"] = mySettings.dutyCycle[0];
+  doc["dutyCycleCh2"] = mySettings.dutyCycle[1];
+  doc["dutyCycleCh3"] = mySettings.dutyCycle[2];
+  doc["dutyCycleCh4"] = mySettings.dutyCycle[3];
+  doc["dutyRangeCh1"] = mySettings.dutyRange[0];
+  doc["dutyRangeCh2"] = mySettings.dutyRange[1];
+  doc["dutyRangeCh3"] = mySettings.dutyRange[2];
+  doc["dutyRangeCh4"] = mySettings.dutyRange[3];
+  tb.sendAttributeDoc(doc);
+  doc.clear();
+  doc["dutyCycleFailSafeCh1"] = mySettings.dutyCycleFailSafe[0];
+  doc["dutyCycleFailSafeCh2"] = mySettings.dutyCycleFailSafe[1];
+  doc["dutyCycleFailSafeCh3"] = mySettings.dutyCycleFailSafe[2];
+  doc["dutyCycleFailSafeCh4"] = mySettings.dutyCycleFailSafe[3];
+  doc["dutyRangeFailSafeCh1"] = mySettings.dutyRangeFailSafe[0];
+  doc["dutyRangeFailSafeCh2"] = mySettings.dutyRangeFailSafe[1];
+  doc["dutyRangeFailSafeCh3"] = mySettings.dutyRangeFailSafe[2];
+  doc["dutyRangeFailSafeCh4"] = mySettings.dutyRangeFailSafe[3];
+  tb.sendAttributeDoc(doc);
+  doc.clear();
+  doc["relayPinCh1"] = mySettings.relayPin[0];
+  doc["relayPinCh2"] = mySettings.relayPin[1];
+  doc["relayPinCh3"] = mySettings.relayPin[2];
+  doc["relayPinCh4"] = mySettings.relayPin[3];
+  doc["ON"] = mySettings.ON;
+  doc["fTeleDev"] = mySettings.fTeleDev;
+  tb.sendAttributeDoc(doc);
+  doc.clear();
+}
+
+void publishDeviceTelemetry()
+{
+  StaticJsonDocument<DOCSIZE> doc;
+
+  doc["heap"] = heap_caps_get_free_size(MALLOC_CAP_8BIT);;
+  doc["rssi"] = WiFi.RSSI();
+  doc["uptime"] = millis()/1000;
+  tb.sendTelemetryDoc(doc);
+  doc.clear();
 }

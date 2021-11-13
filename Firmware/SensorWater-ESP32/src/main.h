@@ -12,7 +12,7 @@
 #include <TaskManagerIO.h>
 
 #define CURRENT_FIRMWARE_TITLE "UDAWA-Damodar"
-#define CURRENT_FIRMWARE_VERSION "0.0.1"
+#define CURRENT_FIRMWARE_VERSION "0.0.2"
 
 const char* settingsPath = "/settings.json";
 
@@ -26,15 +26,19 @@ struct Settings
 {
     unsigned long publishInterval;
     unsigned long lastUpdated;
+    bool fTeleDev;
 };
 
 callbackResponse processSaveConfig(const callbackData &data);
 callbackResponse processSaveSettings(const callbackData &data);
 callbackResponse processSharedAttributesUpdate(const callbackData &data);
+callbackResponse processSyncClientAttributes(const callbackData &data);
 
 void loadSettings();
 void saveSettings();
 void publishWater();
+void syncClientAttributes();
+void publishDeviceTelemetry();
 
 
 #endif

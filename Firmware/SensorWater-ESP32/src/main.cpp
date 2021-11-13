@@ -11,12 +11,13 @@ uint16_t taskIdPublishWater;
 Water water;
 Settings mySettings;
 
-const size_t callbacksSize = 4;
+const size_t callbacksSize = 5;
 GenericCallback callbacks[callbacksSize] = {
   { "sharedAttributesUpdate", processSharedAttributesUpdate },
   { "provisionResponse", processProvisionResponse },
   { "saveConfig", processSaveConfig },
-  { "saveSettings", processSaveSettings }
+  { "saveSettings", processSaveSettings },
+  { "syncClientAttributes", processSyncClientAttributes }
 };
 
 void setup()
@@ -24,18 +25,25 @@ void setup()
   startup();
   loadSettings();
   syncConfigCoMCU();
+
   taskIdPublishWater = taskManager.scheduleFixedRate(mySettings.publishInterval | 30000, [] {
     if(tb.connected())
     {
       publishWater();
     }
   });
+
+  if(mySettings.fTeleDev)
+  {
+    taskManager.scheduleFixedRate(1000, [] {
+      publishDeviceTelemetry();
+    });
+  }
 }
 
 void loop()
 {
   udawa();
-  taskManager.runLoop();
 
   if(tb.connected() && FLAG_IOT_SUBSCRIBE)
   {
@@ -54,6 +62,8 @@ void loop()
       sprintf_P(logBuff, PSTR("Firmware up-to-date."));
       recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
     }
+
+    syncClientAttributes();
   }
 }
 
@@ -85,11 +95,32 @@ void loadSettings()
 {
   StaticJsonDocument<DOCSIZE> doc;
   readSettings(doc, settingsPath);
+
+  if(doc["fTeleDev"] != nullptr)
+  {
+    mySettings.fTeleDev = doc["fTeleDev"].as<bool>();
+  }
+  else
+  {
+    mySettings.fTeleDev = 1;
+  }
+
+  if(doc["publishInterval"] != nullptr)
+  {
+    mySettings.publishInterval = doc["publishInterval"].as<unsigned long>();
+  }
+  else
+  {
+    mySettings.publishInterval = 30000;
+  }
 }
 
 void saveSettings()
 {
   StaticJsonDocument<DOCSIZE> doc;
+
+  doc["fTeleDev"] = mySettings.fTeleDev;
+  doc["publishInterval"]  = mySettings.publishInterval;
 
   writeSettings(doc, settingsPath);
 }
@@ -107,6 +138,12 @@ callbackResponse processSaveSettings(const callbackData &data)
 
   mySettings.lastUpdated = millis();
   return callbackResponse("saveSettings", 1);
+}
+
+callbackResponse processSyncClientAttributes(const callbackData &data)
+{
+  syncClientAttributes();
+  return callbackResponse("syncClientAttributes", 1);
 }
 
 callbackResponse processSharedAttributesUpdate(const callbackData &data)
@@ -130,7 +167,63 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
 
 
   if(data["publishInterval"] != nullptr){mySettings.publishInterval = data["publishInterval"].as<unsigned long>();}
+  if(data["fTeleDev"] != nullptr){mySettings.fTeleDev = data["fTeleDev"].as<bool>();}
   mySettings.lastUpdated = millis();
 
   return callbackResponse("sharedAttributesUpdate", 1);
+}
+
+void syncClientAttributes()
+{
+  StaticJsonDocument<DOCSIZE> doc;
+
+  IPAddress ip = WiFi.localIP();
+  char ipa[25];
+  sprintf(ipa, "%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+  doc["ipad"] = ipa;
+  doc["compdate"] = COMPILED;
+  doc["fmTitle"] = CURRENT_FIRMWARE_TITLE;
+  doc["fmVersion"] = CURRENT_FIRMWARE_VERSION;
+  doc["stamac"] = WiFi.macAddress();
+  tb.sendAttributeDoc(doc);
+  doc.clear();
+  doc["apmac"] = WiFi.softAPmacAddress();
+  doc["flashFree"] = ESP.getFreeSketchSpace();
+  doc["firmwareSize"] = ESP.getSketchSize();
+  doc["flashSize"] = ESP.getFlashChipSize();
+  doc["sdkVer"] = ESP.getSdkVersion();
+  tb.sendAttributeDoc(doc);
+  doc.clear();
+  doc["model"] = config.model;
+  doc["group"] = config.group;
+  doc["broker"] = config.broker;
+  doc["port"] = config.port;
+  doc["wssid"] = config.wssid;
+  tb.sendAttributeDoc(doc);
+  doc.clear();
+  doc["wpass"] = config.wpass;
+  doc["dssid"] = config.dssid;
+  doc["dpass"] = config.dpass;
+  doc["upass"] = config.upass;
+  doc["accessToken"] = config.accessToken;
+  doc["provisionDeviceKey"] = config.provisionDeviceKey;
+  doc["provisionDeviceSecret"] = config.provisionDeviceSecret;
+  doc["logLev"] = config.logLev;
+  tb.sendAttributeDoc(doc);
+  doc.clear();
+  doc["fTeleDev"] = mySettings.fTeleDev;
+  doc["publishInterval"] = mySettings.publishInterval;
+  tb.sendAttributeDoc(doc);
+  doc.clear();
+}
+
+void publishDeviceTelemetry()
+{
+  StaticJsonDocument<DOCSIZE> doc;
+
+  doc["heap"] = heap_caps_get_free_size(MALLOC_CAP_8BIT);;
+  doc["rssi"] = WiFi.RSSI();
+  doc["uptime"] = millis()/1000;
+  tb.sendTelemetryDoc(doc);
+  doc.clear();
 }
