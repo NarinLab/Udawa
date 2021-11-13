@@ -12,7 +12,7 @@
 #include <TaskManagerIO.h>
 
 #define CURRENT_FIRMWARE_TITLE "UDAWA-Damodar"
-#define CURRENT_FIRMWARE_VERSION "0.0.1"
+#define CURRENT_FIRMWARE_VERSION "0.0.2"
 
 const char* settingsPath = "/settings.json";
 
