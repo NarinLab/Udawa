@@ -296,7 +296,6 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["provisionDeviceSecret"] != nullptr){strlcpy(config.provisionDeviceSecret, data["provisionDeviceSecret"].as<const char*>(), sizeof(config.provisionDeviceSecret));}
   if(data["logLev"] != nullptr){config.logLev = data["logLev"].as<uint8_t>();}
 
-
   if(data["dutyCycleCh1"] != nullptr){mySettings.dutyCycle[0] = data["dutyCycleCh1"].as<uint8_t>();}
   if(data["dutyCycleCh2"] != nullptr){mySettings.dutyCycle[1] = data["dutyCycleCh2"].as<uint8_t>();}
   if(data["dutyCycleCh3"] != nullptr){mySettings.dutyCycle[2] = data["dutyCycleCh3"].as<uint8_t>();}
@@ -326,7 +325,6 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["fTeleDev"] != nullptr){mySettings.fTeleDev = data["fTeleDev"].as<bool>();}
 
   mySettings.lastUpdated = millis();
-
   return callbackResponse("sharedAttributesUpdate", 1);
 }
 

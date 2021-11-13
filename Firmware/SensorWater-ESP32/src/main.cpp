@@ -165,11 +165,10 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["provisionDeviceSecret"] != nullptr){strlcpy(config.provisionDeviceSecret, data["provisionDeviceSecret"].as<const char*>(), sizeof(config.provisionDeviceSecret));}
   if(data["logLev"] != nullptr){config.logLev = data["logLev"].as<uint8_t>();}
 
-
   if(data["publishInterval"] != nullptr){mySettings.publishInterval = data["publishInterval"].as<unsigned long>();}
   if(data["fTeleDev"] != nullptr){mySettings.fTeleDev = data["fTeleDev"].as<bool>();}
-  mySettings.lastUpdated = millis();
 
+  mySettings.lastUpdated = millis();
   return callbackResponse("sharedAttributesUpdate", 1);
 }
 
