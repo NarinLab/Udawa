@@ -189,6 +189,17 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["publishInterval"] != nullptr){mySettings.publishInterval = data["publishInterval"].as<unsigned long>();}
   if(data["fTeleDev"] != nullptr){mySettings.fTeleDev = data["fTeleDev"].as<bool>();}
 
+  if(data["pEcKcoe"] != nullptr){configcomcu.pEcKcoe = data["pEcKcoe"].as<float>();}
+  if(data["pEcTcoe"] != nullptr){configcomcu.pEcTcoe = data["pEcTcoe"].as<float>();}
+  if(data["pEcVin"] != nullptr){configcomcu.pEcVin = data["pEcVin"].as<float>();}
+  if(data["pEcPpm"] != nullptr){configcomcu.pEcPpm = data["pEcPpm"].as<float>();}
+  if(data["pEcR1"] != nullptr){configcomcu.pEcR1 = data["pEcR1"].as<uint16_t>();}
+  if(data["pEcRa"] != nullptr){configcomcu.pEcRa = data["pEcRa"].as<uint16_t>();}
+
+  if(data["pinEcPower"] != nullptr){configcomcu.pinEcPower = data["pinEcPower"].as<uint8_t>();}
+  if(data["pinEcGnd"] != nullptr){configcomcu.pinEcGnd = data["pinEcGnd"].as<uint8_t>();}
+  if(data["pinEcData"] != nullptr){configcomcu.pinEcData = data["pinEcData"].as<uint8_t>();}
+  
   mySettings.lastUpdated = millis();
   return callbackResponse("sharedAttributesUpdate", 1);
 }
