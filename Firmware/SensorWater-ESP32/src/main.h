@@ -12,7 +12,7 @@
 #include <TaskManagerIO.h>
 
 #define CURRENT_FIRMWARE_TITLE "UDAWA-Damodar"
-#define CURRENT_FIRMWARE_VERSION "0.0.2"
+#define CURRENT_FIRMWARE_VERSION "0.0.3"
 
 const char* settingsPath = "/settings.json";
 
@@ -34,6 +34,8 @@ callbackResponse processSaveSettings(const callbackData &data);
 callbackResponse processSharedAttributesUpdate(const callbackData &data);
 callbackResponse processSyncClientAttributes(const callbackData &data);
 callbackResponse processConfigCoMCUSave(const callbackData &data);
+callbackResponse processSyncConfigCoMCU(const callbackData &data);
+callbackResponse processReboot(const callbackData &data);
 
 void loadSettings();
 void saveSettings();
