@@ -11,13 +11,14 @@ uint16_t taskIdPublishWater;
 Water water;
 Settings mySettings;
 
-const size_t callbacksSize = 5;
+const size_t callbacksSize = 6;
 GenericCallback callbacks[callbacksSize] = {
   { "sharedAttributesUpdate", processSharedAttributesUpdate },
   { "provisionResponse", processProvisionResponse },
   { "saveConfig", processSaveConfig },
   { "saveSettings", processSaveSettings },
-  { "syncClientAttributes", processSyncClientAttributes }
+  { "syncClientAttributes", processSyncClientAttributes },
+  { "configCoMCUSave", processConfigCoMCUSave }
 };
 
 void setup()
@@ -138,6 +139,12 @@ callbackResponse processSaveSettings(const callbackData &data)
 
   mySettings.lastUpdated = millis();
   return callbackResponse("saveSettings", 1);
+}
+
+callbackResponse processConfigCoMCUSave(const callbackData &data)
+{
+  configCoMCUSave();
+  return callbackResponse("configCoMCUSave", 1);
 }
 
 callbackResponse processSyncClientAttributes(const callbackData &data)
