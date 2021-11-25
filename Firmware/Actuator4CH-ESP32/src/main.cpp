@@ -9,7 +9,7 @@
 
 Settings mySettings;
 
-const size_t callbacksSize = 5;
+const size_t callbacksSize = 6;
 GenericCallback callbacks[callbacksSize] = {
   { "sharedAttributesUpdate", processSharedAttributesUpdate },
   { "provisionResponse", processProvisionResponse },
