@@ -33,6 +33,7 @@ callbackResponse processSaveConfig(const callbackData &data);
 callbackResponse processSaveSettings(const callbackData &data);
 callbackResponse processSharedAttributesUpdate(const callbackData &data);
 callbackResponse processSyncClientAttributes(const callbackData &data);
+callbackResponse processReboot(const callbackData &data);
 
 void loadSettings();
 void saveSettings();

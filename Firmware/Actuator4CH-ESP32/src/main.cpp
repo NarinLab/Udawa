@@ -15,7 +15,8 @@ GenericCallback callbacks[callbacksSize] = {
   { "provisionResponse", processProvisionResponse },
   { "saveConfig", processSaveConfig },
   { "saveSettings", processSaveSettings },
-  { "syncClientAttributes", processSyncClientAttributes }
+  { "syncClientAttributes", processSyncClientAttributes },
+  { "reboot", processReboot }
 };
 
 void setup()
@@ -227,6 +228,12 @@ callbackResponse processSaveSettings(const callbackData &data)
 
   mySettings.lastUpdated = millis();
   return callbackResponse("saveSettings", 1);
+}
+
+callbackResponse processReboot(const callbackData &data)
+{
+  reboot();
+  return callbackResponse("reboot", 1);
 }
 
 callbackResponse processSyncClientAttributes(const callbackData &data)
