@@ -250,7 +250,7 @@ void dutyRuntime()
     {
       if( mySettings.dutyState[i] == mySettings.ON )
       {
-        if( mySettings.dutyCycle != 100 && (millis() - mySettings.dutyCounter[i] ) >= (float)(( ((float)mySettings.dutyCycle[i] / 100) * (float)mySettings.dutyRange[i]) * 1000))
+        if( mySettings.dutyCycle[i] != 100 && (millis() - mySettings.dutyCounter[i] ) >= (float)(( ((float)mySettings.dutyCycle[i] / 100) * (float)mySettings.dutyRange[i]) * 1000))
         {
           mySettings.dutyState[i] = !mySettings.ON;
           pinMode(mySettings.relayPin[i], OUTPUT);
@@ -266,7 +266,7 @@ void dutyRuntime()
       }
       else
       {
-        if( mySettings.dutyCycle != 0 && (millis() - mySettings.dutyCounter[i] ) >= (float) ( ((100 - (float) mySettings.dutyCycle[i]) / 100) * (float) mySettings.dutyRange[i]) * 1000)
+        if( mySettings.dutyCycle[i] != 0 && (millis() - mySettings.dutyCounter[i] ) >= (float) ( ((100 - (float) mySettings.dutyCycle[i]) / 100) * (float) mySettings.dutyRange[i]) * 1000)
         {
           mySettings.dutyState[i] = mySettings.ON;
           pinMode(mySettings.relayPin[i], OUTPUT);
