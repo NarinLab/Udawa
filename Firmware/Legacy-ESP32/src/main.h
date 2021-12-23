@@ -12,7 +12,7 @@
 #include <TaskManagerIO.h>
 
 #define CURRENT_FIRMWARE_TITLE "UDAWA-Legacy"
-#define CURRENT_FIRMWARE_VERSION "0.0.1"
+#define CURRENT_FIRMWARE_VERSION "0.0.2"
 
 const char* settingsPath = "/settings.json";
 
@@ -24,31 +24,33 @@ struct Water
 };
 struct Settings
 {
-    unsigned long publishInterval;
-    unsigned long lastUpdated;
-    bool fTeleDev;
-
     uint8_t dutyCycle[4];
     unsigned long dutyRange[4];
     uint8_t dutyCycleFailSafe[4];
     unsigned long dutyRangeFailSafe[4];
     uint8_t relayPin[4];
+    unsigned long lastUpdated;
     bool ON;
     bool dutyState[4];
     unsigned long dutyCounter[4];
+    bool fTeleDev;
+    unsigned long publishInterval;
 };
 
 callbackResponse processSaveConfig(const callbackData &data);
 callbackResponse processSaveSettings(const callbackData &data);
 callbackResponse processSharedAttributesUpdate(const callbackData &data);
 callbackResponse processSyncClientAttributes(const callbackData &data);
+callbackResponse processReboot(const callbackData &data);
+callbackResponse processConfigCoMCUSave(const callbackData &data);
+callbackResponse processSyncConfigCoMCU(const callbackData &data);
 
 void loadSettings();
 void saveSettings();
-void publishWater();
+void dutyRuntime();
 void syncClientAttributes();
 void publishDeviceTelemetry();
-void dutyRuntime();
+void publishWater();
 
 
 #endif
