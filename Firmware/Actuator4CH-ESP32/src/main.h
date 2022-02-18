@@ -12,7 +12,7 @@
 
 
 #define CURRENT_FIRMWARE_TITLE "UDAWA-Gadadar"
-#define CURRENT_FIRMWARE_VERSION "0.0.3"
+#define CURRENT_FIRMWARE_VERSION "0.0.4"
 
 const char* settingsPath = "/settings.json";
 struct Settings
@@ -34,11 +34,14 @@ callbackResponse processSaveSettings(const callbackData &data);
 callbackResponse processSharedAttributesUpdate(const callbackData &data);
 callbackResponse processSyncClientAttributes(const callbackData &data);
 callbackResponse processReboot(const callbackData &data);
+callbackResponse processSetSwitch(const callbackData &data);
+callbackResponse processGetSwitch(const callbackData &data);
 
 void loadSettings();
 void saveSettings();
 void dutyRuntime();
 void syncClientAttributes();
 void publishDeviceTelemetry();
+void setSwitch(String  ch, String state);
 
 #endif

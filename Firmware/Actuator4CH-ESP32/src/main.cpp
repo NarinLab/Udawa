@@ -9,14 +9,16 @@
 
 Settings mySettings;
 
-const size_t callbacksSize = 6;
+const size_t callbacksSize = 8;
 GenericCallback callbacks[callbacksSize] = {
   { "sharedAttributesUpdate", processSharedAttributesUpdate },
   { "provisionResponse", processProvisionResponse },
   { "saveConfig", processSaveConfig },
   { "saveSettings", processSaveSettings },
   { "syncClientAttributes", processSyncClientAttributes },
-  { "reboot", processReboot }
+  { "reboot", processReboot },
+  { "setSwitch", processSetSwitch },
+  { "getSwitch", processGetSwitch}
 };
 
 void setup()
@@ -242,6 +244,83 @@ callbackResponse processSyncClientAttributes(const callbackData &data)
   return callbackResponse("syncClientAttributes", 1);
 }
 
+callbackResponse processSetSwitch(const callbackData &data)
+{
+  String log;
+  serializeJson(data, log);
+  sprintf_P(logBuff, PSTR("%s"), log.c_str());
+  recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
+
+  if(data["ch"] != nullptr && data["state"] != nullptr)
+  {
+    String ch = data["ch"].as<String>();
+    String state = data["state"].as<String>();
+    setSwitch(ch, state);
+  }
+  else
+  {
+    return callbackResponse("setSwitch", "ERR");
+  }
+  return callbackResponse("setSwitch", "OK");
+}
+
+callbackResponse processGetSwitch(const callbackData &data)
+{
+  String log;
+  serializeJson(data, log);
+  sprintf_P(logBuff, PSTR("DEBUG %s"), log.c_str());
+  recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
+
+  uint8_t pin = 0;
+  bool state = 0;
+  if(data["ch"] != nullptr)
+  {
+    String ch = data["ch"].as<String>();
+    if(ch == String("ch1")){pin = mySettings.relayPin[0];}
+    else if(ch == String("ch2")){pin = mySettings.relayPin[1];}
+    else if(ch == String("ch3")){pin = mySettings.relayPin[2];}
+    else if(ch == String("ch4")){pin = mySettings.relayPin[3];}
+    else
+    {
+      return callbackResponse("getSwitch", "Ch not found.");
+    }
+    state = digitalRead(pin);
+  }
+  else
+  {
+    return callbackResponse("getSwitch", "data[\"ch\"] is nullptr.");
+  }
+  return callbackResponse("getSwitch", state);
+}
+
+void setSwitch(String  ch, String state)
+{
+  bool fState = 0;
+  uint8_t pin = 0;
+  uint8_t chIndex = 0;
+
+  if(ch == String("ch1")){pin = mySettings.relayPin[0]; chIndex = 0;}
+  else if(ch == String("ch2")){pin = mySettings.relayPin[1]; chIndex = 1;}
+  else if(ch == String("ch3")){pin = mySettings.relayPin[2]; chIndex = 2;}
+  else if(ch == String("ch4")){pin = mySettings.relayPin[3]; chIndex = 3;}
+  else {return;}
+  if(state == String("ON"))
+  {
+    fState = mySettings.ON;
+  }
+  else
+  {
+    fState = !mySettings.ON;
+  }
+
+  pinMode(pin, OUTPUT);
+  digitalWrite(pin, fState);
+  if(tb.connected())
+  {
+    tb.sendTelemetryInt((String("ch")+String(chIndex+1)).c_str(), mySettings.dutyState[chIndex]);
+  }
+}
+
 void dutyRuntime()
 {
   for(uint8_t i = 0; i < countof(mySettings.relayPin); i++)
@@ -303,10 +382,38 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["provisionDeviceSecret"] != nullptr){strlcpy(config.provisionDeviceSecret, data["provisionDeviceSecret"].as<const char*>(), sizeof(config.provisionDeviceSecret));}
   if(data["logLev"] != nullptr){config.logLev = data["logLev"].as<uint8_t>();}
 
-  if(data["dutyCycleCh1"] != nullptr){mySettings.dutyCycle[0] = data["dutyCycleCh1"].as<uint8_t>();}
-  if(data["dutyCycleCh2"] != nullptr){mySettings.dutyCycle[1] = data["dutyCycleCh2"].as<uint8_t>();}
-  if(data["dutyCycleCh3"] != nullptr){mySettings.dutyCycle[2] = data["dutyCycleCh3"].as<uint8_t>();}
-  if(data["dutyCycleCh4"] != nullptr){mySettings.dutyCycle[3] = data["dutyCycleCh4"].as<uint8_t>();}
+  if(data["dutyCycleCh1"] != nullptr)
+  {
+    mySettings.dutyCycle[0] = data["dutyCycleCh1"].as<uint8_t>();
+    if(data["dutyCycleCh1"].as<uint8_t>() == 0)
+    {
+      setSwitch(String("ch1"), String("OFF"));
+    }
+  }
+  if(data["dutyCycleCh2"] != nullptr)
+  {
+    mySettings.dutyCycle[1] = data["dutyCycleCh2"].as<uint8_t>();
+    if(data["dutyCycleCh2"].as<uint8_t>() == 0)
+    {
+      setSwitch(String("ch2"), String("OFF"));
+    }
+  }
+  if(data["dutyCycleCh3"] != nullptr)
+  {
+    mySettings.dutyCycle[2] = data["dutyCycleCh3"].as<uint8_t>();
+    if(data["dutyCycleCh3"].as<uint8_t>() == 0)
+    {
+      setSwitch(String("ch3"), String("OFF"));
+    }
+  }
+  if(data["dutyCycleCh4"] != nullptr)
+  {
+    mySettings.dutyCycle[3] = data["dutyCycleCh4"].as<uint8_t>();
+    if(data["dutyCycleCh4"].as<uint8_t>() == 0)
+    {
+      setSwitch(String("ch4"), String("OFF"));
+    }
+  }
 
   if(data["dutyRangeCh1"] != nullptr){mySettings.dutyRange[0] = data["dutyRangeCh1"].as<unsigned long>();}
   if(data["dutyRangeCh2"] != nullptr){mySettings.dutyRange[1] = data["dutyRangeCh2"].as<unsigned long>();}
