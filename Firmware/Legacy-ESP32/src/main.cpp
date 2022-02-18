@@ -7,17 +7,20 @@
 **/
 #include "main.h"
 
+Settings mySettings;
 uint16_t taskIdPublishWater;
 Water water;
-Settings mySettings;
 
-const size_t callbacksSize = 5;
+const size_t callbacksSize = 8;
 GenericCallback callbacks[callbacksSize] = {
   { "sharedAttributesUpdate", processSharedAttributesUpdate },
   { "provisionResponse", processProvisionResponse },
   { "saveConfig", processSaveConfig },
   { "saveSettings", processSaveSettings },
-  { "syncClientAttributes", processSyncClientAttributes }
+  { "syncClientAttributes", processSyncClientAttributes },
+  { "configCoMCUSave", processConfigCoMCUSave },
+  { "reboot", processReboot },
+  { "syncConfigCoMCU", processSyncConfigCoMCU }
 };
 
 void setup()
@@ -29,7 +32,7 @@ void setup()
   taskIdPublishWater = taskManager.scheduleFixedRate(mySettings.publishInterval | 30000, [] {
     if(tb.connected())
     {
-      //publishWater();
+      publishWater();
     }
   });
 
@@ -54,12 +57,14 @@ void loop()
       recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
       FLAG_IOT_SUBSCRIBE = false;
     }
-    if (tb.Firmware_Update(CURRENT_FIRMWARE_TITLE, CURRENT_FIRMWARE_VERSION)) {
+    if (tb.Firmware_Update(CURRENT_FIRMWARE_TITLE, CURRENT_FIRMWARE_VERSION))
+    {
       sprintf_P(logBuff, PSTR("OTA Update finished, rebooting..."));
       recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
       reboot();
     }
-    else {
+    else
+    {
       sprintf_P(logBuff, PSTR("Firmware up-to-date."));
       recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
     }
@@ -251,6 +256,7 @@ void saveSettings()
 
   doc["ON"] = mySettings.ON;
   doc["fTeleDev"] = mySettings.fTeleDev;
+
   doc["publishInterval"]  = mySettings.publishInterval;
 
   writeSettings(doc, settingsPath);
@@ -271,10 +277,69 @@ callbackResponse processSaveSettings(const callbackData &data)
   return callbackResponse("saveSettings", 1);
 }
 
+callbackResponse processConfigCoMCUSave(const callbackData &data)
+{
+  configCoMCUSave();
+  return callbackResponse("configCoMCUSave", 1);
+}
+
+callbackResponse processSyncConfigCoMCU(const callbackData &data)
+{
+  syncConfigCoMCU();
+  return callbackResponse("syncConfigCoMCU", 1);
+}
+
+callbackResponse processReboot(const callbackData &data)
+{
+  reboot();
+  return callbackResponse("reboot", 1);
+}
+
 callbackResponse processSyncClientAttributes(const callbackData &data)
 {
   syncClientAttributes();
   return callbackResponse("syncClientAttributes", 1);
+}
+
+
+void dutyRuntime()
+{
+  for(uint8_t i = 0; i < countof(mySettings.relayPin); i++)
+  {
+    if(mySettings.dutyCycle[i] != 0)
+    {
+      if( mySettings.dutyState[i] == mySettings.ON )
+      {
+        if( mySettings.dutyCycle[i] != 100 && (millis() - mySettings.dutyCounter[i] ) >= (float)(( ((float)mySettings.dutyCycle[i] / 100) * (float)mySettings.dutyRange[i]) * 1000))
+        {
+          mySettings.dutyState[i] = !mySettings.ON;
+          setCoMCUPin(mySettings.relayPin[i], 'D', OUTPUT, 0, mySettings.dutyState[i]);
+          mySettings.dutyCounter[i] = millis();
+          sprintf_P(logBuff, PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
+          recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
+          if(tb.connected())
+          {
+            tb.sendTelemetryInt((String("ch")+String(i+1)).c_str(), mySettings.dutyState[i]);
+          }
+        }
+      }
+      else
+      {
+        if( mySettings.dutyCycle[i] != 0 && (millis() - mySettings.dutyCounter[i] ) >= (float) ( ((100 - (float) mySettings.dutyCycle[i]) / 100) * (float) mySettings.dutyRange[i]) * 1000)
+        {
+          mySettings.dutyState[i] = mySettings.ON;
+          setCoMCUPin(mySettings.relayPin[i], 'D', OUTPUT, 0, mySettings.dutyState[i]);
+          mySettings.dutyCounter[i] = millis();
+          sprintf_P(logBuff, PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
+          recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
+          if(tb.connected())
+          {
+            tb.sendTelemetryInt((String("ch")+String(i+1)).c_str(), mySettings.dutyState[i]);
+          }
+        }
+      }
+    }
+  }
 }
 
 callbackResponse processSharedAttributesUpdate(const callbackData &data)
@@ -295,9 +360,6 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["provisionDeviceKey"] != nullptr){strlcpy(config.provisionDeviceKey, data["provisionDeviceKey"].as<const char*>(), sizeof(config.provisionDeviceKey));}
   if(data["provisionDeviceSecret"] != nullptr){strlcpy(config.provisionDeviceSecret, data["provisionDeviceSecret"].as<const char*>(), sizeof(config.provisionDeviceSecret));}
   if(data["logLev"] != nullptr){config.logLev = data["logLev"].as<uint8_t>();}
-
-  if(data["publishInterval"] != nullptr){mySettings.publishInterval = data["publishInterval"].as<unsigned long>();}
-  if(data["fTeleDev"] != nullptr){mySettings.fTeleDev = data["fTeleDev"].as<bool>();}
 
   if(data["dutyCycleCh1"] != nullptr){mySettings.dutyCycle[0] = data["dutyCycleCh1"].as<uint8_t>();}
   if(data["dutyCycleCh2"] != nullptr){mySettings.dutyCycle[1] = data["dutyCycleCh2"].as<uint8_t>();}
@@ -325,6 +387,18 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["relayPinCh4"] != nullptr){mySettings.relayPin[3] = data["relayPinCh4"].as<uint8_t>();}
 
   if(data["ON"] != nullptr){mySettings.ON = data["ON"].as<bool>();}
+  if(data["fTeleDev"] != nullptr){mySettings.fTeleDev = data["fTeleDev"].as<bool>();}
+
+  if(data["pEcKcoe"] != nullptr){configcomcu.pEcKcoe = data["pEcKcoe"].as<float>();}
+  if(data["pEcTcoe"] != nullptr){configcomcu.pEcTcoe = data["pEcTcoe"].as<float>();}
+  if(data["pEcVin"] != nullptr){configcomcu.pEcVin = data["pEcVin"].as<float>();}
+  if(data["pEcPpm"] != nullptr){configcomcu.pEcPpm = data["pEcPpm"].as<float>();}
+  if(data["pEcR1"] != nullptr){configcomcu.pEcR1 = data["pEcR1"].as<uint16_t>();}
+  if(data["pEcRa"] != nullptr){configcomcu.pEcRa = data["pEcRa"].as<uint16_t>();}
+
+  if(data["pinEcPower"] != nullptr){configcomcu.pinEcPower = data["pinEcPower"].as<uint8_t>();}
+  if(data["pinEcGnd"] != nullptr){configcomcu.pinEcGnd = data["pinEcGnd"].as<uint8_t>();}
+  if(data["pinEcData"] != nullptr){configcomcu.pinEcData = data["pinEcData"].as<uint8_t>();}
 
   mySettings.lastUpdated = millis();
   return callbackResponse("sharedAttributesUpdate", 1);
@@ -368,10 +442,6 @@ void syncClientAttributes()
   doc["logLev"] = config.logLev;
   tb.sendAttributeDoc(doc);
   doc.clear();
-  doc["fTeleDev"] = mySettings.fTeleDev;
-  doc["publishInterval"] = mySettings.publishInterval;
-  tb.sendAttributeDoc(doc);
-  doc.clear();
   doc["dutyCycleCh1"] = mySettings.dutyCycle[0];
   doc["dutyCycleCh2"] = mySettings.dutyCycle[1];
   doc["dutyCycleCh3"] = mySettings.dutyCycle[2];
@@ -396,6 +466,8 @@ void syncClientAttributes()
   doc["relayPinCh2"] = mySettings.relayPin[1];
   doc["relayPinCh3"] = mySettings.relayPin[2];
   doc["relayPinCh4"] = mySettings.relayPin[3];
+  doc["ON"] = mySettings.ON;
+  doc["fTeleDev"] = mySettings.fTeleDev;
   tb.sendAttributeDoc(doc);
   doc.clear();
 }
@@ -409,44 +481,4 @@ void publishDeviceTelemetry()
   doc["uptime"] = millis()/1000;
   tb.sendTelemetryDoc(doc);
   doc.clear();
-}
-
-void dutyRuntime()
-{
-  for(uint8_t i = 0; i < countof(mySettings.relayPin); i++)
-  {
-    if(mySettings.dutyCycle[i] != 0)
-    {
-      if( mySettings.dutyState[i] == mySettings.ON )
-      {
-        if( (millis() - mySettings.dutyCounter[i] ) >= (float)(( ((float)mySettings.dutyCycle[i] / 100) * (float)mySettings.dutyRange[i]) * 1000))
-        {
-          mySettings.dutyState[i] = !mySettings.ON;
-          setCoMCUPin(mySettings.relayPin[i], 'D', OUTPUT, 0, mySettings.dutyState[i]);
-          mySettings.dutyCounter[i] = millis();
-          sprintf_P(logBuff, PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
-          recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
-          if(tb.connected())
-          {
-            tb.sendTelemetryInt((String("ch")+String(i+1)).c_str(), mySettings.dutyState[i]);
-          }
-        }
-      }
-      else
-      {
-        if( (millis() - mySettings.dutyCounter[i] ) >= (float) ( ((100 - (float) mySettings.dutyCycle[i]) / 100) * (float) mySettings.dutyRange[i]) * 1000)
-        {
-          mySettings.dutyState[i] = mySettings.ON;
-          setCoMCUPin(mySettings.relayPin[i], 'D', OUTPUT, 0, mySettings.dutyState[i]);
-          mySettings.dutyCounter[i] = millis();
-          sprintf_P(logBuff, PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
-          recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
-          if(tb.connected())
-          {
-            tb.sendTelemetryInt((String("ch")+String(i+1)).c_str(), mySettings.dutyState[i]);
-          }
-        }
-      }
-    }
-  }
 }
