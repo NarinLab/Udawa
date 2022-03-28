@@ -8,26 +8,21 @@
 #include "main.h"
 
 Settings mySettings;
-uint16_t taskIdPublishWater;
-Water water;
 
-const size_t callbacksSize = 8;
+const size_t callbacksSize = 6;
 GenericCallback callbacks[callbacksSize] = {
   { "sharedAttributesUpdate", processSharedAttributesUpdate },
   { "provisionResponse", processProvisionResponse },
   { "saveConfig", processSaveConfig },
   { "saveSettings", processSaveSettings },
   { "syncClientAttributes", processSyncClientAttributes },
-  { "configCoMCUSave", processConfigCoMCUSave },
-  { "reboot", processReboot },
-  { "syncConfigCoMCU", processSyncConfigCoMCU }
+  { "reboot", processReboot }
 };
 
 void setup()
 {
   startup();
   loadSettings();
-  syncConfigCoMCU();
 
   if(mySettings.fTeleDev)
   {
@@ -118,18 +113,6 @@ callbackResponse processSaveSettings(const callbackData &data)
 
   mySettings.lastUpdated = millis();
   return callbackResponse("saveSettings", 1);
-}
-
-callbackResponse processConfigCoMCUSave(const callbackData &data)
-{
-  configCoMCUSave();
-  return callbackResponse("configCoMCUSave", 1);
-}
-
-callbackResponse processSyncConfigCoMCU(const callbackData &data)
-{
-  syncConfigCoMCU();
-  return callbackResponse("syncConfigCoMCU", 1);
 }
 
 callbackResponse processReboot(const callbackData &data)
@@ -226,5 +209,6 @@ void publishDeviceTelemetry()
 
 void myTask()
 {
-
+  sprintf_P(logBuff, PSTR("I'm executing myTask every %ld."), mySettings.myTaskInterval);
+  recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
 }

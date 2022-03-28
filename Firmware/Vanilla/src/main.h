@@ -16,12 +16,6 @@
 
 const char* settingsPath = "/settings.json";
 
-struct Water
-{
-    float celcius;
-    float tds;
-    float ec;
-};
 struct Settings
 {
     unsigned long lastUpdated;
