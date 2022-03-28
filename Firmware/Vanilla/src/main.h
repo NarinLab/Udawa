@@ -27,6 +27,7 @@ struct Settings
     unsigned long lastUpdated;
     bool fTeleDev;
     unsigned long publishInterval;
+    unsigned long myTaskInterval;
 };
 
 callbackResponse processSaveConfig(const callbackData &data);
@@ -39,5 +40,6 @@ void loadSettings();
 void saveSettings();
 void syncClientAttributes();
 void publishDeviceTelemetry();
+void myTask();
 
 #endif

@@ -35,12 +35,15 @@ void setup()
       publishDeviceTelemetry();
     });
   }
+
+  taskManager.scheduleFixedRate(mySettings.myTaskInterval, [] {
+    myTask();
+  });
 }
 
 void loop()
 {
   udawa();
-  dutyRuntime();
 
   if(tb.connected() && FLAG_IOT_SUBSCRIBE)
   {
@@ -79,6 +82,16 @@ void loadSettings()
   {
     mySettings.fTeleDev = 1;
   }
+
+  if(doc["myTaskInterval"] != nullptr)
+  {
+    mySettings.myTaskInterval = doc["myTaskInterval"].as<unsigned long>();
+  }
+  else
+  {
+    mySettings.myTaskInterval = 30000;
+  }
+
 }
 
 void saveSettings()
@@ -86,6 +99,7 @@ void saveSettings()
   StaticJsonDocument<DOCSIZE> doc;
 
   doc["fTeleDev"] = mySettings.fTeleDev;
+  doc["myTaskInterval"] = mySettings.myTaskInterval;
 
 
   writeSettings(doc, settingsPath);
@@ -148,8 +162,9 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["provisionDeviceKey"] != nullptr){strlcpy(config.provisionDeviceKey, data["provisionDeviceKey"].as<const char*>(), sizeof(config.provisionDeviceKey));}
   if(data["provisionDeviceSecret"] != nullptr){strlcpy(config.provisionDeviceSecret, data["provisionDeviceSecret"].as<const char*>(), sizeof(config.provisionDeviceSecret));}
   if(data["logLev"] != nullptr){config.logLev = data["logLev"].as<uint8_t>();}
-  
+
   if(data["fTeleDev"] != nullptr){mySettings.fTeleDev = data["fTeleDev"].as<bool>();}
+  if(data["myTaskInterval"] != nullptr){mySettings.myTaskInterval = data["myTaskInterval"].as<unsigned long>();}
 
   mySettings.lastUpdated = millis();
   return callbackResponse("sharedAttributesUpdate", 1);
@@ -192,6 +207,8 @@ void syncClientAttributes()
   doc["provisionDeviceSecret"] = config.provisionDeviceSecret;
   doc["logLev"] = config.logLev;
   doc["fTeleDev"] = mySettings.fTeleDev;
+  doc["myTaskInterval"] = mySettings.myTaskInterval;
+
   tb.sendAttributeDoc(doc);
   doc.clear();
 }
@@ -205,4 +222,9 @@ void publishDeviceTelemetry()
   doc["uptime"] = millis()/1000;
   tb.sendTelemetryDoc(doc);
   doc.clear();
+}
+
+void myTask()
+{
+
 }
