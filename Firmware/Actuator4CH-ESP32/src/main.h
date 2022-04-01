@@ -8,6 +8,7 @@
 #ifndef main_h
 #define main_h
 
+#define DOCSIZE 1500
 #include <libudawa.h>
 
 
