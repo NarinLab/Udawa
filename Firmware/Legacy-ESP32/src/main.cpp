@@ -385,7 +385,8 @@ void dutyRuntime()
           if(tb.connected())
           {
             StaticJsonDocument<DOCSIZE> doc;
-            doc[(String("ch")+String(i+1)).c_str()] = mySettings.dutyState[i];
+            String chName = "Ch" + String(i+1);
+            doc[chName.c_str()] = (int)mySettings.dutyState[i];
             tb.sendTelemetryDoc(doc);
             doc.clear();
           }
@@ -403,7 +404,8 @@ void dutyRuntime()
           if(tb.connected())
           {
             StaticJsonDocument<DOCSIZE> doc;
-            doc[(String("ch")+String(i+1)).c_str()] = mySettings.dutyState[i];
+            String chName = "Ch" + String(i+1);
+            doc[chName.c_str()] = (int)mySettings.dutyState[i];
             tb.sendTelemetryDoc(doc);
             doc.clear();
           }
