@@ -26,6 +26,9 @@ void setup()
   startup();
   loadSettings();
 
+  networkInit();
+  tb.setBufferSize(DOCSIZE);
+
   if(mySettings.fTeleDev)
   {
     taskManager.scheduleFixedRate(1000, [] {
@@ -246,22 +249,17 @@ callbackResponse processSyncClientAttributes(const callbackData &data)
 
 callbackResponse processSetSwitch(const callbackData &data)
 {
-  String log;
-  serializeJson(data, log);
-  sprintf_P(logBuff, PSTR("%s"), log.c_str());
-  recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
-
   if(data["ch"] != nullptr && data["state"] != nullptr)
   {
     String ch = data["ch"].as<String>();
     String state = data["state"].as<String>();
     setSwitch(ch, state);
+    return callbackResponse(ch.c_str(), String(state).c_str());
   }
   else
   {
-    return callbackResponse("setSwitch", "ERR");
+    return callbackResponse(String("ch").c_str(), String("null").c_str());
   }
-  return callbackResponse("setSwitch", "OK");
 }
 
 callbackResponse processGetSwitch(const callbackData &data)
@@ -272,7 +270,7 @@ callbackResponse processGetSwitch(const callbackData &data)
   recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
 
   uint8_t pin = 0;
-  bool state = 0;
+  String state;
   if(data["ch"] != nullptr)
   {
     String ch = data["ch"].as<String>();
@@ -282,28 +280,23 @@ callbackResponse processGetSwitch(const callbackData &data)
     else if(ch == String("ch4")){pin = mySettings.relayPin[3];}
     else
     {
-      return callbackResponse("getSwitch", "Ch not found.");
+      return callbackResponse(ch.c_str(), String("null").c_str());
     }
-    state = digitalRead(pin);
+    state = digitalRead(pin) == mySettings.ON ? "ON" : "OFF";
+    return callbackResponse(ch.c_str(), String(state).c_str());
   }
-  else
-  {
-    return callbackResponse("getSwitch", "data[\"ch\"] is nullptr.");
-  }
-  return callbackResponse("getSwitch", state);
+  return callbackResponse(String("ch").c_str(), String("null").c_str());
 }
 
-void setSwitch(String  ch, String state)
+void setSwitch(String ch, String state)
 {
   bool fState = 0;
   uint8_t pin = 0;
-  uint8_t chIndex = 0;
 
-  if(ch == String("ch1")){pin = mySettings.relayPin[0]; chIndex = 0;}
-  else if(ch == String("ch2")){pin = mySettings.relayPin[1]; chIndex = 1;}
-  else if(ch == String("ch3")){pin = mySettings.relayPin[2]; chIndex = 2;}
-  else if(ch == String("ch4")){pin = mySettings.relayPin[3]; chIndex = 3;}
-  else {return;}
+  if(ch == String("ch1")){pin = mySettings.relayPin[0];}
+  else if(ch == String("ch2")){pin = mySettings.relayPin[1];}
+  else if(ch == String("ch3")){pin = mySettings.relayPin[2];}
+  else if(ch == String("ch4")){pin = mySettings.relayPin[3];}
   if(state == String("ON"))
   {
     fState = mySettings.ON;
@@ -315,10 +308,6 @@ void setSwitch(String  ch, String state)
 
   pinMode(pin, OUTPUT);
   digitalWrite(pin, fState);
-  if(tb.connected())
-  {
-    tb.sendTelemetryInt((String("ch")+String(chIndex+1)).c_str(), mySettings.dutyState[chIndex]);
-  }
 }
 
 void dutyRuntime()
@@ -339,7 +328,10 @@ void dutyRuntime()
           recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
           if(tb.connected())
           {
-            tb.sendTelemetryInt((String("ch")+String(i+1)).c_str(), mySettings.dutyState[i]);
+            StaticJsonDocument<DOCSIZE> doc;
+            doc[(String("ch")+String(i+1)).c_str()] = mySettings.dutyState[i];
+            tb.sendTelemetryDoc(doc);
+            doc.clear();
           }
         }
       }
@@ -355,7 +347,10 @@ void dutyRuntime()
           recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
           if(tb.connected())
           {
-            tb.sendTelemetryInt((String("ch")+String(i+1)).c_str(), mySettings.dutyState[i]);
+            StaticJsonDocument<DOCSIZE> doc;
+            doc[(String("ch")+String(i+1)).c_str()] = mySettings.dutyState[i];
+            tb.sendTelemetryDoc(doc);
+            doc.clear();
           }
         }
       }
@@ -365,8 +360,6 @@ void dutyRuntime()
 
 callbackResponse processSharedAttributesUpdate(const callbackData &data)
 {
-  sprintf_P(logBuff, PSTR("Received shared attributes update:"));
-  recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
   if(config.logLev >= 4){serializeJsonPretty(data, Serial);}
 
   if(data["model"] != nullptr){strlcpy(config.model, data["model"].as<const char*>(), sizeof(config.model));}

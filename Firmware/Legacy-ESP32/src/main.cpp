@@ -11,7 +11,7 @@ Settings mySettings;
 uint16_t taskIdPublishWater;
 Water water;
 
-const size_t callbacksSize = 8;
+const size_t callbacksSize = 10;
 GenericCallback callbacks[callbacksSize] = {
   { "sharedAttributesUpdate", processSharedAttributesUpdate },
   { "provisionResponse", processProvisionResponse },
@@ -20,6 +20,8 @@ GenericCallback callbacks[callbacksSize] = {
   { "syncClientAttributes", processSyncClientAttributes },
   { "configCoMCUSave", processConfigCoMCUSave },
   { "reboot", processReboot },
+  { "setSwitch", processSetSwitch },
+  { "getSwitch", processGetSwitch},
   { "syncConfigCoMCU", processSyncConfigCoMCU }
 };
 
@@ -29,12 +31,15 @@ void setup()
   loadSettings();
   syncConfigCoMCU();
 
-  taskIdPublishWater = taskManager.scheduleFixedRate(mySettings.publishInterval | 30000, [] {
-    if(tb.connected())
-    {
+  networkInit();
+  tb.setBufferSize(DOCSIZE);
+
+  if(mySettings.publishInterval > 0)
+  {
+    taskIdPublishWater = taskManager.scheduleFixedRate(mySettings.publishInterval, [] {
       publishWater();
-    }
-  });
+    });
+  }
 
   if(mySettings.fTeleDev)
   {
@@ -81,7 +86,7 @@ void publishWater()
   if(doc["params"]["celcius"] != nullptr)
   {
     water.celcius = doc["params"]["celcius"];
-    tb.sendTelemetryFloat("WaterTemp", water.celcius);
+    tb.sendTelemetryDoc(doc);
   }
 
   doc.clear();
@@ -92,8 +97,7 @@ void publishWater()
   {
     water.ec = doc["params"]["waterEC"];
     water.tds = doc["params"]["waterPPM"];
-    tb.sendTelemetryFloat("WaterEC", water.ec);
-    tb.sendTelemetryFloat("WaterTDS", water.tds);
+    tb.sendTelemetryDoc(doc);
   }
 }
 
@@ -198,7 +202,7 @@ void loadSettings()
 
   if(doc["fTeleDev"] != nullptr)
   {
-    mySettings.fTeleDev = doc["fTeleDev"].as<bool>();
+    mySettings.fTeleDev = (bool)doc["fTeleDev"].as<int>();
   }
   else
   {
@@ -301,6 +305,67 @@ callbackResponse processSyncClientAttributes(const callbackData &data)
   return callbackResponse("syncClientAttributes", 1);
 }
 
+callbackResponse processSetSwitch(const callbackData &data)
+{
+  if(data["ch"] != nullptr && data["state"] != nullptr)
+  {
+    String ch = data["ch"].as<String>();
+    String state = data["state"].as<String>();
+    setSwitch(ch, state);
+    return callbackResponse(ch.c_str(), String(state).c_str());
+  }
+  else
+  {
+    return callbackResponse(String("ch").c_str(), String("null").c_str());
+  }
+}
+
+callbackResponse processGetSwitch(const callbackData &data)
+{
+  String log;
+  serializeJson(data, log);
+  sprintf_P(logBuff, PSTR("DEBUG %s"), log.c_str());
+  recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
+
+  uint8_t pin = 0;
+  String state;
+  if(data["ch"] != nullptr)
+  {
+    String ch = data["ch"].as<String>();
+    if(ch == String("ch1")){pin = mySettings.relayPin[0];}
+    else if(ch == String("ch2")){pin = mySettings.relayPin[1];}
+    else if(ch == String("ch3")){pin = mySettings.relayPin[2];}
+    else if(ch == String("ch4")){pin = mySettings.relayPin[3];}
+    else
+    {
+      return callbackResponse(ch.c_str(), String("null").c_str());
+    }
+    state = digitalRead(pin) == mySettings.ON ? "ON" : "OFF";
+    return callbackResponse(ch.c_str(), String(state).c_str());
+  }
+  return callbackResponse(String("ch").c_str(), String("null").c_str());
+}
+
+void setSwitch(String ch, String state)
+{
+  bool fState = 0;
+  uint8_t pin = 0;
+
+  if(ch == String("ch1")){pin = mySettings.relayPin[0];}
+  else if(ch == String("ch2")){pin = mySettings.relayPin[1];}
+  else if(ch == String("ch3")){pin = mySettings.relayPin[2];}
+  else if(ch == String("ch4")){pin = mySettings.relayPin[3];}
+  if(state == String("ON"))
+  {
+    fState = mySettings.ON;
+  }
+  else
+  {
+    fState = !mySettings.ON;
+  }
+
+  setCoMCUPin(pin, 'D', OUTPUT, 0, fState);
+}
 
 void dutyRuntime()
 {
@@ -319,7 +384,10 @@ void dutyRuntime()
           recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
           if(tb.connected())
           {
-            tb.sendTelemetryInt((String("ch")+String(i+1)).c_str(), mySettings.dutyState[i]);
+            StaticJsonDocument<DOCSIZE> doc;
+            doc[(String("ch")+String(i+1)).c_str()] = mySettings.dutyState[i];
+            tb.sendTelemetryDoc(doc);
+            doc.clear();
           }
         }
       }
@@ -334,7 +402,10 @@ void dutyRuntime()
           recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
           if(tb.connected())
           {
-            tb.sendTelemetryInt((String("ch")+String(i+1)).c_str(), mySettings.dutyState[i]);
+            StaticJsonDocument<DOCSIZE> doc;
+            doc[(String("ch")+String(i+1)).c_str()] = mySettings.dutyState[i];
+            tb.sendTelemetryDoc(doc);
+            doc.clear();
           }
         }
       }
@@ -344,8 +415,6 @@ void dutyRuntime()
 
 callbackResponse processSharedAttributesUpdate(const callbackData &data)
 {
-  sprintf_P(logBuff, PSTR("Received shared attributes update:"));
-  recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
   if(config.logLev >= 4){serializeJsonPretty(data, Serial);}
 
   if(data["model"] != nullptr){strlcpy(config.model, data["model"].as<const char*>(), sizeof(config.model));}
@@ -387,7 +456,8 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["relayPinCh4"] != nullptr){mySettings.relayPin[3] = data["relayPinCh4"].as<uint8_t>();}
 
   if(data["ON"] != nullptr){mySettings.ON = data["ON"].as<bool>();}
-  if(data["fTeleDev"] != nullptr){mySettings.fTeleDev = data["fTeleDev"].as<bool>();}
+  if(data["fTeleDev"] != nullptr){mySettings.fTeleDev = (bool)data["fTeleDev"].as<int>();}
+  if(data["publishInterval"] != nullptr){mySettings.publishInterval = data["publishInterval"].as<unsigned long>();}
 
   if(data["pEcKcoe"] != nullptr){configcomcu.pEcKcoe = data["pEcKcoe"].as<float>();}
   if(data["pEcTcoe"] != nullptr){configcomcu.pEcTcoe = data["pEcTcoe"].as<float>();}
@@ -468,6 +538,7 @@ void syncClientAttributes()
   doc["relayPinCh4"] = mySettings.relayPin[3];
   doc["ON"] = mySettings.ON;
   doc["fTeleDev"] = mySettings.fTeleDev;
+  doc["publishInterval"] = mySettings.publishInterval;
   tb.sendAttributeDoc(doc);
   doc.clear();
 }
