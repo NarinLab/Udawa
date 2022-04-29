@@ -74,6 +74,7 @@ struct Settings
     unsigned long lastUpdated;
     bool ON;
     bool dutyState[4];
+    bool publishSwitch[4] = {false, false, false, false};
     unsigned long dutyCounter[4];
     bool fTeleDev;
     unsigned long publishInterval;
@@ -97,6 +98,7 @@ void syncClientAttributes();
 void publishDeviceTelemetry();
 void publishWater();
 void setSwitch(String ch, String state);
+void publishSwitch();
 
 
 #endif

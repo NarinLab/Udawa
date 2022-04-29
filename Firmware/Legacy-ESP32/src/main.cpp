@@ -11,7 +11,7 @@ Settings mySettings;
 uint16_t taskIdPublishWater;
 Water water;
 
-const size_t callbacksSize = 10;
+const size_t callbacksSize = 13;
 GenericCallback callbacks[callbacksSize] = {
   { "sharedAttributesUpdate", processSharedAttributesUpdate },
   { "provisionResponse", processProvisionResponse },
@@ -21,7 +21,10 @@ GenericCallback callbacks[callbacksSize] = {
   { "configCoMCUSave", processConfigCoMCUSave },
   { "reboot", processReboot },
   { "setSwitch", processSetSwitch },
-  { "getSwitch", processGetSwitch},
+  { "getSwitchCh1", processGetSwitch},
+  { "getSwitchCh2", processGetSwitch},
+  { "getSwitchCh3", processGetSwitch},
+  { "getSwitchCh4", processGetSwitch},
   { "syncConfigCoMCU", processSyncConfigCoMCU }
 };
 
@@ -30,6 +33,7 @@ void setup()
   startup();
   loadSettings();
   syncConfigCoMCU();
+
 
   networkInit();
   tb.setBufferSize(DOCSIZE);
@@ -53,6 +57,7 @@ void loop()
 {
   udawa();
   dutyRuntime();
+  publishSwitch();
 
   if(tb.connected() && FLAG_IOT_SUBSCRIBE)
   {
@@ -307,43 +312,39 @@ callbackResponse processSyncClientAttributes(const callbackData &data)
 
 callbackResponse processSetSwitch(const callbackData &data)
 {
-  if(data["ch"] != nullptr && data["state"] != nullptr)
+  if(data["params"]["ch"] != nullptr && data["params"]["state"] != nullptr)
   {
-    String ch = data["ch"].as<String>();
-    String state = data["state"].as<String>();
+    String ch = data["params"]["ch"].as<String>();
+    String state = data["params"]["state"].as<String>();
     setSwitch(ch, state);
-    return callbackResponse(ch.c_str(), String(state).c_str());
+    return callbackResponse(data["params"]["ch"].as<const char*>(), !strcmp((const char*) "ON", data["params"]["state"].as<const char*>()) ? (int)mySettings.ON : (int)!mySettings.ON);
   }
   else
   {
-    return callbackResponse(String("ch").c_str(), String("null").c_str());
+    return callbackResponse("err", "ch not found.");
   }
 }
 
 callbackResponse processGetSwitch(const callbackData &data)
 {
-  String log;
-  serializeJson(data, log);
-  sprintf_P(logBuff, PSTR("DEBUG %s"), log.c_str());
-  recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
-
-  uint8_t pin = 0;
-  String state;
-  if(data["ch"] != nullptr)
+  const char *methodName = data["method"];
+  if(!strcmp((const char*) "getSwitchCh1", methodName))
   {
-    String ch = data["ch"].as<String>();
-    if(ch == String("ch1")){pin = mySettings.relayPin[0];}
-    else if(ch == String("ch2")){pin = mySettings.relayPin[1];}
-    else if(ch == String("ch3")){pin = mySettings.relayPin[2];}
-    else if(ch == String("ch4")){pin = mySettings.relayPin[3];}
-    else
-    {
-      return callbackResponse(ch.c_str(), String("null").c_str());
-    }
-    state = digitalRead(pin) == mySettings.ON ? "ON" : "OFF";
-    return callbackResponse(ch.c_str(), String(state).c_str());
+    return callbackResponse("getSwitchCh1", mySettings.dutyState[0] == mySettings.ON ? 1 : 0);
   }
-  return callbackResponse(String("ch").c_str(), String("null").c_str());
+  else if(!strcmp((const char*) "getSwitchCh2", methodName))
+  {
+    return callbackResponse("getSwitchCh2", mySettings.dutyState[1] == mySettings.ON ? 1 : 0);
+  }
+  else if(!strcmp((const char*) "getSwitchCh3", methodName))
+  {
+    return callbackResponse("getSwitchCh3", mySettings.dutyState[2] == mySettings.ON ? 1 : 0);
+  }
+  else if(!strcmp((const char*) "getSwitchCh4", methodName))
+  {
+    return callbackResponse("getSwitchCh4", mySettings.dutyState[3] == mySettings.ON ? 1 : 0);
+  }
+  return callbackResponse("getSwitch", 0);
 }
 
 void setSwitch(String ch, String state)
@@ -351,10 +352,10 @@ void setSwitch(String ch, String state)
   bool fState = 0;
   uint8_t pin = 0;
 
-  if(ch == String("ch1")){pin = mySettings.relayPin[0];}
-  else if(ch == String("ch2")){pin = mySettings.relayPin[1];}
-  else if(ch == String("ch3")){pin = mySettings.relayPin[2];}
-  else if(ch == String("ch4")){pin = mySettings.relayPin[3];}
+  if(ch == String("ch1")){pin = mySettings.relayPin[0]; mySettings.dutyState[0] = (state == String("ON")) ? mySettings.ON : !mySettings.ON; mySettings.publishSwitch[0] = true;}
+  else if(ch == String("ch2")){pin = mySettings.relayPin[1]; mySettings.dutyState[1] = (state == String("ON")) ? mySettings.ON : !mySettings.ON; mySettings.publishSwitch[1] = true;}
+  else if(ch == String("ch3")){pin = mySettings.relayPin[2]; mySettings.dutyState[2] = (state == String("ON")) ? mySettings.ON : !mySettings.ON; mySettings.publishSwitch[2] = true;}
+  else if(ch == String("ch4")){pin = mySettings.relayPin[3]; mySettings.dutyState[3] = (state == String("ON")) ? mySettings.ON : !mySettings.ON; mySettings.publishSwitch[3] = true;}
   if(state == String("ON"))
   {
     fState = mySettings.ON;
@@ -378,18 +379,11 @@ void dutyRuntime()
         if( mySettings.dutyCycle[i] != 100 && (millis() - mySettings.dutyCounter[i] ) >= (float)(( ((float)mySettings.dutyCycle[i] / 100) * (float)mySettings.dutyRange[i]) * 1000))
         {
           mySettings.dutyState[i] = !mySettings.ON;
-          setCoMCUPin(mySettings.relayPin[i], 'D', OUTPUT, 0, mySettings.dutyState[i]);
+          String ch = "ch" + String(i+1);
+          setSwitch(ch, "OFF");
           mySettings.dutyCounter[i] = millis();
           sprintf_P(logBuff, PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
           recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
-          if(tb.connected())
-          {
-            StaticJsonDocument<DOCSIZE> doc;
-            String chName = "Ch" + String(i+1);
-            doc[chName.c_str()] = (int)mySettings.dutyState[i];
-            tb.sendTelemetryDoc(doc);
-            doc.clear();
-          }
         }
       }
       else
@@ -397,18 +391,11 @@ void dutyRuntime()
         if( mySettings.dutyCycle[i] != 0 && (millis() - mySettings.dutyCounter[i] ) >= (float) ( ((100 - (float) mySettings.dutyCycle[i]) / 100) * (float) mySettings.dutyRange[i]) * 1000)
         {
           mySettings.dutyState[i] = mySettings.ON;
-          setCoMCUPin(mySettings.relayPin[i], 'D', OUTPUT, 0, mySettings.dutyState[i]);
+          String ch = "ch" + String(i+1);
+          setSwitch(ch, "ON");
           mySettings.dutyCounter[i] = millis();
           sprintf_P(logBuff, PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
           recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
-          if(tb.connected())
-          {
-            StaticJsonDocument<DOCSIZE> doc;
-            String chName = "Ch" + String(i+1);
-            doc[chName.c_str()] = (int)mySettings.dutyState[i];
-            tb.sendTelemetryDoc(doc);
-            doc.clear();
-          }
         }
       }
     }
@@ -554,4 +541,20 @@ void publishDeviceTelemetry()
   doc["uptime"] = millis()/1000;
   tb.sendTelemetryDoc(doc);
   doc.clear();
+}
+
+void publishSwitch(){
+  if(tb.connected()){
+    for (uint8_t i = 0; i < 4; i++){
+      if(mySettings.publishSwitch[i]){
+        StaticJsonDocument<DOCSIZE> doc;
+        String chName = "ch" + String(i+1);
+        doc[chName.c_str()] = (int)mySettings.dutyState[i];
+        tb.sendTelemetryDoc(doc);
+        doc.clear();
+
+        mySettings.publishSwitch[i] = false;
+      }
+    }
+  }
 }
