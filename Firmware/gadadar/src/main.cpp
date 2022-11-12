@@ -7,6 +7,7 @@
 **/
 #include "main.h"
 
+using namespace libudawa;
 Settings mySettings;
 
 const size_t callbacksSize = 8;
@@ -46,20 +47,17 @@ void loop()
   {
     if(tb.callbackSubscribe(callbacks, callbacksSize))
     {
-      sprintf_P(logBuff, PSTR("Callbacks subscribed successfuly!"));
-      recordLog(4, PSTR(__FILE__), __LINE__, PSTR(__func__));
+      log_manager->info(PSTR(__func__),PSTR("Callbacks subscribed successfuly!\n"));
       FLAG_IOT_SUBSCRIBE = false;
     }
     if (tb.Firmware_Update(CURRENT_FIRMWARE_TITLE, CURRENT_FIRMWARE_VERSION))
     {
-      sprintf_P(logBuff, PSTR("OTA Update finished, rebooting..."));
-      recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
+      log_manager->info(PSTR(__func__),PSTR("OTA Update finished, rebooting...\n"));
       reboot();
     }
     else
     {
-      sprintf_P(logBuff, PSTR("Firmware up-to-date."));
-      recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
+      log_manager->info(PSTR(__func__),PSTR("Firmware up-to-date.\n"));
     }
 
     syncClientAttributes();
@@ -266,8 +264,7 @@ callbackResponse processGetSwitch(const callbackData &data)
 {
   String log;
   serializeJson(data, log);
-  sprintf_P(logBuff, PSTR("DEBUG %s"), log.c_str());
-  recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
+  log_manager->info(PSTR(__func__),PSTR("DEBUG %s\n"), log.c_str());
 
   uint8_t pin = 0;
   String state;
@@ -314,6 +311,7 @@ void dutyRuntime()
 {
   for(uint8_t i = 0; i < countof(mySettings.relayPin); i++)
   {
+    if (mySettings.dutyRange[i] < 2){mySettings.dutyRange[i] = 2;} //safenet
     if(mySettings.dutyCycle[i] != 0)
     {
       if( mySettings.dutyState[i] == mySettings.ON )
@@ -324,12 +322,14 @@ void dutyRuntime()
           pinMode(mySettings.relayPin[i], OUTPUT);
           digitalWrite(mySettings.relayPin[i], mySettings.dutyState[i]);
           mySettings.dutyCounter[i] = millis();
-          sprintf_P(logBuff, PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
-          recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
+          log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld\n"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
+
           if(tb.connected())
           {
             StaticJsonDocument<DOCSIZE> doc;
-            doc[(String("ch")+String(i+1)).c_str()] = mySettings.dutyState[i];
+            char ch[3];
+            sprintf(ch, PSTR("ch%d"), i+1);
+            doc[ch] = (int)mySettings.dutyState[i];
             tb.sendTelemetryDoc(doc);
             doc.clear();
           }
@@ -341,14 +341,16 @@ void dutyRuntime()
         {
           mySettings.dutyState[i] = mySettings.ON;
           pinMode(mySettings.relayPin[i], OUTPUT);
-          digitalWrite(mySettings.relayPin[i], mySettings.dutyState[i]);
+          digitalWrite(mySettings.relayPin[i], (int)mySettings.dutyState[i]);
           mySettings.dutyCounter[i] = millis();
-          sprintf_P(logBuff, PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
-          recordLog(5, PSTR(__FILE__), __LINE__, PSTR(__func__));
+          log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld\n"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
+
           if(tb.connected())
           {
             StaticJsonDocument<DOCSIZE> doc;
-            doc[(String("ch")+String(i+1)).c_str()] = mySettings.dutyState[i];
+            char ch[3];
+            sprintf(ch, PSTR("ch%d"), i+1);
+            doc[ch] = (int)mySettings.dutyState[i];
             tb.sendTelemetryDoc(doc);
             doc.clear();
           }
