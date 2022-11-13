@@ -376,6 +376,7 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["provisionDeviceKey"] != nullptr){strlcpy(config.provisionDeviceKey, data["provisionDeviceKey"].as<const char*>(), sizeof(config.provisionDeviceKey));}
   if(data["provisionDeviceSecret"] != nullptr){strlcpy(config.provisionDeviceSecret, data["provisionDeviceSecret"].as<const char*>(), sizeof(config.provisionDeviceSecret));}
   if(data["logLev"] != nullptr){config.logLev = data["logLev"].as<uint8_t>();}
+  if(data["gmtOffset"] != nullptr){config.gmtOffset = data["gmtOffset"].as<int>();}
 
   if(data["dutyCycleCh1"] != nullptr)
   {
@@ -473,6 +474,7 @@ void syncClientAttributes()
   doc["provisionDeviceKey"] = config.provisionDeviceKey;
   doc["provisionDeviceSecret"] = config.provisionDeviceSecret;
   doc["logLev"] = config.logLev;
+  doc["gmtOffset"] = config.gmtOffset;
   tb.sendAttributeDoc(doc);
   doc.clear();
   doc["dutyCycleCh1"] = mySettings.dutyCycle[0];
@@ -501,6 +503,7 @@ void syncClientAttributes()
   doc["relayPinCh4"] = mySettings.relayPin[3];
   doc["ON"] = mySettings.ON;
   doc["fTeleDev"] = mySettings.fTeleDev;
+  doc["dt"] = rtc.getDateTime();
   tb.sendAttributeDoc(doc);
   doc.clear();
 }
@@ -509,7 +512,7 @@ void publishDeviceTelemetry()
 {
   StaticJsonDocument<DOCSIZE> doc;
 
-  doc["heap"] = heap_caps_get_free_size(MALLOC_CAP_8BIT);;
+  doc["heap"] = heap_caps_get_free_size(MALLOC_CAP_8BIT);
   doc["rssi"] = WiFi.RSSI();
   doc["uptime"] = millis()/1000;
   tb.sendTelemetryDoc(doc);
