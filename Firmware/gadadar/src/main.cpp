@@ -41,7 +41,15 @@ void setup()
 void loop()
 {
   udawa();
-  dutyRuntime();
+
+  // 0 = Manual, 1 = By Duty Cycle, 2 = By DateTime & Duration
+  if(mySettings.relayControlMode == 1){
+    relayControlByDutyCycle();
+  }
+  else if(mySettings.relayControlMode == 2){
+    relayControlByDateTime();
+  }
+
 
   if(tb.connected() && FLAG_IOT_SUBSCRIBE)
   {
@@ -137,6 +145,40 @@ void loadSettings()
     }
   }
 
+  if(doc["relayActivationDateTime"] != nullptr)
+  {
+    uint8_t index = 0;
+    for(JsonVariant v : doc["relayActivationDateTime"].as<JsonArray>())
+    {
+        mySettings.relayActivationDateTime[index] = v.as<unsigned long>();
+        index++;
+    }
+  }
+  else
+  {
+    for(uint8_t i = 0; i < countof(mySettings.relayActivationDateTime); i++)
+    {
+        mySettings.relayActivationDateTime[i] = 0;
+    }
+  }
+
+  if(doc["relayActivationDuration"] != nullptr)
+  {
+    uint8_t index = 0;
+    for(JsonVariant v : doc["relayActivationDuration"].as<JsonArray>())
+    {
+        mySettings.relayActivationDuration[index] = v.as<unsigned long>();
+        index++;
+    }
+  }
+  else
+  {
+    for(uint8_t i = 0; i < countof(mySettings.relayActivationDuration); i++)
+    {
+        mySettings.relayActivationDuration[i] = 0;
+    }
+  }
+
   if(doc["relayPin"] != nullptr)
   {
     uint8_t index = 0;
@@ -170,6 +212,15 @@ void loadSettings()
   else
   {
     mySettings.fTeleDev = 1;
+  }
+
+  if(doc["relayControlMode"] != nullptr)
+  {
+    mySettings.relayControlMode = doc["relayControlMode"].as<uint8_t>();
+  }
+  else
+  {
+    mySettings.relayControlMode = 0;
   }
 
   for(uint8_t i = 0; i < countof(mySettings.dutyCounter); i++)
@@ -206,6 +257,18 @@ void saveSettings()
     dutyRangeFailSafe.add(mySettings.dutyRangeFailSafe[i]);
   }
 
+  JsonArray relayActivationDateTime = doc.createNestedArray("relayActivationDateTime");
+  for(uint8_t i=0; i<countof(mySettings.relayActivationDateTime); i++)
+  {
+    relayActivationDateTime.add(mySettings.relayActivationDateTime[i]);
+  }
+
+  JsonArray relayActivationDuration = doc.createNestedArray("relayActivationDuration");
+  for(uint8_t i=0; i<countof(mySettings.relayActivationDuration); i++)
+  {
+    relayActivationDuration.add(mySettings.relayActivationDuration[i]);
+  }
+
   JsonArray relayPin = doc.createNestedArray("relayPin");
   for(uint8_t i=0; i<countof(mySettings.relayPin); i++)
   {
@@ -214,6 +277,7 @@ void saveSettings()
 
   doc["ON"] = mySettings.ON;
   doc["fTeleDev"] = mySettings.fTeleDev;
+  doc["relayControlMode"] = mySettings.relayControlMode;
 
   writeSettings(doc, settingsPath);
 }
@@ -307,7 +371,33 @@ void setSwitch(String ch, String state)
   digitalWrite(pin, fState);
 }
 
-void dutyRuntime()
+void relayControlByDateTime(){
+  for(uint8_t i = 0; i < countof(mySettings.relayPin); i++)
+  {
+    if(mySettings.relayActivationDuration[i] > 0){
+      if(mySettings.relayActivationDateTime[i] <= rtc.getEpoch() && (mySettings.relayActivationDuration[i]) >=
+        (rtc.getEpoch() - mySettings.relayActivationDateTime[i]) && mySettings.dutyState[i] != mySettings.ON){
+          mySettings.dutyState[i] = mySettings.ON;
+          pinMode(mySettings.relayPin[i], OUTPUT);
+          digitalWrite(mySettings.relayPin[i], mySettings.dutyState[i]);
+          log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d - ts:%d - tr:%d - exp:%d\n"), i+1,
+            mySettings.dutyState[i], mySettings.relayActivationDateTime[i], mySettings.relayActivationDuration[i],
+            mySettings.relayActivationDuration[i] - (rtc.getEpoch() - mySettings.relayActivationDateTime[i]));
+      }
+      else if(mySettings.dutyState[i] == mySettings.ON && (mySettings.relayActivationDuration[i]) <=
+        (rtc.getEpoch() - mySettings.relayActivationDateTime[i])){
+          mySettings.dutyState[i] = !mySettings.ON;
+          pinMode(mySettings.relayPin[i], OUTPUT);
+          digitalWrite(mySettings.relayPin[i], mySettings.dutyState[i]);
+          log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d - ts:%d - tr:%d - exp:%d\n"), i+1,
+            mySettings.dutyState[i], mySettings.relayActivationDateTime[i], mySettings.relayActivationDuration[i],
+            mySettings.relayActivationDuration[i] - (rtc.getEpoch() - mySettings.relayActivationDateTime[i]));
+      }
+    }
+  }
+}
+
+void relayControlByDutyCycle()
 {
   for(uint8_t i = 0; i < countof(mySettings.relayPin); i++)
   {
@@ -378,6 +468,7 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["logLev"] != nullptr){config.logLev = data["logLev"].as<uint8_t>();}
   if(data["gmtOffset"] != nullptr){config.gmtOffset = data["gmtOffset"].as<int>();}
 
+
   if(data["dutyCycleCh1"] != nullptr)
   {
     mySettings.dutyCycle[0] = data["dutyCycleCh1"].as<uint8_t>();
@@ -426,6 +517,16 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["dutyRangeFailSafeCh3"] != nullptr){mySettings.dutyRangeFailSafe[2] = data["dutyRangeFailSafeCh3"].as<unsigned long>();}
   if(data["dutyRangeFailSafeCh4"] != nullptr){mySettings.dutyRangeFailSafe[3] = data["dutyRangeFailSafeCh4"].as<unsigned long>();}
 
+  if(data["relayActivationDateTimeCh1"] != nullptr){mySettings.relayActivationDateTime[0] = data["relayActivationDateTimeCh1"].as<unsigned long>();}
+  if(data["relayActivationDateTimeCh2"] != nullptr){mySettings.relayActivationDateTime[1] = data["relayActivationDateTimeCh2"].as<unsigned long>();}
+  if(data["relayActivationDateTimeCh3"] != nullptr){mySettings.relayActivationDateTime[2] = data["relayActivationDateTimeCh3"].as<unsigned long>();}
+  if(data["relayActivationDateTimeCh4"] != nullptr){mySettings.relayActivationDateTime[3] = data["relayActivationDateTimeCh4"].as<unsigned long>();}
+
+  if(data["relayActivationDurationCh1"] != nullptr){mySettings.relayActivationDuration[0] = data["relayActivationDurationCh1"].as<unsigned long>();}
+  if(data["relayActivationDurationCh2"] != nullptr){mySettings.relayActivationDuration[1] = data["relayActivationDurationCh2"].as<unsigned long>();}
+  if(data["relayActivationDurationCh3"] != nullptr){mySettings.relayActivationDuration[2] = data["relayActivationDurationCh3"].as<unsigned long>();}
+  if(data["relayActivationDurationCh4"] != nullptr){mySettings.relayActivationDuration[3] = data["relayActivationDurationCh4"].as<unsigned long>();}
+
   if(data["relayPinCh1"] != nullptr){mySettings.relayPin[0] = data["relayPinCh1"].as<uint8_t>();}
   if(data["relayPinCh2"] != nullptr){mySettings.relayPin[1] = data["relayPinCh2"].as<uint8_t>();}
   if(data["relayPinCh3"] != nullptr){mySettings.relayPin[2] = data["relayPinCh3"].as<uint8_t>();}
@@ -433,6 +534,7 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
 
   if(data["ON"] != nullptr){mySettings.ON = data["ON"].as<bool>();}
   if(data["fTeleDev"] != nullptr){mySettings.fTeleDev = data["fTeleDev"].as<bool>();}
+  if(data["relayControlMode"] != nullptr){mySettings.relayControlMode = data["relayControlMode"].as<uint8_t>();}
 
   mySettings.lastUpdated = millis();
   return callbackResponse("sharedAttributesUpdate", 1);
@@ -497,6 +599,16 @@ void syncClientAttributes()
   doc["dutyRangeFailSafeCh4"] = mySettings.dutyRangeFailSafe[3];
   tb.sendAttributeDoc(doc);
   doc.clear();
+  doc["relayActivationDateTimeCh1"] = mySettings.relayActivationDateTime[0];
+  doc["relayActivationDateTimeCh2"] = mySettings.relayActivationDateTime[1];
+  doc["relayActivationDateTimeCh3"] = mySettings.relayActivationDateTime[2];
+  doc["relayActivationDateTimeCh4"] = mySettings.relayActivationDateTime[3];
+  doc["relayActivationDurationCh1"] = mySettings.relayActivationDuration[0];
+  doc["relayActivationDurationCh2"] = mySettings.relayActivationDuration[1];
+  doc["relayActivationDurationCh3"] = mySettings.relayActivationDuration[2];
+  doc["relayActivationDurationCh4"] = mySettings.relayActivationDuration[3];
+  tb.sendAttributeDoc(doc);
+  doc.clear();
   doc["relayPinCh1"] = mySettings.relayPin[0];
   doc["relayPinCh2"] = mySettings.relayPin[1];
   doc["relayPinCh3"] = mySettings.relayPin[2];
@@ -504,6 +616,7 @@ void syncClientAttributes()
   doc["ON"] = mySettings.ON;
   doc["fTeleDev"] = mySettings.fTeleDev;
   doc["dt"] = rtc.getDateTime();
+  doc["relayControlMode"] = mySettings.relayControlMode;
   tb.sendAttributeDoc(doc);
   doc.clear();
 }
