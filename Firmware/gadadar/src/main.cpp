@@ -19,7 +19,7 @@ GenericCallback callbacks[callbacksSize] = {
   { "syncClientAttributes", processSyncClientAttributes },
   { "reboot", processReboot },
   { "setSwitch", processSetSwitch },
-  { "getSwitch", processGetSwitch}
+  { "getSwitchCh1", processGetSwitchCh1}
 };
 
 void setup()
@@ -311,42 +311,19 @@ callbackResponse processSyncClientAttributes(const callbackData &data)
 
 callbackResponse processSetSwitch(const callbackData &data)
 {
-  if(data["ch"] != nullptr && data["state"] != nullptr)
+  if(data["params"]["ch"] != nullptr && data["params"]["state"] != nullptr)
   {
-    String ch = data["ch"].as<String>();
-    String state = data["state"].as<String>();
+    String ch = data["params"]["ch"].as<String>();
+    String state = data["params"]["state"].as<String>();
+    log_manager->debug(PSTR(__func__),"Calling setSwitch (%s - %s)...\n", ch, state);
     setSwitch(ch, state);
-    return callbackResponse(ch.c_str(), String(state).c_str());
   }
-  else
-  {
-    return callbackResponse(String("ch").c_str(), String("null").c_str());
-  }
+  return callbackResponse(data["params"]["ch"].as<const char*>(), data["params"]["state"].as<const char*>());
 }
 
-callbackResponse processGetSwitch(const callbackData &data)
+callbackResponse processGetSwitchCh1(const callbackData &data)
 {
-  String log;
-  serializeJson(data, log);
-  log_manager->info(PSTR(__func__),PSTR("DEBUG %s\n"), log.c_str());
-
-  uint8_t pin = 0;
-  String state;
-  if(data["ch"] != nullptr)
-  {
-    String ch = data["ch"].as<String>();
-    if(ch == String("ch1")){pin = mySettings.relayPin[0];}
-    else if(ch == String("ch2")){pin = mySettings.relayPin[1];}
-    else if(ch == String("ch3")){pin = mySettings.relayPin[2];}
-    else if(ch == String("ch4")){pin = mySettings.relayPin[3];}
-    else
-    {
-      return callbackResponse(ch.c_str(), String("null").c_str());
-    }
-    state = digitalRead(pin) == mySettings.ON ? "ON" : "OFF";
-    return callbackResponse(ch.c_str(), String(state).c_str());
-  }
-  return callbackResponse(String("ch").c_str(), String("null").c_str());
+  return callbackResponse("ch1", digitalRead(mySettings.relayPin[0]) == mySettings.ON ? "ON" : "OFF");
 }
 
 void setSwitch(String ch, String state)
@@ -369,6 +346,7 @@ void setSwitch(String ch, String state)
 
   pinMode(pin, OUTPUT);
   digitalWrite(pin, fState);
+  log_manager->warn(PSTR(__func__), "Relay %s was set to %s / %d.\n", ch, state, (int)fState);
 }
 
 void relayControlByDateTime(){

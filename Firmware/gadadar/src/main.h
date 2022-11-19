@@ -78,7 +78,7 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data);
 callbackResponse processSyncClientAttributes(const callbackData &data);
 callbackResponse processReboot(const callbackData &data);
 callbackResponse processSetSwitch(const callbackData &data);
-callbackResponse processGetSwitch(const callbackData &data);
+callbackResponse processGetSwitchCh1(const callbackData &data);
 
 void loadSettings();
 void saveSettings();
