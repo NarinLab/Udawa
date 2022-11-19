@@ -57,7 +57,7 @@ ny6l9/duT2POAsUN5IwHGDu8b2NT+vCUQRFVHY31
 const char* settingsPath = "/settings.json";
 struct Settings
 {
-    uint8_t relayControlMode;
+    uint8_t relayControlMode[4];
     uint8_t dutyCycle[4];
     unsigned long dutyRange[4];
     uint8_t dutyCycleFailSafe[4];
@@ -70,6 +70,7 @@ struct Settings
     bool fTeleDev;
     unsigned long relayActivationDateTime[4];
     unsigned long relayActivationDuration[4];
+    bool publishSwitch[4] = {false, false, false, false};
 };
 
 callbackResponse processSaveConfig(const callbackData &data);
@@ -79,6 +80,9 @@ callbackResponse processSyncClientAttributes(const callbackData &data);
 callbackResponse processReboot(const callbackData &data);
 callbackResponse processSetSwitch(const callbackData &data);
 callbackResponse processGetSwitchCh1(const callbackData &data);
+callbackResponse processGetSwitchCh2(const callbackData &data);
+callbackResponse processGetSwitchCh3(const callbackData &data);
+callbackResponse processGetSwitchCh4(const callbackData &data);
 
 void loadSettings();
 void saveSettings();
@@ -87,5 +91,6 @@ void relayControlByDateTime();
 void syncClientAttributes();
 void publishDeviceTelemetry();
 void setSwitch(String  ch, String state);
+void publishSwitch();
 
 #endif

@@ -10,7 +10,7 @@
 using namespace libudawa;
 Settings mySettings;
 
-const size_t callbacksSize = 8;
+const size_t callbacksSize = 11;
 GenericCallback callbacks[callbacksSize] = {
   { "sharedAttributesUpdate", processSharedAttributesUpdate },
   { "provisionResponse", processProvisionResponse },
@@ -19,7 +19,10 @@ GenericCallback callbacks[callbacksSize] = {
   { "syncClientAttributes", processSyncClientAttributes },
   { "reboot", processReboot },
   { "setSwitch", processSetSwitch },
-  { "getSwitchCh1", processGetSwitchCh1}
+  { "getSwitchCh1", processGetSwitchCh1},
+  { "getSwitchCh2", processGetSwitchCh2},
+  { "getSwitchCh3", processGetSwitchCh3},
+  { "getSwitchCh4", processGetSwitchCh4}
 };
 
 void setup()
@@ -41,15 +44,9 @@ void setup()
 void loop()
 {
   udawa();
-
-  // 0 = Manual, 1 = By Duty Cycle, 2 = By DateTime & Duration
-  if(mySettings.relayControlMode == 1){
-    relayControlByDutyCycle();
-  }
-  else if(mySettings.relayControlMode == 2){
-    relayControlByDateTime();
-  }
-
+  relayControlByDateTime();
+  relayControlByDutyCycle();
+  publishSwitch();
 
   if(tb.connected() && FLAG_IOT_SUBSCRIBE)
   {
@@ -216,11 +213,19 @@ void loadSettings()
 
   if(doc["relayControlMode"] != nullptr)
   {
-    mySettings.relayControlMode = doc["relayControlMode"].as<uint8_t>();
+    uint8_t index = 0;
+    for(JsonVariant v : doc["relayControlMode"].as<JsonArray>())
+    {
+        mySettings.relayControlMode[index] = v.as<uint8_t>();
+        index++;
+    }
   }
   else
   {
-    mySettings.relayControlMode = 0;
+    for(uint8_t i = 0; i < countof(mySettings.relayControlMode); i++)
+    {
+        mySettings.relayControlMode[i] = 0;
+    }
   }
 
   for(uint8_t i = 0; i < countof(mySettings.dutyCounter); i++)
@@ -277,7 +282,12 @@ void saveSettings()
 
   doc["ON"] = mySettings.ON;
   doc["fTeleDev"] = mySettings.fTeleDev;
-  doc["relayControlMode"] = mySettings.relayControlMode;
+
+  JsonArray relayControlMode = doc.createNestedArray("relayControlMode");
+  for(uint8_t i=0; i<countof(mySettings.relayControlMode); i++)
+  {
+    relayControlMode.add(mySettings.relayControlMode[i]);
+  }
 
   writeSettings(doc, settingsPath);
 }
@@ -323,7 +333,22 @@ callbackResponse processSetSwitch(const callbackData &data)
 
 callbackResponse processGetSwitchCh1(const callbackData &data)
 {
-  return callbackResponse("ch1", digitalRead(mySettings.relayPin[0]) == mySettings.ON ? "ON" : "OFF");
+  return callbackResponse("ch1", mySettings.dutyState[0] == mySettings.ON ? "ON" : "OFF");
+}
+
+callbackResponse processGetSwitchCh2(const callbackData &data)
+{
+  return callbackResponse("ch2", mySettings.dutyState[1] == mySettings.ON ? "ON" : "OFF");
+}
+
+callbackResponse processGetSwitchCh3(const callbackData &data)
+{
+  return callbackResponse("ch3", mySettings.dutyState[2] == mySettings.ON ? "ON" : "OFF");
+}
+
+callbackResponse processGetSwitchCh4(const callbackData &data)
+{
+  return callbackResponse("ch4", mySettings.dutyState[3] == mySettings.ON ? "ON" : "OFF");
 }
 
 void setSwitch(String ch, String state)
@@ -331,10 +356,11 @@ void setSwitch(String ch, String state)
   bool fState = 0;
   uint8_t pin = 0;
 
-  if(ch == String("ch1")){pin = mySettings.relayPin[0];}
-  else if(ch == String("ch2")){pin = mySettings.relayPin[1];}
-  else if(ch == String("ch3")){pin = mySettings.relayPin[2];}
-  else if(ch == String("ch4")){pin = mySettings.relayPin[3];}
+  if(ch == String("ch1")){pin = mySettings.relayPin[0]; mySettings.dutyState[0] = (state == String("ON")) ? mySettings.ON : !mySettings.ON; mySettings.publishSwitch[0] = true;}
+  else if(ch == String("ch2")){pin = mySettings.relayPin[1]; mySettings.dutyState[1] = (state == String("ON")) ? mySettings.ON : !mySettings.ON; mySettings.publishSwitch[1] = true;}
+  else if(ch == String("ch3")){pin = mySettings.relayPin[2]; mySettings.dutyState[2] = (state == String("ON")) ? mySettings.ON : !mySettings.ON; mySettings.publishSwitch[2] = true;}
+  else if(ch == String("ch4")){pin = mySettings.relayPin[3]; mySettings.dutyState[3] = (state == String("ON")) ? mySettings.ON : !mySettings.ON; mySettings.publishSwitch[3] = true;}
+
   if(state == String("ON"))
   {
     fState = mySettings.ON;
@@ -344,20 +370,19 @@ void setSwitch(String ch, String state)
     fState = !mySettings.ON;
   }
 
-  pinMode(pin, OUTPUT);
-  digitalWrite(pin, fState);
+  setCoMCUPin(pin, 'D', OUTPUT, 0, fState);
   log_manager->warn(PSTR(__func__), "Relay %s was set to %s / %d.\n", ch, state, (int)fState);
 }
 
 void relayControlByDateTime(){
   for(uint8_t i = 0; i < countof(mySettings.relayPin); i++)
   {
-    if(mySettings.relayActivationDuration[i] > 0){
+    if(mySettings.relayActivationDuration[i] > 0 && mySettings.relayControlMode[i] == 2){
       if(mySettings.relayActivationDateTime[i] <= rtc.getEpoch() && (mySettings.relayActivationDuration[i]) >=
         (rtc.getEpoch() - mySettings.relayActivationDateTime[i]) && mySettings.dutyState[i] != mySettings.ON){
           mySettings.dutyState[i] = mySettings.ON;
-          pinMode(mySettings.relayPin[i], OUTPUT);
-          digitalWrite(mySettings.relayPin[i], mySettings.dutyState[i]);
+          String ch = "ch" + String(i+1);
+          setSwitch(ch, "ON");
           log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d - ts:%d - tr:%d - exp:%d\n"), i+1,
             mySettings.dutyState[i], mySettings.relayActivationDateTime[i], mySettings.relayActivationDuration[i],
             mySettings.relayActivationDuration[i] - (rtc.getEpoch() - mySettings.relayActivationDateTime[i]));
@@ -365,8 +390,8 @@ void relayControlByDateTime(){
       else if(mySettings.dutyState[i] == mySettings.ON && (mySettings.relayActivationDuration[i]) <=
         (rtc.getEpoch() - mySettings.relayActivationDateTime[i])){
           mySettings.dutyState[i] = !mySettings.ON;
-          pinMode(mySettings.relayPin[i], OUTPUT);
-          digitalWrite(mySettings.relayPin[i], mySettings.dutyState[i]);
+          String ch = "ch" + String(i+1);
+          setSwitch(ch, "OFF");
           log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d - ts:%d - tr:%d - exp:%d\n"), i+1,
             mySettings.dutyState[i], mySettings.relayActivationDateTime[i], mySettings.relayActivationDuration[i],
             mySettings.relayActivationDuration[i] - (rtc.getEpoch() - mySettings.relayActivationDateTime[i]));
@@ -380,27 +405,17 @@ void relayControlByDutyCycle()
   for(uint8_t i = 0; i < countof(mySettings.relayPin); i++)
   {
     if (mySettings.dutyRange[i] < 2){mySettings.dutyRange[i] = 2;} //safenet
-    if(mySettings.dutyCycle[i] != 0)
+    if(mySettings.dutyCycle[i] != 0 && mySettings.relayControlMode[i] == 1)
     {
       if( mySettings.dutyState[i] == mySettings.ON )
       {
         if( mySettings.dutyCycle[i] != 100 && (millis() - mySettings.dutyCounter[i] ) >= (float)(( ((float)mySettings.dutyCycle[i] / 100) * (float)mySettings.dutyRange[i]) * 1000))
         {
           mySettings.dutyState[i] = !mySettings.ON;
-          pinMode(mySettings.relayPin[i], OUTPUT);
-          digitalWrite(mySettings.relayPin[i], mySettings.dutyState[i]);
+          String ch = "ch" + String(i+1);
+          setSwitch(ch, "OFF");
           mySettings.dutyCounter[i] = millis();
           log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld\n"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
-
-          if(tb.connected())
-          {
-            StaticJsonDocument<DOCSIZE> doc;
-            char ch[3];
-            sprintf(ch, PSTR("ch%d"), i+1);
-            doc[ch] = (int)mySettings.dutyState[i];
-            tb.sendTelemetryDoc(doc);
-            doc.clear();
-          }
         }
       }
       else
@@ -408,20 +423,10 @@ void relayControlByDutyCycle()
         if( mySettings.dutyCycle[i] != 0 && (millis() - mySettings.dutyCounter[i] ) >= (float) ( ((100 - (float) mySettings.dutyCycle[i]) / 100) * (float) mySettings.dutyRange[i]) * 1000)
         {
           mySettings.dutyState[i] = mySettings.ON;
-          pinMode(mySettings.relayPin[i], OUTPUT);
-          digitalWrite(mySettings.relayPin[i], (int)mySettings.dutyState[i]);
+          String ch = "ch" + String(i+1);
+          setSwitch(ch, "ON");
           mySettings.dutyCounter[i] = millis();
           log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld\n"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
-
-          if(tb.connected())
-          {
-            StaticJsonDocument<DOCSIZE> doc;
-            char ch[3];
-            sprintf(ch, PSTR("ch%d"), i+1);
-            doc[ch] = (int)mySettings.dutyState[i];
-            tb.sendTelemetryDoc(doc);
-            doc.clear();
-          }
         }
       }
     }
@@ -512,7 +517,24 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
 
   if(data["ON"] != nullptr){mySettings.ON = data["ON"].as<bool>();}
   if(data["fTeleDev"] != nullptr){mySettings.fTeleDev = data["fTeleDev"].as<bool>();}
-  if(data["relayControlMode"] != nullptr){mySettings.relayControlMode = data["relayControlMode"].as<uint8_t>();}
+
+
+  if(data["relayControlModeCh1"] != nullptr)
+  {
+    mySettings.relayControlMode[0] = data["relayControlModeCh1"].as<uint8_t>();
+  }
+  if(data["relayControlModeCh2"] != nullptr)
+  {
+    mySettings.relayControlMode[1] = data["relayControlModeCh2"].as<uint8_t>();
+  }
+  if(data["relayControlModeCh3"] != nullptr)
+  {
+    mySettings.relayControlMode[2] = data["relayControlModeCh3"].as<uint8_t>();
+  }
+  if(data["relayControlModeCh4"] != nullptr)
+  {
+    mySettings.relayControlMode[3] = data["relayControlModeCh4"].as<uint8_t>();
+  }
 
   mySettings.lastUpdated = millis();
   return callbackResponse("sharedAttributesUpdate", 1);
@@ -594,7 +616,10 @@ void syncClientAttributes()
   doc["ON"] = mySettings.ON;
   doc["fTeleDev"] = mySettings.fTeleDev;
   doc["dt"] = rtc.getDateTime();
-  doc["relayControlMode"] = mySettings.relayControlMode;
+  doc["relayControlModeCh1"] = mySettings.relayControlMode[0];
+  doc["relayControlModeCh2"] = mySettings.relayControlMode[1];
+  doc["relayControlModeCh3"] = mySettings.relayControlMode[2];
+  doc["relayControlModeCh4"] = mySettings.relayControlMode[3];
   tb.sendAttributeDoc(doc);
   doc.clear();
 }
@@ -608,4 +633,20 @@ void publishDeviceTelemetry()
   doc["uptime"] = millis()/1000;
   tb.sendTelemetryDoc(doc);
   doc.clear();
+}
+
+void publishSwitch(){
+  if(tb.connected()){
+    for (uint8_t i = 0; i < 4; i++){
+      if(mySettings.publishSwitch[i]){
+        StaticJsonDocument<DOCSIZE> doc;
+        String chName = "ch" + String(i+1);
+        doc[chName.c_str()] = (int)mySettings.dutyState[i];
+        tb.sendTelemetryDoc(doc);
+        doc.clear();
+
+        mySettings.publishSwitch[i] = false;
+      }
+    }
+  }
 }
