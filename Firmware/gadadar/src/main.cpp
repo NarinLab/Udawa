@@ -10,12 +10,13 @@
 using namespace libudawa;
 Settings mySettings;
 
-const size_t callbacksSize = 11;
+const size_t callbacksSize = 12;
 GenericCallback callbacks[callbacksSize] = {
   { "sharedAttributesUpdate", processSharedAttributesUpdate },
   { "provisionResponse", processProvisionResponse },
   { "saveConfig", processSaveConfig },
   { "saveSettings", processSaveSettings },
+  { "saveConfigCoMCU", processSaveConfigCoMCU },
   { "syncClientAttributes", processSyncClientAttributes },
   { "reboot", processReboot },
   { "setSwitch", processSetSwitch },
@@ -29,16 +30,20 @@ void setup()
 {
   startup();
   loadSettings();
+  configCoMCULoad();
 
   networkInit();
   tb.setBufferSize(DOCSIZE);
 
-  if(mySettings.fTeleDev)
-  {
-    taskManager.scheduleFixedRate(1000, [] {
-      publishDeviceTelemetry();
-    });
-  }
+  taskid_t taskPublishDeviceTelemetry = taskManager.scheduleFixedRate(1000, [] {
+    publishDeviceTelemetry();
+  });
+  taskManager.setTaskEnabled(taskPublishDeviceTelemetry, false);
+
+  taskid_t taskMonitorPowerUsage = taskManager.scheduleFixedRate(mySettings.intrvlRecPwgUsg, [] {
+    recPowerUsage();
+  });
+  taskManager.setTaskEnabled(taskMonitorPowerUsage, false);
 }
 
 void loop()
@@ -66,6 +71,48 @@ void loop()
     }
 
     syncClientAttributes();
+  }
+}
+
+void getPowerUsage(){
+  StaticJsonDocument<DOCSIZE> doc;
+  doc["pinACS"] = mySettings.pinACS;
+  doc["testFreq"] = mySettings.testFreq;
+  doc["windowLength"] = mySettings.windowLength;
+  doc["intercept"] = mySettings.intercept;
+  doc["slope"] = mySettings.slope;
+  doc["method"] = "setSettings";
+  serialWriteToCoMcu(doc, false);
+  doc.clear();
+  doc["method"] = "getPowerUsage";
+  serialWriteToCoMcu(doc, true);
+  if(doc["armpsTRMS"] != nullptr && doc["ACSValue"] != nullptr){
+    mySettings.latestAmpsTRMS = doc["armpsTRMS"].as<float>();
+    mySettings.latestACSValue = doc["ACSValue"].as<float>();
+    doc.clear();
+    log_manager->debug(PSTR(__func__), "Latest power meter reading armpsTRMS: %.2f - ACSValue: %.2f\n", mySettings.latestAmpsTRMS, mySettings.latestACSValue);
+    mySettings.accuAmpsTRMS += doc["armpsTRMS"].as<float>();
+    mySettings.accuACSValue += doc["ACSValue"].as<float>();
+    mySettings.counterPowerMonitor++;
+  }
+}
+
+void recPowerUsage(){
+  if(tb.connected()){
+    float ampsTRMS = mySettings.accuAmpsTRMS / mySettings.counterPowerMonitor;
+    float ACSValue = mySettings.accuACSValue / mySettings.counterPowerMonitor;
+    StaticJsonDocument<DOCSIZE> doc;
+    doc["armpsTRMS"] = ampsTRMS;
+    doc["ACSValue"] = ACSValue;
+    tb.sendTelemetryDoc(doc);
+    doc.clear();
+    log_manager->info(PSTR(__func__), "Recorded power usage armpsTRMS: %.2f - ACSValue: %.2f\n", ampsTRMS, ACSValue);
+    mySettings.accuACSValue = 0;
+    mySettings.accuAmpsTRMS = 0;
+    mySettings.counterPowerMonitor = 0;
+  }
+  else{
+    log_manager->warn(PSTR(__func__), "Failed to record power usage, IoT not connected. %d records waiting on the accumulator.\n", mySettings.counterPowerMonitor);
   }
 }
 
@@ -202,13 +249,13 @@ void loadSettings()
     mySettings.ON = 1;
   }
 
-  if(doc["fTeleDev"] != nullptr)
+  if(doc["intrvlRecPwgUsg"] != nullptr)
   {
-    mySettings.fTeleDev = doc["fTeleDev"].as<bool>();
+    mySettings.intrvlRecPwgUsg = doc["intrvlRecPwgUsg"].as<long>();
   }
   else
   {
-    mySettings.fTeleDev = 1;
+    mySettings.intrvlRecPwgUsg = 600;
   }
 
   if(doc["relayControlMode"] != nullptr)
@@ -232,6 +279,18 @@ void loadSettings()
   {
     mySettings.dutyCounter[i] = 86400;
   }
+
+  if(doc["pinACS"] != nullptr){mySettings.pinACS = doc["pinACS"].as<uint8_t>();}
+  else{mySettings.pinACS = 14;}
+  if(doc["testFreq"] != nullptr){mySettings.testFreq = doc["testFreq"].as<float>();}
+  else{mySettings.testFreq = 50;}
+  if(doc["windowLength"] != nullptr){mySettings.windowLength = doc["windowLength"].as<float>();}
+  else{mySettings.windowLength = 40.0;}
+  if(doc["intercept"] != nullptr){mySettings.intercept = doc["intercept"].as<float>();}
+  else{mySettings.intercept = 0;}
+  if(doc["slope"] != nullptr){mySettings.slope = doc["slope"].as<float>();}
+  else{mySettings.slope = 0.0752;}
+
 }
 
 void saveSettings()
@@ -281,13 +340,19 @@ void saveSettings()
   }
 
   doc["ON"] = mySettings.ON;
-  doc["fTeleDev"] = mySettings.fTeleDev;
+  doc["intrvlRecPwgUsg"] = mySettings.intrvlRecPwgUsg;
 
   JsonArray relayControlMode = doc.createNestedArray("relayControlMode");
   for(uint8_t i=0; i<countof(mySettings.relayControlMode); i++)
   {
     relayControlMode.add(mySettings.relayControlMode[i]);
   }
+
+  doc["pinACS"] = mySettings.pinACS;
+  doc["testFreq"] = mySettings.testFreq;
+  doc["windowLength"] = mySettings.windowLength;
+  doc["intercept"] = mySettings.intercept;
+  doc["slope"] = mySettings.slope;
 
   writeSettings(doc, settingsPath);
 }
@@ -305,6 +370,14 @@ callbackResponse processSaveSettings(const callbackData &data)
 
   mySettings.lastUpdated = millis();
   return callbackResponse("saveSettings", 1);
+}
+
+callbackResponse processSaveConfigCoMCU(const callbackData &data)
+{
+  configCoMCUSave();
+  configCoMCULoad();
+  syncConfigCoMCU();
+  return callbackResponse("saveConfigCoMCU", 1);
 }
 
 callbackResponse processReboot(const callbackData &data)
@@ -516,25 +589,27 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["relayPinCh4"] != nullptr){mySettings.relayPin[3] = data["relayPinCh4"].as<uint8_t>();}
 
   if(data["ON"] != nullptr){mySettings.ON = data["ON"].as<bool>();}
-  if(data["fTeleDev"] != nullptr){mySettings.fTeleDev = data["fTeleDev"].as<bool>();}
+  if(data["intrvlRecPwgUsg"] != nullptr){mySettings.intrvlRecPwgUsg = data["intrvlRecPwgUsg"].as<long>();}
 
 
-  if(data["relayControlModeCh1"] != nullptr)
-  {
-    mySettings.relayControlMode[0] = data["relayControlModeCh1"].as<uint8_t>();
-  }
-  if(data["relayControlModeCh2"] != nullptr)
-  {
-    mySettings.relayControlMode[1] = data["relayControlModeCh2"].as<uint8_t>();
-  }
-  if(data["relayControlModeCh3"] != nullptr)
-  {
-    mySettings.relayControlMode[2] = data["relayControlModeCh3"].as<uint8_t>();
-  }
-  if(data["relayControlModeCh4"] != nullptr)
-  {
-    mySettings.relayControlMode[3] = data["relayControlModeCh4"].as<uint8_t>();
-  }
+  if(data["relayControlModeCh1"] != nullptr){mySettings.relayControlMode[0] = data["relayControlModeCh1"].as<uint8_t>();}
+  if(data["relayControlModeCh2"] != nullptr){mySettings.relayControlMode[1] = data["relayControlModeCh2"].as<uint8_t>();}
+  if(data["relayControlModeCh3"] != nullptr){mySettings.relayControlMode[2] = data["relayControlModeCh3"].as<uint8_t>();}
+  if(data["relayControlModeCh4"] != nullptr){mySettings.relayControlMode[3] = data["relayControlModeCh4"].as<uint8_t>();}
+
+  if(data["pinACS"] != nullptr){mySettings.pinACS = data["pinACS"].as<uint8_t>();}
+  if(data["testFreq"] != nullptr){mySettings.testFreq = data["testFreq"].as<float>();}
+  if(data["windowLength"] != nullptr){mySettings.windowLength = data["windowLength"].as<float>();}
+  if(data["intercept"] != nullptr){mySettings.intercept = data["intercept"].as<float>();}
+  if(data["slope"] != nullptr){mySettings.slope = data["slope"].as<float>();}
+
+  if(data["fPanic"] != nullptr){configcomcu.fPanic = data["fPanic"].as<bool>();}
+  if(data["bfreq"] != nullptr){configcomcu.bfreq = data["bfreq"].as<uint16_t>();}
+  if(data["fBuzz"] != nullptr){configcomcu.fBuzz = data["fBuzz"].as<bool>();}
+  if(data["pinBuzzer"] != nullptr){configcomcu.pinBuzzer = data["pinBuzzer"].as<uint8_t>();}
+  if(data["pinLedR"] != nullptr){configcomcu.pinLedR = data["pinLedR"].as<uint8_t>();}
+  if(data["pinLedG"] != nullptr){configcomcu.pinLedG = data["pinLedG"].as<uint8_t>();}
+  if(data["pinLedB"] != nullptr){configcomcu.pinLedB = data["pinLedB"].as<uint8_t>();}
 
   mySettings.lastUpdated = millis();
   return callbackResponse("sharedAttributesUpdate", 1);
@@ -614,12 +689,19 @@ void syncClientAttributes()
   doc["relayPinCh3"] = mySettings.relayPin[2];
   doc["relayPinCh4"] = mySettings.relayPin[3];
   doc["ON"] = mySettings.ON;
-  doc["fTeleDev"] = mySettings.fTeleDev;
+  doc["intrvlRecPwgUsg"] = mySettings.intrvlRecPwgUsg;
   doc["dt"] = rtc.getDateTime();
   doc["relayControlModeCh1"] = mySettings.relayControlMode[0];
   doc["relayControlModeCh2"] = mySettings.relayControlMode[1];
   doc["relayControlModeCh3"] = mySettings.relayControlMode[2];
   doc["relayControlModeCh4"] = mySettings.relayControlMode[3];
+  tb.sendAttributeDoc(doc);
+  doc.clear();
+  doc["pinACS"] = mySettings.pinACS;
+  doc["testFreq"] = mySettings.testFreq;
+  doc["windowLength"] = mySettings.windowLength;
+  doc["intercept"] = mySettings.intercept;
+  doc["slope"] = mySettings.slope;
   tb.sendAttributeDoc(doc);
   doc.clear();
 }

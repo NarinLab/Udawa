@@ -67,10 +67,22 @@ struct Settings
     bool ON;
     bool dutyState[4];
     unsigned long dutyCounter[4];
-    bool fTeleDev;
+    long intrvlRecPwgUsg = 600;
     unsigned long relayActivationDateTime[4];
     unsigned long relayActivationDuration[4];
     bool publishSwitch[4] = {false, false, false, false};
+
+    uint8_t pinACS = 14;
+
+    float testFreq = 50;
+    float windowLength = 40.0;
+    float intercept = 0;
+    float slope = 0.0752;
+    float latestAmpsTRMS;
+    float latestACSValue;
+    long counterPowerMonitor = 0;
+    float accuAmpsTRMS;
+    float accuACSValue;
 };
 
 callbackResponse processSaveConfig(const callbackData &data);
@@ -83,6 +95,7 @@ callbackResponse processGetSwitchCh1(const callbackData &data);
 callbackResponse processGetSwitchCh2(const callbackData &data);
 callbackResponse processGetSwitchCh3(const callbackData &data);
 callbackResponse processGetSwitchCh4(const callbackData &data);
+callbackResponse processSaveConfigCoMCU(const callbackData &data);
 
 void loadSettings();
 void saveSettings();
@@ -92,5 +105,7 @@ void syncClientAttributes();
 void publishDeviceTelemetry();
 void setSwitch(String  ch, String state);
 void publishSwitch();
+void getPowerUsage();
+void recPowerUsage();
 
 #endif

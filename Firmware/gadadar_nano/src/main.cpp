@@ -34,16 +34,17 @@ void loop() {
     }
   }
   doc.clear();
-}
 
-void getPowerUsage(StaticJsonDocument<DOCSIZE> &doc)
-{
-  pinMode(mySettings.pinACS, OUTPUT);
   // create statistics to look at the raw test signal
   mySettings.ACSValue = analogRead(mySettings.pinACS);
   // read the analog in value:
   // log to Stats function
   inputStats.input(mySettings.ACSValue);
+}
+
+void getPowerUsage(StaticJsonDocument<DOCSIZE> &doc)
+{
+  pinMode(mySettings.pinACS, INPUT);
   mySettings.ampsTRMS = mySettings.intercept + mySettings.slope * inputStats.sigma();
   doc["armpsTRMS"] = mySettings.ampsTRMS;
   doc["ACSValue"] = mySettings.ACSValue;
