@@ -49,6 +49,7 @@ ny6l9/duT2POAsUN5IwHGDu8b2NT+vCUQRFVHY31
 
 #define DOCSIZE 768
 #include <libudawa.h>
+#include <TimeLib.h>
 
 
 #define CURRENT_FIRMWARE_TITLE "UDAWA-Gadadar"
@@ -57,19 +58,19 @@ ny6l9/duT2POAsUN5IwHGDu8b2NT+vCUQRFVHY31
 const char* settingsPath = "/settings.json";
 struct Settings
 {
-    uint8_t relayControlMode[4];
-    uint8_t dutyCycle[4];
-    unsigned long dutyRange[4];
-    uint8_t dutyCycleFailSafe[4];
-    unsigned long dutyRangeFailSafe[4];
-    uint8_t relayPin[4];
-    unsigned long lastUpdated;
+    uint8_t rlyCtrlMd[4];
+    uint8_t dtCyc[4];
+    unsigned long dtRng[4];
+    uint8_t dtCycFS[4];
+    unsigned long dtRngFS[4];
+    uint8_t pin[4];
+    uint32_t lastUpdated;
     bool ON;
     bool dutyState[4];
     unsigned long dutyCounter[4];
     long intrvlRecPwgUsg = 600;
-    unsigned long relayActivationDateTime[4];
-    unsigned long relayActivationDuration[4];
+    uint32_t rlyActDT[4];
+    unsigned long rlyActDr[4];
     bool publishSwitch[4] = {false, false, false, false};
 
     uint8_t pinACS = 14;
@@ -99,7 +100,7 @@ callbackResponse processSaveConfigCoMCU(const callbackData &data);
 
 void loadSettings();
 void saveSettings();
-void relayControlByDutyCycle();
+void relayControlBydtCyc();
 void relayControlByDateTime();
 void syncClientAttributes();
 void publishDeviceTelemetry();
@@ -107,5 +108,6 @@ void setSwitch(String  ch, String state);
 void publishSwitch();
 void getPowerUsage();
 void recPowerUsage();
+uint32_t micro2milli(uint32_t hi, uint32_t lo);
 
 #endif

@@ -7,10 +7,11 @@
 **/
 #include "main.h"
 
+
 using namespace libudawa;
 Settings mySettings;
 
-const size_t callbacksSize = 12;
+const size_t callbacksSize = 13;
 GenericCallback callbacks[callbacksSize] = {
   { "sharedAttributesUpdate", processSharedAttributesUpdate },
   { "provisionResponse", processProvisionResponse },
@@ -38,7 +39,7 @@ void setup()
   taskid_t taskPublishDeviceTelemetry = taskManager.scheduleFixedRate(1000, [] {
     publishDeviceTelemetry();
   });
-  taskManager.setTaskEnabled(taskPublishDeviceTelemetry, false);
+  //taskManager.setTaskEnabled(taskPublishDeviceTelemetry, false);
 
   taskid_t taskMonitorPowerUsage = taskManager.scheduleFixedRate(mySettings.intrvlRecPwgUsg, [] {
     recPowerUsage();
@@ -50,7 +51,7 @@ void loop()
 {
   udawa();
   relayControlByDateTime();
-  relayControlByDutyCycle();
+  relayControlBydtCyc();
   publishSwitch();
 
   if(tb.connected() && FLAG_IOT_SUBSCRIBE)
@@ -72,6 +73,22 @@ void loop()
 
     syncClientAttributes();
   }
+}
+
+const uint32_t MAX_INT = 0xFFFFFFFF;
+uint32_t micro2milli(uint32_t hi, uint32_t lo)
+{
+  if (hi >= 1000)
+  {
+    log_manager->error(PSTR(__func__),"Cannot store milliseconds in uint32!\n");
+  }
+
+  uint32_t r = (lo >> 16) + (hi << 16);
+  uint32_t ans = r / 1000;
+  r = ((r % 1000) << 16) + (lo & 0xFFFF);
+  ans = (ans << 16) + r / 1000;
+
+  return ans;
 }
 
 void getPowerUsage(){
@@ -121,122 +138,122 @@ void loadSettings()
   StaticJsonDocument<DOCSIZE> doc;
   readSettings(doc, settingsPath);
 
-  if(doc["dutyCycle"] != nullptr)
+  if(doc["dtCyc"] != nullptr)
   {
     uint8_t index = 0;
-    for(JsonVariant v : doc["dutyCycle"].as<JsonArray>())
+    for(JsonVariant v : doc["dtCyc"].as<JsonArray>())
     {
-        mySettings.dutyCycle[index] = v.as<uint8_t>();
+        mySettings.dtCyc[index] = v.as<uint8_t>();
         index++;
     }
   }
   else
   {
-    for(uint8_t i = 0; i < countof(mySettings.dutyCycle); i++)
+    for(uint8_t i = 0; i < countof(mySettings.dtCyc); i++)
     {
-        mySettings.dutyCycle[i] = 0;
+        mySettings.dtCyc[i] = 0;
     }
   }
 
-  if(doc["dutyRange"] != nullptr)
+  if(doc["dtRng"] != nullptr)
   {
     uint8_t index = 0;
-    for(JsonVariant v : doc["dutyRange"].as<JsonArray>())
+    for(JsonVariant v : doc["dtRng"].as<JsonArray>())
     {
-        mySettings.dutyRange[index] = v.as<unsigned long>();
+        mySettings.dtRng[index] = v.as<unsigned long>();
         index++;
     }
   }
   else
   {
-    for(uint8_t i = 0; i < countof(mySettings.dutyRange); i++)
+    for(uint8_t i = 0; i < countof(mySettings.dtRng); i++)
     {
-        mySettings.dutyRange[i] = 0;
+        mySettings.dtRng[i] = 0;
     }
   }
 
-  if(doc["dutyCycleFailSafe"] != nullptr)
+  if(doc["dtCycFS"] != nullptr)
   {
     uint8_t index = 0;
-    for(JsonVariant v : doc["dutyCycleFailSafe"].as<JsonArray>())
+    for(JsonVariant v : doc["dtCycFS"].as<JsonArray>())
     {
-        mySettings.dutyCycleFailSafe[index] = v.as<uint8_t>();
+        mySettings.dtCycFS[index] = v.as<uint8_t>();
         index++;
     }
   }
   else
   {
-    for(uint8_t i = 0; i < countof(mySettings.dutyCycleFailSafe); i++)
+    for(uint8_t i = 0; i < countof(mySettings.dtCycFS); i++)
     {
-        mySettings.dutyCycleFailSafe[i] = 0;
+        mySettings.dtCycFS[i] = 0;
     }
   }
 
-  if(doc["dutyRangeFailSafe"] != nullptr)
+  if(doc["dtRngFS"] != nullptr)
   {
     uint8_t index = 0;
-    for(JsonVariant v : doc["dutyRangeFailSafe"].as<JsonArray>())
+    for(JsonVariant v : doc["dtRngFS"].as<JsonArray>())
     {
-        mySettings.dutyRangeFailSafe[index] = v.as<unsigned long>();
+        mySettings.dtRngFS[index] = v.as<unsigned long>();
         index++;
     }
   }
   else
   {
-    for(uint8_t i = 0; i < countof(mySettings.dutyRangeFailSafe); i++)
+    for(uint8_t i = 0; i < countof(mySettings.dtRngFS); i++)
     {
-        mySettings.dutyRangeFailSafe[i] = 0;
+        mySettings.dtRngFS[i] = 0;
     }
   }
 
-  if(doc["relayActivationDateTime"] != nullptr)
+  if(doc["rlyActDT"] != nullptr)
   {
     uint8_t index = 0;
-    for(JsonVariant v : doc["relayActivationDateTime"].as<JsonArray>())
+    for(JsonVariant v : doc["rlyActDT"].as<JsonArray>())
     {
-        mySettings.relayActivationDateTime[index] = v.as<unsigned long>();
+        mySettings.rlyActDT[index] = v.as<unsigned long>();
         index++;
     }
   }
   else
   {
-    for(uint8_t i = 0; i < countof(mySettings.relayActivationDateTime); i++)
+    for(uint8_t i = 0; i < countof(mySettings.rlyActDT); i++)
     {
-        mySettings.relayActivationDateTime[i] = 0;
+        mySettings.rlyActDT[i] = 0;
     }
   }
 
-  if(doc["relayActivationDuration"] != nullptr)
+  if(doc["rlyActDr"] != nullptr)
   {
     uint8_t index = 0;
-    for(JsonVariant v : doc["relayActivationDuration"].as<JsonArray>())
+    for(JsonVariant v : doc["rlyActDr"].as<JsonArray>())
     {
-        mySettings.relayActivationDuration[index] = v.as<unsigned long>();
+        mySettings.rlyActDr[index] = v.as<unsigned long>();
         index++;
     }
   }
   else
   {
-    for(uint8_t i = 0; i < countof(mySettings.relayActivationDuration); i++)
+    for(uint8_t i = 0; i < countof(mySettings.rlyActDr); i++)
     {
-        mySettings.relayActivationDuration[i] = 0;
+        mySettings.rlyActDr[i] = 0;
     }
   }
 
-  if(doc["relayPin"] != nullptr)
+  if(doc["pin"] != nullptr)
   {
     uint8_t index = 0;
-    for(JsonVariant v : doc["relayPin"].as<JsonArray>())
+    for(JsonVariant v : doc["pin"].as<JsonArray>())
     {
-        mySettings.relayPin[index] = v.as<uint8_t>();
+        mySettings.pin[index] = v.as<uint8_t>();
         index++;
     }
   }
   else
   {
-    for(uint8_t i = 0; i < countof(mySettings.relayPin); i++)
+    for(uint8_t i = 0; i < countof(mySettings.pin); i++)
     {
-        mySettings.relayPin[i] = 0;
+        mySettings.pin[i] = 0;
     }
   }
 
@@ -258,20 +275,20 @@ void loadSettings()
     mySettings.intrvlRecPwgUsg = 600;
   }
 
-  if(doc["relayControlMode"] != nullptr)
+  if(doc["rlyCtrlMd"] != nullptr)
   {
     uint8_t index = 0;
-    for(JsonVariant v : doc["relayControlMode"].as<JsonArray>())
+    for(JsonVariant v : doc["rlyCtrlMd"].as<JsonArray>())
     {
-        mySettings.relayControlMode[index] = v.as<uint8_t>();
+        mySettings.rlyCtrlMd[index] = v.as<uint8_t>();
         index++;
     }
   }
   else
   {
-    for(uint8_t i = 0; i < countof(mySettings.relayControlMode); i++)
+    for(uint8_t i = 0; i < countof(mySettings.rlyCtrlMd); i++)
     {
-        mySettings.relayControlMode[i] = 0;
+        mySettings.rlyCtrlMd[i] = 0;
     }
   }
 
@@ -291,61 +308,64 @@ void loadSettings()
   if(doc["slope"] != nullptr){mySettings.slope = doc["slope"].as<float>();}
   else{mySettings.slope = 0.0752;}
 
+  String tmp;
+  if(config.logLev >= 4){serializeJsonPretty(doc, tmp);}
+  //log_manager->debug(PSTR(__func__), "Loaded settings:\n %s \n", tmp.c_str());
 }
 
 void saveSettings()
 {
   StaticJsonDocument<DOCSIZE> doc;
 
-  JsonArray dutyCycle = doc.createNestedArray("dutyCycle");
-  for(uint8_t i=0; i<countof(mySettings.dutyCycle); i++)
+  JsonArray dtCyc = doc.createNestedArray("dtCyc");
+  for(uint8_t i=0; i<countof(mySettings.dtCyc); i++)
   {
-    dutyCycle.add(mySettings.dutyCycle[i]);
+    dtCyc.add(mySettings.dtCyc[i]);
   }
 
-  JsonArray dutyRange = doc.createNestedArray("dutyRange");
-  for(uint8_t i=0; i<countof(mySettings.dutyRange); i++)
+  JsonArray dtRng = doc.createNestedArray("dtRng");
+  for(uint8_t i=0; i<countof(mySettings.dtRng); i++)
   {
-    dutyRange.add(mySettings.dutyRange[i]);
+    dtRng.add(mySettings.dtRng[i]);
   }
 
-  JsonArray dutyCycleFailSafe = doc.createNestedArray("dutyCycleFailSafe");
-  for(uint8_t i=0; i<countof(mySettings.dutyCycleFailSafe); i++)
+  JsonArray dtCycFS = doc.createNestedArray("dtCycFS");
+  for(uint8_t i=0; i<countof(mySettings.dtCycFS); i++)
   {
-    dutyCycleFailSafe.add(mySettings.dutyCycleFailSafe[i]);
+    dtCycFS.add(mySettings.dtCycFS[i]);
   }
 
-  JsonArray dutyRangeFailSafe = doc.createNestedArray("dutyRangeFailSafe");
-  for(uint8_t i=0; i<countof(mySettings.dutyRangeFailSafe); i++)
+  JsonArray dtRngFS = doc.createNestedArray("dtRngFS");
+  for(uint8_t i=0; i<countof(mySettings.dtRngFS); i++)
   {
-    dutyRangeFailSafe.add(mySettings.dutyRangeFailSafe[i]);
+    dtRngFS.add(mySettings.dtRngFS[i]);
   }
 
-  JsonArray relayActivationDateTime = doc.createNestedArray("relayActivationDateTime");
-  for(uint8_t i=0; i<countof(mySettings.relayActivationDateTime); i++)
+  JsonArray rlyActDT = doc.createNestedArray("rlyActDT");
+  for(uint8_t i=0; i<countof(mySettings.rlyActDT); i++)
   {
-    relayActivationDateTime.add(mySettings.relayActivationDateTime[i]);
+    rlyActDT.add(mySettings.rlyActDT[i]);
   }
 
-  JsonArray relayActivationDuration = doc.createNestedArray("relayActivationDuration");
-  for(uint8_t i=0; i<countof(mySettings.relayActivationDuration); i++)
+  JsonArray rlyActDr = doc.createNestedArray("rlyActDr");
+  for(uint8_t i=0; i<countof(mySettings.rlyActDr); i++)
   {
-    relayActivationDuration.add(mySettings.relayActivationDuration[i]);
+    rlyActDr.add(mySettings.rlyActDr[i]);
   }
 
-  JsonArray relayPin = doc.createNestedArray("relayPin");
-  for(uint8_t i=0; i<countof(mySettings.relayPin); i++)
+  JsonArray pin = doc.createNestedArray("pin");
+  for(uint8_t i=0; i<countof(mySettings.pin); i++)
   {
-    relayPin.add(mySettings.relayPin[i]);
+    pin.add(mySettings.pin[i]);
   }
 
   doc["ON"] = mySettings.ON;
   doc["intrvlRecPwgUsg"] = mySettings.intrvlRecPwgUsg;
 
-  JsonArray relayControlMode = doc.createNestedArray("relayControlMode");
-  for(uint8_t i=0; i<countof(mySettings.relayControlMode); i++)
+  JsonArray rlyCtrlMd = doc.createNestedArray("rlyCtrlMd");
+  for(uint8_t i=0; i<countof(mySettings.rlyCtrlMd); i++)
   {
-    relayControlMode.add(mySettings.relayControlMode[i]);
+    rlyCtrlMd.add(mySettings.rlyCtrlMd[i]);
   }
 
   doc["pinACS"] = mySettings.pinACS;
@@ -355,6 +375,9 @@ void saveSettings()
   doc["slope"] = mySettings.slope;
 
   writeSettings(doc, settingsPath);
+  //String tmp;
+  //if(config.logLev >= 4){serializeJsonPretty(doc, tmp);}
+  //log_manager->debug(PSTR(__func__), "Written settings:\n %s \n", tmp.c_str());
 }
 
 callbackResponse processSaveConfig(const callbackData &data)
@@ -424,15 +447,16 @@ callbackResponse processGetSwitchCh4(const callbackData &data)
   return callbackResponse("ch4", mySettings.dutyState[3] == mySettings.ON ? "ON" : "OFF");
 }
 
+
 void setSwitch(String ch, String state)
 {
   bool fState = 0;
   uint8_t pin = 0;
 
-  if(ch == String("ch1")){pin = mySettings.relayPin[0]; mySettings.dutyState[0] = (state == String("ON")) ? mySettings.ON : !mySettings.ON; mySettings.publishSwitch[0] = true;}
-  else if(ch == String("ch2")){pin = mySettings.relayPin[1]; mySettings.dutyState[1] = (state == String("ON")) ? mySettings.ON : !mySettings.ON; mySettings.publishSwitch[1] = true;}
-  else if(ch == String("ch3")){pin = mySettings.relayPin[2]; mySettings.dutyState[2] = (state == String("ON")) ? mySettings.ON : !mySettings.ON; mySettings.publishSwitch[2] = true;}
-  else if(ch == String("ch4")){pin = mySettings.relayPin[3]; mySettings.dutyState[3] = (state == String("ON")) ? mySettings.ON : !mySettings.ON; mySettings.publishSwitch[3] = true;}
+  if(ch == String("ch1")){pin = mySettings.pin[0]; mySettings.dutyState[0] = (state == String("ON")) ? mySettings.ON : !mySettings.ON; mySettings.publishSwitch[0] = true;}
+  else if(ch == String("ch2")){pin = mySettings.pin[1]; mySettings.dutyState[1] = (state == String("ON")) ? mySettings.ON : !mySettings.ON; mySettings.publishSwitch[1] = true;}
+  else if(ch == String("ch3")){pin = mySettings.pin[2]; mySettings.dutyState[2] = (state == String("ON")) ? mySettings.ON : !mySettings.ON; mySettings.publishSwitch[2] = true;}
+  else if(ch == String("ch4")){pin = mySettings.pin[3]; mySettings.dutyState[3] = (state == String("ON")) ? mySettings.ON : !mySettings.ON; mySettings.publishSwitch[3] = true;}
 
   if(state == String("ON"))
   {
@@ -448,58 +472,95 @@ void setSwitch(String ch, String state)
 }
 
 void relayControlByDateTime(){
-  for(uint8_t i = 0; i < countof(mySettings.relayPin); i++)
+  for(uint8_t i = 0; i < countof(mySettings.pin); i++)
   {
-    if(mySettings.relayActivationDuration[i] > 0 && mySettings.relayControlMode[i] == 2){
-      if(mySettings.relayActivationDateTime[i] <= rtc.getEpoch() && (mySettings.relayActivationDuration[i]) >=
-        (rtc.getEpoch() - mySettings.relayActivationDateTime[i]) && mySettings.dutyState[i] != mySettings.ON){
+    if(mySettings.rlyActDr[i] > 0 && mySettings.rlyCtrlMd[i] == 2){
+      if(mySettings.rlyActDT[i] <= (rtc.getEpoch()) && (mySettings.rlyActDr[i]) >=
+        (rtc.getEpoch() - mySettings.rlyActDT[i]) && mySettings.dutyState[i] != mySettings.ON){
           mySettings.dutyState[i] = mySettings.ON;
           String ch = "ch" + String(i+1);
           setSwitch(ch, "ON");
           log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d - ts:%d - tr:%d - exp:%d\n"), i+1,
-            mySettings.dutyState[i], mySettings.relayActivationDateTime[i], mySettings.relayActivationDuration[i],
-            mySettings.relayActivationDuration[i] - (rtc.getEpoch() - mySettings.relayActivationDateTime[i]));
+            mySettings.dutyState[i], mySettings.rlyActDT[i], mySettings.rlyActDr[i],
+            mySettings.rlyActDr[i] - (rtc.getEpoch() - mySettings.rlyActDT[i]));
       }
-      else if(mySettings.dutyState[i] == mySettings.ON && (mySettings.relayActivationDuration[i]) <=
-        (rtc.getEpoch() - mySettings.relayActivationDateTime[i])){
+      else if(mySettings.dutyState[i] == mySettings.ON && (mySettings.rlyActDr[i]) <=
+        (rtc.getEpoch() - mySettings.rlyActDT[i])){
           mySettings.dutyState[i] = !mySettings.ON;
           String ch = "ch" + String(i+1);
           setSwitch(ch, "OFF");
           log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d - ts:%d - tr:%d - exp:%d\n"), i+1,
-            mySettings.dutyState[i], mySettings.relayActivationDateTime[i], mySettings.relayActivationDuration[i],
-            mySettings.relayActivationDuration[i] - (rtc.getEpoch() - mySettings.relayActivationDateTime[i]));
+            mySettings.dutyState[i], mySettings.rlyActDT[i], mySettings.rlyActDr[i],
+            mySettings.rlyActDr[i] - (rtc.getEpoch() - mySettings.rlyActDT[i]));
+      }
+    }
+    else if(mySettings.rlyActDr[i] > 0 && mySettings.rlyCtrlMd[i] == 3){
+      uint32_t currHour = rtc.getHour(true);
+      uint16_t currMinute = rtc.getMinute();
+      uint8_t currSecond = rtc.getSecond();
+      String currDT = rtc.getDateTime();
+      uint16_t currentTimeInSec = (currHour * 60 * 60) + (currMinute * 60) + currSecond;
+
+      uint32_t rlyActDT = mySettings.rlyActDT[i] + config.gmtOffset;
+      uint32_t targetHour = hour(rlyActDT);
+      uint16_t targetMinute = minute(rlyActDT);
+      uint8_t targetSecond = second(rlyActDT);
+      char targetDT[32];
+      sprintf(targetDT, "%02d.%02d.%02d %02d:%02d:%02d", day(rlyActDT), month(rlyActDT),
+        year(rlyActDT), hour(rlyActDT), minute(rlyActDT), second(rlyActDT));
+      uint16_t targetTimeInSec = (targetHour * 60 * 60) + (targetMinute * 60) + targetSecond;
+
+      if(targetTimeInSec <= currentTimeInSec && (mySettings.rlyActDr[i]) >=
+        (currentTimeInSec - targetTimeInSec) && mySettings.dutyState[i] != mySettings.ON){
+          mySettings.dutyState[i] = mySettings.ON;
+          String ch = "ch" + String(i+1);
+          setSwitch(ch, "ON");
+          log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d \n currentTimeInSec:%d (%d:%d:%d - %s - %d) targetTimeInSec:%d (%d:%d:%d - %s - %d) - rlyActDr:%d - exp:%d\n"), i+1,
+            mySettings.dutyState[i], currentTimeInSec, currHour, currMinute, currSecond, currDT.c_str(), rtc.getEpoch(),
+            targetTimeInSec, targetHour, targetMinute, targetSecond, targetDT, rlyActDT,
+            mySettings.rlyActDr[i], mySettings.rlyActDr[i] - (currentTimeInSec - targetTimeInSec));
+      }
+      else if(mySettings.dutyState[i] == mySettings.ON && (mySettings.rlyActDr[i]) <=
+        (currentTimeInSec - targetTimeInSec)){
+          mySettings.dutyState[i] = !mySettings.ON;
+          String ch = "ch" + String(i+1);
+          setSwitch(ch, "OFF");
+          log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d \n currentTimeInSec:%d (%d:%d:%d - %s - %d) targetTimeInSec:%d (%d:%d:%d - %s - %d) - rlyActDr:%d - exp:%d\n"), i+1,
+            mySettings.dutyState[i], currentTimeInSec, currHour, currMinute, currSecond, currDT.c_str(), rtc.getEpoch(),
+            targetTimeInSec, targetHour, targetMinute, targetSecond, targetDT, rlyActDT,
+            mySettings.rlyActDr[i], mySettings.rlyActDr[i] - (currentTimeInSec - targetTimeInSec));
       }
     }
   }
 }
 
-void relayControlByDutyCycle()
+void relayControlBydtCyc()
 {
-  for(uint8_t i = 0; i < countof(mySettings.relayPin); i++)
+  for(uint8_t i = 0; i < countof(mySettings.pin); i++)
   {
-    if (mySettings.dutyRange[i] < 2){mySettings.dutyRange[i] = 2;} //safenet
-    if(mySettings.dutyCycle[i] != 0 && mySettings.relayControlMode[i] == 1)
+    if (mySettings.dtRng[i] < 2){mySettings.dtRng[i] = 2;} //safenet
+    if(mySettings.dtCyc[i] != 0 && mySettings.rlyCtrlMd[i] == 1)
     {
       if( mySettings.dutyState[i] == mySettings.ON )
       {
-        if( mySettings.dutyCycle[i] != 100 && (millis() - mySettings.dutyCounter[i] ) >= (float)(( ((float)mySettings.dutyCycle[i] / 100) * (float)mySettings.dutyRange[i]) * 1000))
+        if( mySettings.dtCyc[i] != 100 && (millis() - mySettings.dutyCounter[i] ) >= (float)(( ((float)mySettings.dtCyc[i] / 100) * (float)mySettings.dtRng[i]) * 1000))
         {
           mySettings.dutyState[i] = !mySettings.ON;
           String ch = "ch" + String(i+1);
           setSwitch(ch, "OFF");
           mySettings.dutyCounter[i] = millis();
-          log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld\n"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
+          log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d - dtCyc:%d - dtRng:%ld\n"), i+1, mySettings.dutyState[i], mySettings.dtCyc[i], mySettings.dtRng[i]);
         }
       }
       else
       {
-        if( mySettings.dutyCycle[i] != 0 && (millis() - mySettings.dutyCounter[i] ) >= (float) ( ((100 - (float) mySettings.dutyCycle[i]) / 100) * (float) mySettings.dutyRange[i]) * 1000)
+        if( mySettings.dtCyc[i] != 0 && (millis() - mySettings.dutyCounter[i] ) >= (float) ( ((100 - (float) mySettings.dtCyc[i]) / 100) * (float) mySettings.dtRng[i]) * 1000)
         {
           mySettings.dutyState[i] = mySettings.ON;
           String ch = "ch" + String(i+1);
           setSwitch(ch, "ON");
           mySettings.dutyCounter[i] = millis();
-          log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d - dutyCycle:%d - dutyRange:%ld\n"), i+1, mySettings.dutyState[i], mySettings.dutyCycle[i], mySettings.dutyRange[i]);
+          log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d - dtCyc:%d - dtRng:%ld\n"), i+1, mySettings.dutyState[i], mySettings.dtCyc[i], mySettings.dtRng[i]);
         }
       }
     }
@@ -509,6 +570,7 @@ void relayControlByDutyCycle()
 callbackResponse processSharedAttributesUpdate(const callbackData &data)
 {
   if(config.logLev >= 4){serializeJsonPretty(data, Serial);}
+  Serial.println();
 
   if(data["model"] != nullptr){strlcpy(config.model, data["model"].as<const char*>(), sizeof(config.model));}
   if(data["group"] != nullptr){strlcpy(config.group, data["group"].as<const char*>(), sizeof(config.group));}
@@ -525,77 +587,97 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["gmtOffset"] != nullptr){config.gmtOffset = data["gmtOffset"].as<int>();}
 
 
-  if(data["dutyCycleCh1"] != nullptr)
+  if(data["dtCycCh1"] != nullptr)
   {
-    mySettings.dutyCycle[0] = data["dutyCycleCh1"].as<uint8_t>();
-    if(data["dutyCycleCh1"].as<uint8_t>() == 0)
+    mySettings.dtCyc[0] = data["dtCycCh1"].as<uint8_t>();
+    if(data["dtCycCh1"].as<uint8_t>() == 0)
     {
       setSwitch(String("ch1"), String("OFF"));
     }
   }
-  if(data["dutyCycleCh2"] != nullptr)
+  if(data["dtCycCh2"] != nullptr)
   {
-    mySettings.dutyCycle[1] = data["dutyCycleCh2"].as<uint8_t>();
-    if(data["dutyCycleCh2"].as<uint8_t>() == 0)
+    mySettings.dtCyc[1] = data["dtCycCh2"].as<uint8_t>();
+    if(data["dtCycCh2"].as<uint8_t>() == 0)
     {
       setSwitch(String("ch2"), String("OFF"));
     }
   }
-  if(data["dutyCycleCh3"] != nullptr)
+  if(data["dtCycCh3"] != nullptr)
   {
-    mySettings.dutyCycle[2] = data["dutyCycleCh3"].as<uint8_t>();
-    if(data["dutyCycleCh3"].as<uint8_t>() == 0)
+    mySettings.dtCyc[2] = data["dtCycCh3"].as<uint8_t>();
+    if(data["dtCycCh3"].as<uint8_t>() == 0)
     {
       setSwitch(String("ch3"), String("OFF"));
     }
   }
-  if(data["dutyCycleCh4"] != nullptr)
+  if(data["dtCycCh4"] != nullptr)
   {
-    mySettings.dutyCycle[3] = data["dutyCycleCh4"].as<uint8_t>();
-    if(data["dutyCycleCh4"].as<uint8_t>() == 0)
+    mySettings.dtCyc[3] = data["dtCycCh4"].as<uint8_t>();
+    if(data["dtCycCh4"].as<uint8_t>() == 0)
     {
       setSwitch(String("ch4"), String("OFF"));
     }
   }
 
-  if(data["dutyRangeCh1"] != nullptr){mySettings.dutyRange[0] = data["dutyRangeCh1"].as<unsigned long>();}
-  if(data["dutyRangeCh2"] != nullptr){mySettings.dutyRange[1] = data["dutyRangeCh2"].as<unsigned long>();}
-  if(data["dutyRangeCh3"] != nullptr){mySettings.dutyRange[2] = data["dutyRangeCh3"].as<unsigned long>();}
-  if(data["dutyRangeCh4"] != nullptr){mySettings.dutyRange[3] = data["dutyRangeCh4"].as<unsigned long>();}
+  if(data["dtRngCh1"] != nullptr){mySettings.dtRng[0] = data["dtRngCh1"].as<unsigned long>();}
+  if(data["dtRngCh2"] != nullptr){mySettings.dtRng[1] = data["dtRngCh2"].as<unsigned long>();}
+  if(data["dtRngCh3"] != nullptr){mySettings.dtRng[2] = data["dtRngCh3"].as<unsigned long>();}
+  if(data["dtRngCh4"] != nullptr){mySettings.dtRng[3] = data["dtRngCh4"].as<unsigned long>();}
 
-  if(data["dutyCycleFailSafeCh1"] != nullptr){mySettings.dutyCycleFailSafe[0] = data["dutyCycleFailSafeCh1"].as<uint8_t>();}
-  if(data["dutyCycleFailSafeCh2"] != nullptr){mySettings.dutyCycleFailSafe[1] = data["dutyCycleFailSafeCh2"].as<uint8_t>();}
-  if(data["dutyCycleFailSafeCh3"] != nullptr){mySettings.dutyCycleFailSafe[2] = data["dutyCycleFailSafeCh3"].as<uint8_t>();}
-  if(data["dutyCycleFailSafeCh4"] != nullptr){mySettings.dutyCycleFailSafe[3] = data["dutyCycleFailSafeCh4"].as<uint8_t>();}
+  if(data["dtCycFSCh1"] != nullptr){mySettings.dtCycFS[0] = data["dtCycFSCh1"].as<uint8_t>();}
+  if(data["dtCycFSCh2"] != nullptr){mySettings.dtCycFS[1] = data["dtCycFSCh2"].as<uint8_t>();}
+  if(data["dtCycFSCh3"] != nullptr){mySettings.dtCycFS[2] = data["dtCycFSCh3"].as<uint8_t>();}
+  if(data["dtCycFSCh4"] != nullptr){mySettings.dtCycFS[3] = data["dtCycFSCh4"].as<uint8_t>();}
 
-  if(data["dutyRangeFailSafeCh1"] != nullptr){mySettings.dutyRangeFailSafe[0] = data["dutyRangeFailSafeCh1"].as<unsigned long>();}
-  if(data["dutyRangeFailSafeCh2"] != nullptr){mySettings.dutyRangeFailSafe[1] = data["dutyRangeFailSafeCh2"].as<unsigned long>();}
-  if(data["dutyRangeFailSafeCh3"] != nullptr){mySettings.dutyRangeFailSafe[2] = data["dutyRangeFailSafeCh3"].as<unsigned long>();}
-  if(data["dutyRangeFailSafeCh4"] != nullptr){mySettings.dutyRangeFailSafe[3] = data["dutyRangeFailSafeCh4"].as<unsigned long>();}
+  if(data["dtRngFSCh1"] != nullptr){mySettings.dtRngFS[0] = data["dtRngFSCh1"].as<unsigned long>();}
+  if(data["dtRngFSCh2"] != nullptr){mySettings.dtRngFS[1] = data["dtRngFSCh2"].as<unsigned long>();}
+  if(data["dtRngFSCh3"] != nullptr){mySettings.dtRngFS[2] = data["dtRngFSCh3"].as<unsigned long>();}
+  if(data["dtRngFSCh4"] != nullptr){mySettings.dtRngFS[3] = data["dtRngFSCh4"].as<unsigned long>();}
 
-  if(data["relayActivationDateTimeCh1"] != nullptr){mySettings.relayActivationDateTime[0] = data["relayActivationDateTimeCh1"].as<unsigned long>();}
-  if(data["relayActivationDateTimeCh2"] != nullptr){mySettings.relayActivationDateTime[1] = data["relayActivationDateTimeCh2"].as<unsigned long>();}
-  if(data["relayActivationDateTimeCh3"] != nullptr){mySettings.relayActivationDateTime[2] = data["relayActivationDateTimeCh3"].as<unsigned long>();}
-  if(data["relayActivationDateTimeCh4"] != nullptr){mySettings.relayActivationDateTime[3] = data["relayActivationDateTimeCh4"].as<unsigned long>();}
+  if(data["rlyActDTCh1"] != nullptr){
+    uint64_t micro = data["rlyActDTCh1"].as<uint64_t>();
+    uint32_t micro_high = micro >> 32;
+    uint32_t micro_low = micro & MAX_INT;
+    mySettings.rlyActDT[0] = micro2milli(micro_high, micro_low);
+  }
+  if(data["rlyActDTCh2"] != nullptr){
+    uint64_t micro = data["rlyActDTCh2"].as<uint64_t>();
+    uint32_t micro_high = micro >> 32;
+    uint32_t micro_low = micro & MAX_INT;
+    mySettings.rlyActDT[1] = micro2milli(micro_high, micro_low);
+  }
+  if(data["rlyActDTCh3"] != nullptr){
+    uint64_t micro = data["rlyActDTCh3"].as<uint64_t>();
+    uint32_t micro_high = micro >> 32;
+    uint32_t micro_low = micro & MAX_INT;
+    mySettings.rlyActDT[2] = micro2milli(micro_high, micro_low);
+  }
+  if(data["rlyActDTCh4"] != nullptr){
+    uint64_t micro = data["rlyActDTCh4"].as<uint64_t>();
+    uint32_t micro_high = micro >> 32;
+    uint32_t micro_low = micro & MAX_INT;
+    mySettings.rlyActDT[3] = micro2milli(micro_high, micro_low);
+  }
 
-  if(data["relayActivationDurationCh1"] != nullptr){mySettings.relayActivationDuration[0] = data["relayActivationDurationCh1"].as<unsigned long>();}
-  if(data["relayActivationDurationCh2"] != nullptr){mySettings.relayActivationDuration[1] = data["relayActivationDurationCh2"].as<unsigned long>();}
-  if(data["relayActivationDurationCh3"] != nullptr){mySettings.relayActivationDuration[2] = data["relayActivationDurationCh3"].as<unsigned long>();}
-  if(data["relayActivationDurationCh4"] != nullptr){mySettings.relayActivationDuration[3] = data["relayActivationDurationCh4"].as<unsigned long>();}
+  if(data["rlyActDrCh1"] != nullptr){mySettings.rlyActDr[0] = data["rlyActDrCh1"].as<unsigned long>();}
+  if(data["rlyActDrCh2"] != nullptr){mySettings.rlyActDr[1] = data["rlyActDrCh2"].as<unsigned long>();}
+  if(data["rlyActDrCh3"] != nullptr){mySettings.rlyActDr[2] = data["rlyActDrCh3"].as<unsigned long>();}
+  if(data["rlyActDrCh4"] != nullptr){mySettings.rlyActDr[3] = data["rlyActDrCh4"].as<unsigned long>();}
 
-  if(data["relayPinCh1"] != nullptr){mySettings.relayPin[0] = data["relayPinCh1"].as<uint8_t>();}
-  if(data["relayPinCh2"] != nullptr){mySettings.relayPin[1] = data["relayPinCh2"].as<uint8_t>();}
-  if(data["relayPinCh3"] != nullptr){mySettings.relayPin[2] = data["relayPinCh3"].as<uint8_t>();}
-  if(data["relayPinCh4"] != nullptr){mySettings.relayPin[3] = data["relayPinCh4"].as<uint8_t>();}
+  if(data["pinCh1"] != nullptr){mySettings.pin[0] = data["pinCh1"].as<uint8_t>();}
+  if(data["pinCh2"] != nullptr){mySettings.pin[1] = data["pinCh2"].as<uint8_t>();}
+  if(data["pinCh3"] != nullptr){mySettings.pin[2] = data["pinCh3"].as<uint8_t>();}
+  if(data["pinCh4"] != nullptr){mySettings.pin[3] = data["pinCh4"].as<uint8_t>();}
 
   if(data["ON"] != nullptr){mySettings.ON = data["ON"].as<bool>();}
   if(data["intrvlRecPwgUsg"] != nullptr){mySettings.intrvlRecPwgUsg = data["intrvlRecPwgUsg"].as<long>();}
 
 
-  if(data["relayControlModeCh1"] != nullptr){mySettings.relayControlMode[0] = data["relayControlModeCh1"].as<uint8_t>();}
-  if(data["relayControlModeCh2"] != nullptr){mySettings.relayControlMode[1] = data["relayControlModeCh2"].as<uint8_t>();}
-  if(data["relayControlModeCh3"] != nullptr){mySettings.relayControlMode[2] = data["relayControlModeCh3"].as<uint8_t>();}
-  if(data["relayControlModeCh4"] != nullptr){mySettings.relayControlMode[3] = data["relayControlModeCh4"].as<uint8_t>();}
+  if(data["rlyCtrlMdCh1"] != nullptr){mySettings.rlyCtrlMd[0] = data["rlyCtrlMdCh1"].as<uint8_t>();}
+  if(data["rlyCtrlMdCh2"] != nullptr){mySettings.rlyCtrlMd[1] = data["rlyCtrlMdCh2"].as<uint8_t>();}
+  if(data["rlyCtrlMdCh3"] != nullptr){mySettings.rlyCtrlMd[2] = data["rlyCtrlMdCh3"].as<uint8_t>();}
+  if(data["rlyCtrlMdCh4"] != nullptr){mySettings.rlyCtrlMd[3] = data["rlyCtrlMdCh4"].as<uint8_t>();}
 
   if(data["pinACS"] != nullptr){mySettings.pinACS = data["pinACS"].as<uint8_t>();}
   if(data["testFreq"] != nullptr){mySettings.testFreq = data["testFreq"].as<float>();}
@@ -654,47 +736,46 @@ void syncClientAttributes()
   doc["gmtOffset"] = config.gmtOffset;
   tb.sendAttributeDoc(doc);
   doc.clear();
-  doc["dutyCycleCh1"] = mySettings.dutyCycle[0];
-  doc["dutyCycleCh2"] = mySettings.dutyCycle[1];
-  doc["dutyCycleCh3"] = mySettings.dutyCycle[2];
-  doc["dutyCycleCh4"] = mySettings.dutyCycle[3];
-  doc["dutyRangeCh1"] = mySettings.dutyRange[0];
-  doc["dutyRangeCh2"] = mySettings.dutyRange[1];
-  doc["dutyRangeCh3"] = mySettings.dutyRange[2];
-  doc["dutyRangeCh4"] = mySettings.dutyRange[3];
+  doc["dtCycCh1"] = mySettings.dtCyc[0];
+  doc["dtCycCh2"] = mySettings.dtCyc[1];
+  doc["dtCycCh3"] = mySettings.dtCyc[2];
+  doc["dtCycCh4"] = mySettings.dtCyc[3];
+  doc["dtRngCh1"] = mySettings.dtRng[0];
+  doc["dtRngCh2"] = mySettings.dtRng[1];
+  doc["dtRngCh3"] = mySettings.dtRng[2];
+  doc["dtRngCh4"] = mySettings.dtRng[3];
   tb.sendAttributeDoc(doc);
   doc.clear();
-  doc["dutyCycleFailSafeCh1"] = mySettings.dutyCycleFailSafe[0];
-  doc["dutyCycleFailSafeCh2"] = mySettings.dutyCycleFailSafe[1];
-  doc["dutyCycleFailSafeCh3"] = mySettings.dutyCycleFailSafe[2];
-  doc["dutyCycleFailSafeCh4"] = mySettings.dutyCycleFailSafe[3];
-  doc["dutyRangeFailSafeCh1"] = mySettings.dutyRangeFailSafe[0];
-  doc["dutyRangeFailSafeCh2"] = mySettings.dutyRangeFailSafe[1];
-  doc["dutyRangeFailSafeCh3"] = mySettings.dutyRangeFailSafe[2];
-  doc["dutyRangeFailSafeCh4"] = mySettings.dutyRangeFailSafe[3];
+  doc["dtCycFSCh1"] = mySettings.dtCycFS[0];
+  doc["dtCycFSCh2"] = mySettings.dtCycFS[1];
+  doc["dtCycFSCh3"] = mySettings.dtCycFS[2];
+  doc["dtCycFSCh4"] = mySettings.dtCycFS[3];
+  doc["dtRngFSCh1"] = mySettings.dtRngFS[0];
+  doc["dtRngFSCh2"] = mySettings.dtRngFS[1];
+  doc["dtRngFSCh3"] = mySettings.dtRngFS[2];
+  doc["dtRngFSCh4"] = mySettings.dtRngFS[3];
   tb.sendAttributeDoc(doc);
   doc.clear();
-  doc["relayActivationDateTimeCh1"] = mySettings.relayActivationDateTime[0];
-  doc["relayActivationDateTimeCh2"] = mySettings.relayActivationDateTime[1];
-  doc["relayActivationDateTimeCh3"] = mySettings.relayActivationDateTime[2];
-  doc["relayActivationDateTimeCh4"] = mySettings.relayActivationDateTime[3];
-  doc["relayActivationDurationCh1"] = mySettings.relayActivationDuration[0];
-  doc["relayActivationDurationCh2"] = mySettings.relayActivationDuration[1];
-  doc["relayActivationDurationCh3"] = mySettings.relayActivationDuration[2];
-  doc["relayActivationDurationCh4"] = mySettings.relayActivationDuration[3];
+  doc["rlyActDTCh1"] = (uint64_t)mySettings.rlyActDT[0] * 1000;
+  doc["rlyActDTCh2"] = (uint64_t)mySettings.rlyActDT[1] * 1000;
+  doc["rlyActDTCh3"] = (uint64_t)mySettings.rlyActDT[2] * 1000;
+  doc["rlyActDTCh4"] = (uint64_t)mySettings.rlyActDT[3] * 1000;
+  doc["rlyActDrCh1"] = mySettings.rlyActDr[0];
+  doc["rlyActDrCh2"] = mySettings.rlyActDr[1];
+  doc["rlyActDrCh3"] = mySettings.rlyActDr[2];
+  doc["rlyActDrCh4"] = mySettings.rlyActDr[3];
   tb.sendAttributeDoc(doc);
   doc.clear();
-  doc["relayPinCh1"] = mySettings.relayPin[0];
-  doc["relayPinCh2"] = mySettings.relayPin[1];
-  doc["relayPinCh3"] = mySettings.relayPin[2];
-  doc["relayPinCh4"] = mySettings.relayPin[3];
+  doc["pinCh1"] = mySettings.pin[0];
+  doc["pinCh2"] = mySettings.pin[1];
+  doc["pinCh3"] = mySettings.pin[2];
+  doc["pinCh4"] = mySettings.pin[3];
   doc["ON"] = mySettings.ON;
   doc["intrvlRecPwgUsg"] = mySettings.intrvlRecPwgUsg;
-  doc["dt"] = rtc.getDateTime();
-  doc["relayControlModeCh1"] = mySettings.relayControlMode[0];
-  doc["relayControlModeCh2"] = mySettings.relayControlMode[1];
-  doc["relayControlModeCh3"] = mySettings.relayControlMode[2];
-  doc["relayControlModeCh4"] = mySettings.relayControlMode[3];
+  doc["rlyCtrlMdCh1"] = mySettings.rlyCtrlMd[0];
+  doc["rlyCtrlMdCh2"] = mySettings.rlyCtrlMd[1];
+  doc["rlyCtrlMdCh3"] = mySettings.rlyCtrlMd[2];
+  doc["rlyCtrlMdCh4"] = mySettings.rlyCtrlMd[3];
   tb.sendAttributeDoc(doc);
   doc.clear();
   doc["pinACS"] = mySettings.pinACS;
@@ -713,6 +794,8 @@ void publishDeviceTelemetry()
   doc["heap"] = heap_caps_get_free_size(MALLOC_CAP_8BIT);
   doc["rssi"] = WiFi.RSSI();
   doc["uptime"] = millis()/1000;
+  doc["dt"] = rtc.getEpoch();
+  doc["dts"] = rtc.getDateTime();
   tb.sendTelemetryDoc(doc);
   doc.clear();
 }
