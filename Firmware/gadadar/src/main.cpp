@@ -36,15 +36,24 @@ void setup()
   networkInit();
   tb.setBufferSize(DOCSIZE);
 
-  taskid_t taskPublishDeviceTelemetry = taskManager.scheduleFixedRate(1000, [] {
-    publishDeviceTelemetry();
-  });
-  //taskManager.setTaskEnabled(taskPublishDeviceTelemetry, false);
+  if(mySettings.intvDevTel != 0){
+    taskid_t taskPublishDeviceTelemetry = taskManager.scheduleFixedRate(mySettings.intvDevTel * 1000, [] {
+      publishDeviceTelemetry();
+    });
+  }
 
-  taskid_t taskMonitorPowerUsage = taskManager.scheduleFixedRate(mySettings.intrvlRecPwgUsg, [] {
-    recPowerUsage();
-  });
-  taskManager.setTaskEnabled(taskMonitorPowerUsage, false);
+  if(mySettings.intvGetPwrUsg != 0){
+    taskid_t taskMonitorPowerUsage = taskManager.scheduleFixedRate(mySettings.intvGetPwrUsg * 1000, [] {
+      getPowerUsage();
+    });
+  }
+
+  if(mySettings.intvRecPwrUsg != 0){
+    taskid_t taskMonitorPowerUsage = taskManager.scheduleFixedRate(mySettings.intvRecPwrUsg * 1000, [] {
+      recPowerUsage();
+    });
+  }
+
 }
 
 void loop()
@@ -99,37 +108,65 @@ void getPowerUsage(){
   doc["intercept"] = mySettings.intercept;
   doc["slope"] = mySettings.slope;
   doc["method"] = "setSettings";
-  serialWriteToCoMcu(doc, false);
+  //serialWriteToCoMcu(doc, false);
   doc.clear();
   doc["method"] = "getPowerUsage";
-  serialWriteToCoMcu(doc, true);
-  if(doc["armpsTRMS"] != nullptr && doc["ACSValue"] != nullptr){
-    mySettings.latestAmpsTRMS = doc["armpsTRMS"].as<float>();
+  //serialWriteToCoMcu(doc, true);
+  float ampsTRMS = 0.0;
+  float ACSValue = 0.0;
+  uint8_t counter = 0;
+  for(uint8_t i = 0; i < 4; i++){
+    if(mySettings.dutyState[i] == mySettings.ON){
+      counter++;
+    }
+  }
+  if(counter == 1){
+    ampsTRMS = (float)random(1000, 4000)/1000;
+    ACSValue = random(180, 190);
+  }
+  else if(counter == 2){
+    ampsTRMS = (float)random(4000, 6000)/1000;
+    ACSValue = random(190, 200);
+  }
+  else if(counter == 3){
+    ampsTRMS = (float)random(6000, 8000)/1000;
+    ACSValue = random(200, 210);
+  }
+  else if(counter == 4){
+    ampsTRMS = (float)random(8000, 10000)/1000;
+    ACSValue = random(210, 220);
+  }
+  doc["ampsTRMS"] = ampsTRMS;
+  doc["ACSValue"] = ACSValue;
+
+  if(doc["ampsTRMS"] != nullptr && doc["ACSValue"] != nullptr){
+    mySettings.latestAmpsTRMS = doc["ampsTRMS"].as<float>();
     mySettings.latestACSValue = doc["ACSValue"].as<float>();
     doc.clear();
-    log_manager->debug(PSTR(__func__), "Latest power meter reading armpsTRMS: %.2f - ACSValue: %.2f\n", mySettings.latestAmpsTRMS, mySettings.latestACSValue);
-    mySettings.accuAmpsTRMS += doc["armpsTRMS"].as<float>();
-    mySettings.accuACSValue += doc["ACSValue"].as<float>();
+    log_manager->debug(PSTR(__func__), "Latest power meter reading ampsTRMS: %.2f - ACSValue: %.2f\n", mySettings.latestAmpsTRMS, mySettings.latestACSValue);
+    mySettings.accuAmpsTRMS += mySettings.latestAmpsTRMS;
+    mySettings.accuACSValue += mySettings.latestACSValue;
     mySettings.counterPowerMonitor++;
   }
 }
 
 void recPowerUsage(){
-  if(tb.connected()){
+  if(tb.connected() && mySettings.accuAmpsTRMS > 0){
     float ampsTRMS = mySettings.accuAmpsTRMS / mySettings.counterPowerMonitor;
     float ACSValue = mySettings.accuACSValue / mySettings.counterPowerMonitor;
     StaticJsonDocument<DOCSIZE> doc;
-    doc["armpsTRMS"] = ampsTRMS;
+    doc["ampsTRMS"] = ampsTRMS;
     doc["ACSValue"] = ACSValue;
     tb.sendTelemetryDoc(doc);
     doc.clear();
-    log_manager->info(PSTR(__func__), "Recorded power usage armpsTRMS: %.2f - ACSValue: %.2f\n", ampsTRMS, ACSValue);
+    log_manager->info(PSTR(__func__), "Recorded power usage ampsTRMS: %.2f - ACSValue: %.2f\n", ampsTRMS, ACSValue);
     mySettings.accuACSValue = 0;
     mySettings.accuAmpsTRMS = 0;
     mySettings.counterPowerMonitor = 0;
   }
   else{
-    log_manager->warn(PSTR(__func__), "Failed to record power usage, IoT not connected. %d records waiting on the accumulator.\n", mySettings.counterPowerMonitor);
+    log_manager->warn(PSTR(__func__), "Failed to record power usage, IoT not connected or result is zero. %d records waiting on the accumulator (%d - %d).\n",
+      mySettings.counterPowerMonitor, mySettings.accuAmpsTRMS, mySettings.accuACSValue);
   }
 }
 
@@ -266,14 +303,15 @@ void loadSettings()
     mySettings.ON = 1;
   }
 
-  if(doc["intrvlRecPwgUsg"] != nullptr)
-  {
-    mySettings.intrvlRecPwgUsg = doc["intrvlRecPwgUsg"].as<long>();
-  }
-  else
-  {
-    mySettings.intrvlRecPwgUsg = 600;
-  }
+  if(doc["intvRecPwrUsg"] != nullptr){mySettings.intvRecPwrUsg = doc["intvRecPwrUsg"].as<uint16_t>();}
+  else{mySettings.intvRecPwrUsg = 600;}
+
+  if(doc["intvGetPwrUsg"] != nullptr){mySettings.intvGetPwrUsg = doc["intvGetPwrUsg"].as<uint16_t>();}
+  else{mySettings.intvGetPwrUsg = 1;}
+
+  if(doc["intvDevTel"] != nullptr){mySettings.intvDevTel = doc["intvDevTel"].as<uint16_t>();}
+  else{mySettings.intvDevTel = 1;}
+
 
   if(doc["rlyCtrlMd"] != nullptr)
   {
@@ -310,7 +348,7 @@ void loadSettings()
 
   String tmp;
   if(config.logLev >= 4){serializeJsonPretty(doc, tmp);}
-  //log_manager->debug(PSTR(__func__), "Loaded settings:\n %s \n", tmp.c_str());
+  log_manager->debug(PSTR(__func__), "Loaded settings:\n %s \n", tmp.c_str());
 }
 
 void saveSettings()
@@ -360,7 +398,9 @@ void saveSettings()
   }
 
   doc["ON"] = mySettings.ON;
-  doc["intrvlRecPwgUsg"] = mySettings.intrvlRecPwgUsg;
+  doc["intvRecPwrUsg"] = mySettings.intvRecPwrUsg;
+  doc["intvGetPwrUsg"] = mySettings.intvGetPwrUsg;
+  doc["intvDevTel"] = mySettings.intvDevTel;
 
   JsonArray rlyCtrlMd = doc.createNestedArray("rlyCtrlMd");
   for(uint8_t i=0; i<countof(mySettings.rlyCtrlMd); i++)
@@ -375,9 +415,9 @@ void saveSettings()
   doc["slope"] = mySettings.slope;
 
   writeSettings(doc, settingsPath);
-  //String tmp;
-  //if(config.logLev >= 4){serializeJsonPretty(doc, tmp);}
-  //log_manager->debug(PSTR(__func__), "Written settings:\n %s \n", tmp.c_str());
+  String tmp;
+  if(config.logLev >= 4){serializeJsonPretty(doc, tmp);}
+  log_manager->debug(PSTR(__func__), "Written settings:\n %s \n", tmp.c_str());
 }
 
 callbackResponse processSaveConfig(const callbackData &data)
@@ -671,7 +711,9 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["pinCh4"] != nullptr){mySettings.pin[3] = data["pinCh4"].as<uint8_t>();}
 
   if(data["ON"] != nullptr){mySettings.ON = data["ON"].as<bool>();}
-  if(data["intrvlRecPwgUsg"] != nullptr){mySettings.intrvlRecPwgUsg = data["intrvlRecPwgUsg"].as<long>();}
+  if(data["intvRecPwrUsg"] != nullptr){mySettings.intvRecPwrUsg = data["intvRecPwrUsg"].as<uint16_t>();}
+  if(data["intvGetPwrUsg"] != nullptr){mySettings.intvGetPwrUsg = data["intvRecPwrUsg"].as<uint16_t>();}
+  if(data["intvDevTel"] != nullptr){mySettings.intvDevTel = data["intvDevTel"].as<uint16_t>();}
 
 
   if(data["rlyCtrlMdCh1"] != nullptr){mySettings.rlyCtrlMd[0] = data["rlyCtrlMdCh1"].as<uint8_t>();}
@@ -771,7 +813,9 @@ void syncClientAttributes()
   doc["pinCh3"] = mySettings.pin[2];
   doc["pinCh4"] = mySettings.pin[3];
   doc["ON"] = mySettings.ON;
-  doc["intrvlRecPwgUsg"] = mySettings.intrvlRecPwgUsg;
+  doc["intvRecPwrUsg"] = mySettings.intvRecPwrUsg;
+  doc["intvGetPwrUsg"] = mySettings.intvGetPwrUsg;
+  doc["intvDevTel"] = mySettings.intvDevTel;
   doc["rlyCtrlMdCh1"] = mySettings.rlyCtrlMd[0];
   doc["rlyCtrlMdCh2"] = mySettings.rlyCtrlMd[1];
   doc["rlyCtrlMdCh3"] = mySettings.rlyCtrlMd[2];

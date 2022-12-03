@@ -47,7 +47,7 @@ ny6l9/duT2POAsUN5IwHGDu8b2NT+vCUQRFVHY31
 -----END CERTIFICATE-----
 )EOF";
 
-#define DOCSIZE 768
+#define DOCSIZE 1024
 #include <libudawa.h>
 #include <TimeLib.h>
 
@@ -68,7 +68,9 @@ struct Settings
     bool ON;
     bool dutyState[4];
     unsigned long dutyCounter[4];
-    long intrvlRecPwgUsg = 600;
+    uint16_t intvRecPwrUsg = 600;
+    uint16_t intvGetPwrUsg = 1;
+    uint16_t intvDevTel = 1;
     uint32_t rlyActDT[4];
     unsigned long rlyActDr[4];
     bool publishSwitch[4] = {false, false, false, false};

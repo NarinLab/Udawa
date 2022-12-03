@@ -46,7 +46,7 @@ void getPowerUsage(StaticJsonDocument<DOCSIZE> &doc)
 {
   pinMode(mySettings.pinACS, INPUT);
   mySettings.ampsTRMS = mySettings.intercept + mySettings.slope * inputStats.sigma();
-  doc["armpsTRMS"] = mySettings.ampsTRMS;
+  doc["ampsTRMS"] = mySettings.ampsTRMS;
   doc["ACSValue"] = mySettings.ACSValue;
   nano.serialWriteToESP32(doc);
 }
