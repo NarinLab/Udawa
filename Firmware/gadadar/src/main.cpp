@@ -61,6 +61,7 @@ void loop()
   udawa();
   relayControlByDateTime();
   relayControlBydtCyc();
+  relayControlByIntrvl();
   publishSwitch();
 
   if(tb.connected() && FLAG_IOT_SUBSCRIBE)
@@ -121,19 +122,19 @@ void getPowerUsage(){
     }
   }
   if(counter == 1){
-    ampsTRMS = (float)random(1000, 4000)/1000;
+    ampsTRMS = (float)random(3950, 4000)/1000;
     ACSValue = random(180, 190);
   }
   else if(counter == 2){
-    ampsTRMS = (float)random(4000, 6000)/1000;
+    ampsTRMS = (float)random(5950, 6000)/1000;
     ACSValue = random(190, 200);
   }
   else if(counter == 3){
-    ampsTRMS = (float)random(6000, 8000)/1000;
+    ampsTRMS = (float)random(7950, 8000)/1000;
     ACSValue = random(200, 210);
   }
   else if(counter == 4){
-    ampsTRMS = (float)random(8000, 10000)/1000;
+    ampsTRMS = (float)random(9950, 10000)/1000;
     ACSValue = random(210, 220);
   }
   doc["ampsTRMS"] = ampsTRMS;
@@ -277,6 +278,40 @@ void loadSettings()
     }
   }
 
+if(doc["rlyActIT"] != nullptr)
+  {
+    uint8_t index = 0;
+    for(JsonVariant v : doc["rlyActIT"].as<JsonArray>())
+    {
+        mySettings.rlyActIT[index] = v.as<unsigned long>();
+        index++;
+    }
+  }
+  else
+  {
+    for(uint8_t i = 0; i < countof(mySettings.rlyActIT); i++)
+    {
+        mySettings.rlyActIT[i] = 0;
+    }
+  }
+
+  if(doc["rlyActITOn"] != nullptr)
+  {
+    uint8_t index = 0;
+    for(JsonVariant v : doc["rlyActITOn"].as<JsonArray>())
+    {
+        mySettings.rlyActITOn[index] = v.as<unsigned long>();
+        index++;
+    }
+  }
+  else
+  {
+    for(uint8_t i = 0; i < countof(mySettings.rlyActITOn); i++)
+    {
+        mySettings.rlyActITOn[i] = 0;
+    }
+  }
+
   if(doc["pin"] != nullptr)
   {
     uint8_t index = 0;
@@ -389,6 +424,18 @@ void saveSettings()
   for(uint8_t i=0; i<countof(mySettings.rlyActDr); i++)
   {
     rlyActDr.add(mySettings.rlyActDr[i]);
+  }
+
+  JsonArray rlyActIT = doc.createNestedArray("rlyActIT");
+  for(uint8_t i=0; i<countof(mySettings.rlyActIT); i++)
+  {
+    rlyActIT.add(mySettings.rlyActIT[i]);
+  }
+
+  JsonArray rlyActITOn = doc.createNestedArray("rlyActITOn");
+  for(uint8_t i=0; i<countof(mySettings.rlyActITOn); i++)
+  {
+    rlyActITOn.add(mySettings.rlyActITOn[i]);
   }
 
   JsonArray pin = doc.createNestedArray("pin");
@@ -589,7 +636,7 @@ void relayControlBydtCyc()
           String ch = "ch" + String(i+1);
           setSwitch(ch, "OFF");
           mySettings.dutyCounter[i] = millis();
-          log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d - dtCyc:%d - dtRng:%ld\n"), i+1, mySettings.dutyState[i], mySettings.dtCyc[i], mySettings.dtRng[i]);
+          log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d has changed to %d - dtCyc:%d - dtRng:%ld\n"), i+1, mySettings.dutyState[i], mySettings.dtCyc[i], mySettings.dtRng[i]);
         }
       }
       else
@@ -600,8 +647,32 @@ void relayControlBydtCyc()
           String ch = "ch" + String(i+1);
           setSwitch(ch, "ON");
           mySettings.dutyCounter[i] = millis();
-          log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d changed to %d - dtCyc:%d - dtRng:%ld\n"), i+1, mySettings.dutyState[i], mySettings.dtCyc[i], mySettings.dtRng[i]);
+          log_manager->debug(PSTR(__func__),PSTR("Relay Ch%d has changed to %d - dtCyc:%d - dtRng:%ld\n"), i+1, mySettings.dutyState[i], mySettings.dtCyc[i], mySettings.dtRng[i]);
         }
+      }
+    }
+  }
+}
+
+void relayControlByIntrvl(){
+  for(uint8_t i = 0; i < countof(mySettings.pin); i++)
+  {
+    if(mySettings.rlyActIT[i] != 0 && mySettings.rlyActITOn[i] != 0 && mySettings.rlyCtrlMd[i] == 4)
+    {
+      if( mySettings.dutyState[i] == !mySettings.ON && (millis() - mySettings.rlyActITOnTs[i]) > (mySettings.rlyActIT[i] * 1000) ){
+        mySettings.dutyState[i] = mySettings.ON;
+        String ch = "ch" + String(i+1);
+        setSwitch(ch, "ON");
+        mySettings.rlyActITOnTs[i] = millis();
+        log_manager->debug(PSTR(__func__), PSTR("Relay Ch%d has changed to %d - rlyActIT:%d - rlyActITOn:%d\n"), i+1, mySettings.dutyState[i],
+          mySettings.rlyActIT[i], mySettings.rlyActITOn[i]);
+      }
+      if( mySettings.dutyState[i] == mySettings.ON && (millis() - mySettings.rlyActITOnTs[i]) > (mySettings.rlyActITOn[i] * 1000) ){
+        mySettings.dutyState[i] = !mySettings.ON;
+        String ch = "ch" + String(i+1);
+        setSwitch(ch, "OFF");
+        log_manager->debug(PSTR(__func__), PSTR("Relay Ch%d has changed to %d - rlyActIT:%d - rlyActITOn:%d\n"), i+1, mySettings.dutyState[i],
+          mySettings.rlyActIT[i], mySettings.rlyActITOn[i]);
       }
     }
   }
@@ -704,6 +775,16 @@ callbackResponse processSharedAttributesUpdate(const callbackData &data)
   if(data["rlyActDrCh2"] != nullptr){mySettings.rlyActDr[1] = data["rlyActDrCh2"].as<unsigned long>();}
   if(data["rlyActDrCh3"] != nullptr){mySettings.rlyActDr[2] = data["rlyActDrCh3"].as<unsigned long>();}
   if(data["rlyActDrCh4"] != nullptr){mySettings.rlyActDr[3] = data["rlyActDrCh4"].as<unsigned long>();}
+
+  if(data["rlyActITCh1"] != nullptr){mySettings.rlyActIT[0] = data["rlyActITCh1"].as<unsigned long>();}
+  if(data["rlyActITCh2"] != nullptr){mySettings.rlyActIT[1] = data["rlyActITCh2"].as<unsigned long>();}
+  if(data["rlyActITCh3"] != nullptr){mySettings.rlyActIT[2] = data["rlyActITCh3"].as<unsigned long>();}
+  if(data["rlyActITCh4"] != nullptr){mySettings.rlyActIT[3] = data["rlyActITCh4"].as<unsigned long>();}
+
+  if(data["rlyActITOnCh1"] != nullptr){mySettings.rlyActITOn[0] = data["rlyActITOnCh1"].as<unsigned long>();}
+  if(data["rlyActITOnCh2"] != nullptr){mySettings.rlyActITOn[1] = data["rlyActITOnCh2"].as<unsigned long>();}
+  if(data["rlyActITOnCh3"] != nullptr){mySettings.rlyActITOn[2] = data["rlyActITOnCh3"].as<unsigned long>();}
+  if(data["rlyActITOnCh4"] != nullptr){mySettings.rlyActITOn[3] = data["rlyActITOnCh4"].as<unsigned long>();}
 
   if(data["pinCh1"] != nullptr){mySettings.pin[0] = data["pinCh1"].as<uint8_t>();}
   if(data["pinCh2"] != nullptr){mySettings.pin[1] = data["pinCh2"].as<uint8_t>();}
@@ -808,6 +889,16 @@ void syncClientAttributes()
   doc["rlyActDrCh4"] = mySettings.rlyActDr[3];
   tb.sendAttributeDoc(doc);
   doc.clear();
+  doc["rlyActITCh1"] = mySettings.rlyActIT[0];
+  doc["rlyActITCh2"] = mySettings.rlyActIT[1];
+  doc["rlyActITCh3"] = mySettings.rlyActIT[2];
+  doc["rlyActITCh4"] = mySettings.rlyActIT[3];
+  doc["rlyActITOnCh1"] = mySettings.rlyActITOn[0];
+  doc["rlyActITOnCh2"] = mySettings.rlyActITOn[1];
+  doc["rlyActITOnCh3"] = mySettings.rlyActITOn[2];
+  doc["rlyActITOnCh4"] = mySettings.rlyActITOn[3];
+  tb.sendAttributeDoc(doc);
+  doc.clear();
   doc["pinCh1"] = mySettings.pin[0];
   doc["pinCh2"] = mySettings.pin[1];
   doc["pinCh3"] = mySettings.pin[2];
@@ -840,6 +931,7 @@ void publishDeviceTelemetry()
   doc["uptime"] = millis()/1000;
   doc["dt"] = rtc.getEpoch();
   doc["dts"] = rtc.getDateTime();
+  doc["pwr"] = mySettings.latestAmpsTRMS;
   tb.sendTelemetryDoc(doc);
   doc.clear();
 }

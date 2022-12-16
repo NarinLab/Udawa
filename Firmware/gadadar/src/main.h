@@ -72,7 +72,10 @@ struct Settings
     uint16_t intvGetPwrUsg = 1;
     uint16_t intvDevTel = 1;
     uint32_t rlyActDT[4];
+    uint32_t rlyActIT[4];
     unsigned long rlyActDr[4];
+    unsigned long rlyActITOn[4];
+    unsigned long rlyActITOnTs[4];
     bool publishSwitch[4] = {false, false, false, false};
 
     uint8_t pinACS = 14;
@@ -104,6 +107,7 @@ void loadSettings();
 void saveSettings();
 void relayControlBydtCyc();
 void relayControlByDateTime();
+void relayControlByIntrvl();
 void syncClientAttributes();
 void publishDeviceTelemetry();
 void setSwitch(String  ch, String state);
